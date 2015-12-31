@@ -1,0 +1,86 @@
+.fb-post-preview {
+	border: 1px solid #ccc;
+	padding: 8px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-ms-border-radius: 4px;
+	border-radius: 4px;
+}
+
+.fb-post-preview * {
+	font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
+	font-size: 11px;
+	color: #808080;	
+}
+
+.fb-post-preview-bottom {
+	clear: both;
+}
+
+.fb-post-preview a {
+	color: #3B5998;
+	font-weight: bold;
+}
+
+.fb-post-preview-detail {
+	clear: both;
+	margin-top: 10px;
+}
+
+.fb-post-preview-message {
+	color: #000;
+	padding: 10px 0 10px;
+}
+
+.fb-post-preview-attachment {
+	padding: 5px;
+}
+
+.fb-post-preview-image-pane {
+	float: left;
+	padding-right: 10px;
+	min-height: 60px;
+}
+
+.fb-post-preview-image-pane img {
+	width: 115px;
+}
+
+.fb-post-preview-description {
+	padding-top: 6px;
+}
+
+.fb-post-preview-caption {
+	padding: 2px 0 4px;
+}
+
+
+.fb-post-preview-user-picture {
+	float: left;
+	overflow:hidden;
+	margin-right: 5px;
+	border: 0;
+	border-style: none;
+}	
+	
+
+.fb-post-preview-user-picture div {
+	background-image: url("fb-avatar.jpg");
+	background-size: 100% 100%;
+	width: 40px;
+	height: 40px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	-ms-border-radius: 2px;
+	border-radius: 2px;	
+	border: none;
+	border-style: none;
+}
+
+.fb-post-preview-username {
+	font-weight: bold;
+}
+
+.fb-post-preview-time {
+	padding-top: 4px;
+}

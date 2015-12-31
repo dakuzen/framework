@@ -1,0 +1,1 @@
+<?=HTML_UTIL::get_dropdown($name."[hour]",$hour_list,$hour);?>:<?=HTML_UTIL::get_dropdown($name."[minute]",$minute_list,$minute);?>

@@ -1,0 +1,583 @@
+
+#browse_container {
+	white-space: nowrap;
+}
+
+ul.browse-dir-tree {
+	line-height: 18px;
+	padding: 0px;
+	margin: 0px;
+}
+
+ul.browse-dir-tree li {
+	list-style: none;
+	float: left;
+	height: 185px;
+	width: 185px;
+	padding: 10px;
+	margin: 5px;
+	overflow: hidden;
+	border: 1px solid transparent;
+	border-radius: 2px;	
+	position: relative;
+	text-align: center;
+}
+
+ul.browse-dir-tree li .file-name {
+	position: absolute;
+	height: 25px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: #fff;
+	text-align: center;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+  	overflow: hidden;
+  	padding: 0px 10px 0 10px;
+  	width: 100%;
+  	z-index: 9999;
+}
+
+ul.browse-dir-tree a:hover li {
+	border: 1px solid #efefef;	
+}
+
+ul.browse-dir-tree a li.selected {
+	border: 1px solid #999;
+}
+
+ul.browse-dir-tree li .preview {
+	
+	/*-webkit-mask-image: -webkit-gradient(linear, 0% 100%, 0% 0%, color-stop(0%, rgba(255,255,255,.05)),  color-stop(10%, rgba(255,255,255,1)), color-stop(100%, rgba(255,255,255,1)));*/
+	height: 145px;
+}
+
+ul.browse-dir-tree li .preview .check {
+	background: url(images/check.png);
+	display: inline-block;
+}
+
+ul.browse-dir-tree li .preview img {
+	max-width: 100%;
+	max-height: 145px;
+}
+
+ul.browse-dir-tree li img.preview.landscape {
+  max-width: none;
+  max-height: 100%;
+}
+
+
+ul.browse-dir-tree li.directory {
+  background: url(images/dir.png) no-repeat;
+  background-size: 65%;
+  background-position: 50% 50%;	
+}
+
+ul.browse-dir-tree div.dir-name {
+	display: block;
+	padding-left: 3px;
+}
+
+ul.browse-dir-tree div.dir-icon {
+	height: 16px;
+	width: 16px;
+	background: url(images/directory.png) left center no-repeat;
+	float:left;
+}
+
+ul.browse-dir-tree div.dir-icon.expanded {
+	background: url(images/folder_open.png) left center no-repeat;
+}
+
+ul.browse-dir-tree div.dir-icon.wait {
+	background: url(images/spinner.gif) left top no-repeat; 
+}
+
+
+ul.browse-dir-tree a:hover {
+	background: #bdf;
+}
+
+ul#browse-file-list {
+	font-family: verdana, sans-serif;
+	font-size: 11px;
+	line-height: 18px;
+	padding: 0px;
+	margin: 0px;
+}
+
+ul#browse-file-list li {
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+	white-space: nowrap;
+}
+
+ul#browse-file-list a {
+	margin-left: 20px;
+	color: #333;
+	text-decoration: none;
+	display: block;
+}
+
+ul#browse-file-list a:hover {
+	background: #bdf;
+}
+
+
+.browse-dir-tree li.file a {
+	margin-left: 20px;
+}
+
+.browse-panel-details {
+	height: 60px;
+	border-top: 1px solid #ccc;
+	padding: 10px;
+}
+
+.browse-panel-details .directory {
+	display: none;
+}
+
+.browse-panel-details .icon {
+	background-size: 16px 16px;		
+	width: 16px;
+	height: 16px;
+	float: left;
+	margin-right: 5px;
+}
+
+.browse-panel-details .directory .icon {
+	background: url(images/directory.png) no-repeat;
+}
+
+
+
+
+.browse-panel-spacer { 
+	width: 20px;
+	float: left;
+}
+
+#browse-editor {
+	display: none;
+	position: absolute;
+	z-index: 999999999;
+	width: 90%;
+	height: 90%;
+	border: 1px solid #ccc;
+	background-color: #fff;
+}
+
+#browse-editor-toolbar-panel {	
+	line-hight: 50px;
+	height: 50px;
+	background-color: #999;
+	vertical-align: middle;
+}
+
+#browse-editor-toolbar {
+	padding: 10px 4px;
+}
+
+#browse-editor-textarea {
+	font-family: Courier, monospace;
+	font-size: 12px;
+	height:800px !important;
+	width:100% !important;
+}
+
+#browse-upload {
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	box-shadow: -1px -1px 1px #ffffff;
+	-moz-box-shadow: -1px 1px 1px #ffffff;
+	-webkit-box-shadow: -1px 1px 1px #ffffff;
+	position: absolute;
+	z-index: 999999999;
+	width: 600px;
+	height: 150px;
+	border: 1px solid #ccc;
+	background-color: #fff;
+	overflow-y: auto;
+	display: none;
+}
+
+
+#browse-upload-toolbar-panel {	
+	border-radius: 6px 6px 0px 0px;
+	-moz-border-radius: 6px 6px 0px 0px;
+	-webkit-border-radius: 6px 6px 0px 0px;
+	line-hight: 50px;
+	height: 50px;
+	vertical-align: middle;
+	background-color: #999;
+}
+
+
+
+
+
+
+
+.browse-upload-error {
+	color: red;
+	display: inline;
+}
+
+.browse-upload-success {
+	color: green;
+	display: inline;
+}
+
+.browse-nav {
+	padding: 7px;
+	border-bottom: 1px solid #ccc;	
+}
+
+.browse-nav .nav-home {
+	float: left;
+}
+
+
+.browse-nav .nav-link {
+	padding: 0px 0px 0 5px; 
+}
+
+.browse-nav .nav-link a {
+	padding: 0px 0px 0 5px; 
+}
+
+.browse-nav .nav-link:before {
+	content: "/"
+}
+
+
+
+.browser .browse-panel-preview {
+	display: none;
+}
+
+
+.browser  {
+	border: 1px solid #ccc;	
+}
+
+.browser .browse-panel-dir-wrap > ul > li  {
+	margin-left: 0px;
+}
+
+.browser .browse-panel-dir-wrap {
+	padding: 3px;
+}
+
+.browser .preview-image {
+	height : auto;
+}
+
+.browser .preview-code {
+	text-align: left;
+	font-family: "Courier New",Courier,monospace;
+}
+
+
+.browser .info { 
+	border-bottom: 1px solid #ccc;
+	font-size: 11px;
+	height: 30px;
+	width: 100%;
+}
+
+.browser .info-wrap { 
+	padding: 5px;
+}
+
+.browser .info-wrap * { 
+	font-size: 12px;
+}
+
+.browser .info .info-link { 
+	margin-left: 5px;
+	vertical-align: middle;
+	display: inline-block;
+}
+
+.browser .info .info-link {
+	background: url("images/external_link.png") no-repeat;
+	width: 9px;
+	height: 9px;
+}
+
+.browser .info .info-name {
+	padding-left: 19px;
+	height: 16px;
+	display: inline-block;
+}
+
+.browser .browse-toolbar-panel {
+	background-color: #E8E8E8;
+	padding: 4px;
+	border-bottom: 1px solid #ccc;
+}
+
+.browse-toolbar-panel i {
+	margin-right: 3px;
+}
+
+.ui-tabs { position: inherit; }
+
+.no-preview {
+	padding-top: 100px;
+	text-align: center;
+}
+
+
+
+
+.cf:after {
+   content: " "; /* Older browser do not support empty content */
+   visibility: hidden;
+   display: block;
+   height: 0;
+   clear: both;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*!
+ * jQuery contextMenu - Plugin for simple contextMenu handling
+ *
+ * Version: git-master
+ *
+ * Authors: Rodney Rehm, Addy Osmani (patches for FF)
+ * Web: http://medialize.github.com/jQuery-contextMenu/
+ *
+ * Licensed under
+ *   MIT License http://www.opensource.org/licenses/mit-license
+ *   GPL v3 http://opensource.org/licenses/GPL-3.0
+ *
+ */
+
+.context-menu-list {
+    margin:0; 
+    padding:0;
+    
+    min-width: 120px;
+    max-width: 250px;
+    display: inline-block;
+    position: absolute;
+    list-style-type: none;
+    
+    border: 1px solid #DDD;
+    background: #EEE;
+    
+    -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+       -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        -ms-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+         -o-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 11px;
+}
+
+.context-menu-item {
+	display: block;
+	width: auto;
+	height: auto;
+    padding: 2px 2px 2px 24px;
+    background-color: #EEE;
+    position: relative;
+    -webkit-user-select: none;
+       -moz-user-select: -moz-none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+.context-menu-separator {
+    padding-bottom:0;
+    border-bottom: 1px solid #DDD;
+}
+
+.context-menu-item > label > input,
+.context-menu-item > label > textarea {
+    -webkit-user-select: text;
+       -moz-user-select: text;
+        -ms-user-select: text;
+            user-select: text;
+}
+
+.context-menu-item.hover {
+    cursor: pointer;
+    background-color: #39F;
+}
+
+.context-menu-item.disabled {
+    color: #666;
+}
+
+.context-menu-input.hover,
+.context-menu-item.disabled.hover {
+    cursor: default;
+    background-color: #EEE;
+}
+
+.context-menu-submenu:after {
+    content: ">";
+    color: #666;
+    position: absolute;
+    top: 0;
+    right: 3px;
+    z-index: 1;
+}
+
+/* icons
+    #protip:
+    In case you want to use sprites for icons (which I would suggest you do) have a look at
+    http://css-tricks.com/13224-pseudo-spriting/ to get an idea of how to implement 
+    .context-menu-item.icon:before {}
+ */
+.context-menu-item.icon { min-height: 18px; background-repeat: no-repeat; background-position: 4px 2px; }
+.context-menu-item.icon-edit { background-image: url(../../../contextMenu/images/page_white_edit.png); }
+.context-menu-item.icon-cut { background-image: url(../../../contextMenu/images/cut.png); }
+.context-menu-item.icon-copy { background-image: url(../../../contextMenu/images/page_white_copy.png); }
+.context-menu-item.icon-paste { background-image: url(../../../contextMenu/images/page_white_paste.png); }
+.context-menu-item.icon-delete { background-image: url(../../../contextMenu/images/page_white_delete.png); }
+.context-menu-item.icon-add { background-image: url(../../../contextMenu/images/page_white_add.png); }
+.context-menu-item.icon-quit { background-image: url(../../../contextMenu/images/door.png); }
+
+/* vertically align inside labels */
+.context-menu-input > label > * { vertical-align: top; }
+
+/* position checkboxes and radios as icons */
+.context-menu-input > label > input[type="checkbox"],
+.context-menu-input > label > input[type="radio"] {
+    margin-left: -17px;
+}
+.context-menu-input > label > span {
+    margin-left: 5px;
+}
+
+.context-menu-input > label,
+.context-menu-input > label > input[type="text"],
+.context-menu-input > label > textarea,
+.context-menu-input > label > select {
+    display: block;
+    width: 100%;
+    
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+         -o-box-sizing: border-box;
+            box-sizing: border-box;
+}
+
+.context-menu-input > label > textarea {
+    height: 100px;
+}
+.context-menu-item > .context-menu-list {
+    display: none;
+    /* re-positioned by js */
+    right: -5px;
+    top: 5px;
+}
+
+.context-menu-item.hover > .context-menu-list {
+    display: block;
+}
+
+.context-menu-accesskey {
+    text-decoration: underline;
+}
+
+
+
+
+
+.file-size {
+	float: right;
+}
+
+.file-ext {
+	height: 16px;
+	width: 16px;
+	display: block;
+	float: left;
+	margin: 0;
+}
+
+
+
+.file { background: url(images/file.png) left top no-repeat; }
+.ext_file { background: url(images/file.png) left top no-repeat; }
+.ext_3gp { background: url(images/film.png) left top no-repeat; }
+.ext_afp { background: url(images/code.png) left top no-repeat; }
+.ext_afpa { background: url(images/code.png) left top no-repeat; }
+.ext_asp { background: url(images/code.png) left top no-repeat; }
+.ext_aspx { background: url(images/code.png) left top no-repeat; }
+.ext_avi { background: url(images/film.png) left top no-repeat; }
+.ext_bat { background: url(images/application.png) left top no-repeat; }
+.ext_bmp { background: url(images/picture.png) left top no-repeat; }
+.ext_c { background: url(images/code.png) left top no-repeat; }
+.ext_cfm { background: url(images/code.png) left top no-repeat; }
+.ext_cgi { background: url(images/code.png) left top no-repeat; }
+.ext_com { background: url(images/application.png) left top no-repeat; }
+.ext_cpp { background: url(images/code.png) left top no-repeat; }
+.ext_css { background: url(images/css.png) left top no-repeat; }
+.ext_doc { background: url(images/doc.png) left top no-repeat; }
+.ext_exe { background: url(images/application.png) left top no-repeat; }
+.ext_gif { background: url(images/picture.png) left top no-repeat; }
+.ext_fla { background: url(images/flash.png) left top no-repeat; }
+.ext_h { background: url(images/code.png) left top no-repeat; }
+.ext_htm { background: url(images/html.png) left top no-repeat; }
+.ext_html { background: url(images/html.png) left top no-repeat; }
+.ext_jar { background: url(images/java.png) left top no-repeat; }
+.ext_jpg { background: url(images/picture.png) left top no-repeat; }
+.ext_jpeg { background: url(images/picture.png) left top no-repeat; }
+.ext_js { background: url(images/script.png) left top no-repeat; }
+.ext_lasso { background: url(images/code.png) left top no-repeat; }
+.ext_log { background: url(images/txt.png) left top no-repeat; }
+.ext_m4p { background: url(images/music.png) left top no-repeat; }
+.ext_mov { background: url(images/film.png) left top no-repeat; }
+.ext_mp3 { background: url(images/music.png) left top no-repeat; }
+.ext_mp4 { background: url(images/film.png) left top no-repeat; }
+.ext_mpg { background: url(images/film.png) left top no-repeat; }
+.ext_mpeg { background: url(images/film.png) left top no-repeat; }
+.ext_ogg { background: url(images/music.png) left top no-repeat; }
+.ext_pcx { background: url(images/picture.png) left top no-repeat; }
+.ext_pdf { background: url(images/pdf.png) left top no-repeat; }
+.ext_php { background: url(images/php.png) left top no-repeat; }
+.ext_png { background: url(images/picture.png) left top no-repeat; }
+.ext_ppt { background: url(images/ppt.png) left top no-repeat; }
+.ext_psd { background: url(images/psd.png) left top no-repeat; }
+.ext_pl { background: url(images/script.png) left top no-repeat; }
+.ext_py { background: url(images/script.png) left top no-repeat; }
+.ext_rb { background: url(images/ruby.png) left top no-repeat; }
+.ext_rbx { background: url(images/ruby.png) left top no-repeat; }
+.ext_rhtml { background: url(images/ruby.png) left top no-repeat; }
+.ext_rpm { background: url(images/linux.png) left top no-repeat; }
+.ext_ruby { background: url(images/ruby.png) left top no-repeat; }
+.ext_sql { background: url(images/db.png) left top no-repeat; }
+.ext_swf { background: url(images/flash.png) left top no-repeat; }
+.ext_tif { background: url(images/picture.png) left top no-repeat; }
+.ext_tiff { background: url(images/picture.png) left top no-repeat; }
+.ext_txt { background: url(images/txt.png) left top no-repeat; }
+.ext_vb { background: url(images/code.png) left top no-repeat; }
+.ext_wav { background: url(images/music.png) left top no-repeat; }
+.ext_wmv { background: url(images/film.png) left top no-repeat; }
+.ext_xls { background: url(images/xls.png) left top no-repeat; }
+.ext_xml { background: url(images/code.png) left top no-repeat; }
+.ext_zip { background: url(images/zip.png) left top no-repeat; }

@@ -1,0 +1,139 @@
+.datatable {
+	clear: both;
+	width: 100%;
+}
+
+.css_right {
+    float: right;
+}
+
+.dataTables_wrapper {
+	position: relative;
+	min-height: 302px;
+	clear: both;
+	_height: 302px;
+	zoom: 1; /* Feeling sorry for IE */
+}
+
+.dataTables_processing {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 250px;
+	height: 30px;
+	margin-left: -125px;
+	margin-top: -15px;
+	padding: 14px 0 2px 0;
+	border: 1px solid #ddd;
+	text-align: center;
+	color: #999;
+	font-size: 14px;
+	background-color: white;
+}
+
+.dataTables_length {
+	float: right;
+	padding: 8px;
+}
+
+.dataTables_filter {
+	float: right;
+	text-align: right;
+}
+
+.dataTables_info {
+	float: left;
+	height: 28px;
+	line-height: 28px;
+	padding-left: 10px;
+}
+
+.DataTables_sort_wrapper {
+	cursor: pointer;
+	*cursor: hand;
+}
+
+.dataTables_paginate {
+	width: 44px;
+	* width: 50px;
+	float: right;
+	text-align: right;
+}
+
+
+.paging_full_numbers {
+	width: 400px;
+	padding:3px;
+}
+
+.paging_full_numbers span.paginate_button,
+.paging_full_numbers span.paginate_active {
+	border: 1px solid #aaa;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	padding: 2px 5px;
+	margin: 0 3px;
+	cursor: pointer;
+	*cursor: hand;
+}
+
+.paging_full_numbers span.paginate_button {
+	background-color: #ddd;
+}
+
+.paging_full_numbers span.paginate_button:hover {
+	background-color: #ccc;
+}
+
+.paging_full_numbers span.paginate_active {
+	background-color: #99B3FF;
+}
+
+.dataTables_wrapper tr.even.row_selected td {
+	background-color: #B0BED9;
+}
+
+
+.paging_two_button .ui-button {
+    cursor: pointer;
+    float: left;
+}
+
+.paging_full_numbers .ui-button {
+    cursor: pointer;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    padding-bottom: 2px;
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-top: 2px;
+}
+
+
+.paging_full_numbers.ui-buttonset .ui-button {
+    margin-right: -0.1em !important;
+}
+
+
+.dataTables_wrapper tr.odd.row_selected td {
+	background-color: #9FAFD1;
+}
+
+.dataTables_wrapper tr.odd {
+	background-color: #E2E4FF;
+}
+
+.dataTables_wrapper tr.even {
+	background-color: white;
+}
+
+.dataTables_wrapper tr.odd td.sorting_1 {
+	background-color: #D3D6FF;
+}
+
+.dataTables_wrapper tr.even td.sorting_1 {
+	background-color: #EAEBFF;
+}
+

@@ -1,0 +1,20 @@
+<?
+	class BASE_VIEW_APPLICATION_ERRORMESSAGES extends VIEW {
+
+		protected $_msgs 			= array();
+		protected $_message_close 	= true;
+
+		function __construct() {
+			$this->set_route("application","errormessages");
+			$this->disable_authorization();
+		}
+
+		function get_messages() 				{ return $this->_msgs; }
+		function set_message_close($value) 		{ return $this->_message_close = $value; }
+		function set_messages($msgs) 			{ $this->_msgs = $msgs; }
+		function add_messages($msgs) 			{ $this->_msgs = array_merge($this->_msgs,$msgs); }
+
+		function init() {
+			$this->set_var("message_close",$this->_message_close);
+		}
+	}

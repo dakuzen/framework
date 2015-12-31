@@ -1,0 +1,23 @@
+.table-listing .table-listing-row-odd td {
+	background-color: #F2F2F2;
+	border-top : 1px solid #DFDFDF;
+	border-bottom : 1px solid #DFDFDF;
+}
+
+table.table-form td {
+	padding: 3px;		
+}
+
+.table-listing th {
+	border-top : 1px solid #888888;
+	border-bottom : 1px solid #888888;
+	background: url(/lib/images/table/th-bg.png);
+	color : #333333;
+	height: 25px;
+	padding:0px 5px 0px 5px;
+}
+
+.table-listing td {
+	padding : 4px;
+}
+

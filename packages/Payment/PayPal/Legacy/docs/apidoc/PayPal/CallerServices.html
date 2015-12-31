@@ -1,0 +1,2397 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class CallerServices</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class CallerServices</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+					</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Interface class that wraps all WSDL ports into a unified API for  the user. Also handles PayPal-specific details like type handling,  error handling, etc.</p>
+		<p class="notes">
+			Located in <a class="field" href="_PayPal---CallerServices.php.html">/PayPal/CallerServices.php</a> (line <span class="field">35</span>)
+		</p>
+		
+				
+		<pre>SOAP_Client
+   |
+   --CallerServices</pre>
+	
+			</div>
+</div>
+
+
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+																																																								<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$_endpointMap" title="details" class="var-name">$_endpointMap</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">string</span>
+					<a href="#$_logDir" title="details" class="var-name">$_logDir</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">Log</span>
+					<a href="#$_logger" title="details" class="var-name">$_logger</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">integer</span>
+					<a href="#$_logLevel" title="details" class="var-name">$_logLevel</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type"><a href="../PayPal/APIProfile.html">APIProfile</a></span>
+					<a href="#$_profile" title="details" class="var-name">$_profile</a>
+				</div>
+											</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																				
+												<div class="method-definition">
+											<span class="method-result">CallerServices</span>
+										<a href="#CallerServices" title="details" class="method-name">CallerServices</a>
+											(<span class="var-type"><a href="../PayPal/APIProfile.html">APIProfile</a></span>&nbsp;<span class="var-name">$profile</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#AddressVerify" title="details" class="method-name">&amp;AddressVerify</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$AddressVerifyReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#BillAgreementUpdate" title="details" class="method-name">&amp;BillAgreementUpdate</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$BillAgreementUpdateReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#BillOutstandingAmount" title="details" class="method-name">&amp;BillOutstandingAmount</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$BillOutstandingAmountReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#BillUser" title="details" class="method-name">&amp;BillUser</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$BillUserReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#BMButtonSearch" title="details" class="method-name">&amp;BMButtonSearch</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$BMButtonSearchReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#BMCreateButton" title="details" class="method-name">&amp;BMCreateButton</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$BMCreateButtonReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#BMGetButtonDetails" title="details" class="method-name">&amp;BMGetButtonDetails</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$BMGetButtonDetailsReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#BMGetInventory" title="details" class="method-name">&amp;BMGetInventory</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$BMGetInventoryReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#BMManageButtonStatus" title="details" class="method-name">&amp;BMManageButtonStatus</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$BMManageButtonStatusReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#BMSetInventory" title="details" class="method-name">&amp;BMSetInventory</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$BMSetInventoryReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#BMUpdateButton" title="details" class="method-name">&amp;BMUpdateButton</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$BMUpdateButtonReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#buildAuthString" title="details" class="method-name">buildAuthString</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$auth_token</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$auth_signature</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$auth_timestamp</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#call" title="details" class="method-name">&amp;call</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$method</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$params</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$namespace</span> = <span class="var-default">false</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$soapAction</span> = <span class="var-default">false</span>])
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#CancelRecoup" title="details" class="method-name">&amp;CancelRecoup</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$CancelRecoupReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#CompleteRecoup" title="details" class="method-name">&amp;CompleteRecoup</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$CompleteRecoupReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#CreateBillingAgreement" title="details" class="method-name">&amp;CreateBillingAgreement</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$CreateBillingAgreementReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#CreateMobilePayment" title="details" class="method-name">&amp;CreateMobilePayment</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$CreateMobilePaymentReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#CreateRecurringPaymentsProfile" title="details" class="method-name">&amp;CreateRecurringPaymentsProfile</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$CreateRecurringPaymentsProfileReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#DoAuthorization" title="details" class="method-name">&amp;DoAuthorization</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$DoAuthorizationReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#DoCancel" title="details" class="method-name">&amp;DoCancel</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$DoCancelReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#DoCapture" title="details" class="method-name">&amp;DoCapture</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$DoCaptureReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#DoDirectPayment" title="details" class="method-name">&amp;DoDirectPayment</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$DoDirectPaymentReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#DoExpressCheckoutPayment" title="details" class="method-name">&amp;DoExpressCheckoutPayment</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$DoExpressCheckoutPaymentReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#DoMobileCheckoutPayment" title="details" class="method-name">&amp;DoMobileCheckoutPayment</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$DoMobileCheckoutPaymentReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#DoNonReferencedCredit" title="details" class="method-name">&amp;DoNonReferencedCredit</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$DoNonReferencedCreditReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#DoReauthorization" title="details" class="method-name">&amp;DoReauthorization</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$DoReauthorizationReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#DoReferenceTransaction" title="details" class="method-name">&amp;DoReferenceTransaction</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$DoReferenceTransactionReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#DoUATPAuthorization" title="details" class="method-name">&amp;DoUATPAuthorization</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$DoUATPAuthorizationReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#DoUATPExpressCheckoutPayment" title="details" class="method-name">&amp;DoUATPExpressCheckoutPayment</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$DoUATPExpressCheckoutPaymentReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#DoVoid" title="details" class="method-name">&amp;DoVoid</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$DoVoidReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#EnterBoarding" title="details" class="method-name">&amp;EnterBoarding</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$EnterBoardingReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#ExecuteCheckoutOperations" title="details" class="method-name">&amp;ExecuteCheckoutOperations</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$ExecuteCheckoutOperationsReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#ExternalRememberMeOptOut" title="details" class="method-name">&amp;ExternalRememberMeOptOut</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$ExternalRememberMeOptOutReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#GetAccessPermissionDetails" title="details" class="method-name">&amp;GetAccessPermissionDetails</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$GetAccessPermissionDetailsReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../PayPal/APIProfile.html">APIProfile</a></span>
+										<a href="#getAPIProfile" title="details" class="method-name">&amp;getAPIProfile</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#GetAuthDetails" title="details" class="method-name">&amp;GetAuthDetails</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$GetAuthDetailsReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#GetBalance" title="details" class="method-name">&amp;GetBalance</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$GetBalanceReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#GetBillingAgreementCustomerDetails" title="details" class="method-name">&amp;GetBillingAgreementCustomerDetails</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$GetBillingAgreementCustomerDetailsReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#GetBoardingDetails" title="details" class="method-name">&amp;GetBoardingDetails</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$GetBoardingDetailsReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#GetExpressCheckoutDetails" title="details" class="method-name">&amp;GetExpressCheckoutDetails</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$GetExpressCheckoutDetailsReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#GetIncentiveEvaluation" title="details" class="method-name">&amp;GetIncentiveEvaluation</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$GetIncentiveEvaluationReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">Log</span>
+										<a href="#getLogger" title="details" class="method-name">&amp;getLogger</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#GetMobileStatus" title="details" class="method-name">&amp;GetMobileStatus</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$GetMobileStatusReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#GetPalDetails" title="details" class="method-name">&amp;GetPalDetails</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$GetPalDetailsReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#GetRecurringPaymentsProfileDetails" title="details" class="method-name">&amp;GetRecurringPaymentsProfileDetails</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$GetRecurringPaymentsProfileDetailsReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result"><a href="../PayPal/AbstractResponseType.html">AbstractResponseType</a></span>
+										<a href="#getResponseObject" title="details" class="method-name">&amp;getResponseObject</a>
+											(<span class="var-type">array</span>&nbsp;<span class="var-name">$values</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#GetTransactionDetails" title="details" class="method-name">&amp;GetTransactionDetails</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$GetTransactionDetailsReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#InitiateRecoup" title="details" class="method-name">&amp;InitiateRecoup</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$InitiateRecoupReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#ManagePendingTransactionStatus" title="details" class="method-name">&amp;ManagePendingTransactionStatus</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$ManagePendingTransactionStatusReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#ManageRecurringPaymentsProfileStatus" title="details" class="method-name">&amp;ManageRecurringPaymentsProfileStatus</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$ManageRecurringPaymentsProfileStatusReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#MassPay" title="details" class="method-name">&amp;MassPay</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$MassPayReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#RefundTransaction" title="details" class="method-name">&amp;RefundTransaction</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$RefundTransactionReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#ReverseTransaction" title="details" class="method-name">&amp;ReverseTransaction</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$ReverseTransactionReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#SetAccessPermissions" title="details" class="method-name">&amp;SetAccessPermissions</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$SetAccessPermissionsReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setAPIProfile" title="details" class="method-name">setAPIProfile</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">&$profile</span>, <span class="var-type"><a href="../PayPal/APIProfile.html">APIProfile</a></span>&nbsp;<span class="var-name">$profile</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#SetAuthFlowParam" title="details" class="method-name">&amp;SetAuthFlowParam</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$SetAuthFlowParamReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#SetCustomerBillingAgreement" title="details" class="method-name">&amp;SetCustomerBillingAgreement</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$SetCustomerBillingAgreementReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#setEndpoint" title="details" class="method-name">setEndpoint</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$portType</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$version</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#SetExpressCheckout" title="details" class="method-name">&amp;SetExpressCheckout</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$SetExpressCheckoutReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setLogger" title="details" class="method-name">setLogger</a>
+											(<span class="var-type">Log</span>&nbsp;<span class="var-name">&$logger</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#SetMobileCheckout" title="details" class="method-name">&amp;SetMobileCheckout</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$SetMobileCheckoutReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#TransactionSearch" title="details" class="method-name">&amp;TransactionSearch</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$TransactionSearchReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#UpdateAccessPermissions" title="details" class="method-name">&amp;UpdateAccessPermissions</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$UpdateAccessPermissionsReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#UpdateRecurringPaymentsProfile" title="details" class="method-name">&amp;UpdateRecurringPaymentsProfile</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$UpdateRecurringPaymentsProfileReq</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#_decode" title="details" class="method-name">&amp;_decode</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">&$soapval</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">integer</span>
+										<a href="#_getElapsed" title="details" class="method-name">_getElapsed</a>
+											(<span class="var-type">integer</span>&nbsp;<span class="var-name">$start</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">integer</span>
+										<a href="#_getMicroseconds" title="details" class="method-name">_getMicroseconds</a>
+										()
+									</div>
+																<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#_logTransaction" title="details" class="method-name">_logTransaction</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$operation</span>, <span class="var-type">integer</span>&nbsp;<span class="var-name">$elapsed</span>, <span class="var-type">object</span>&nbsp;<span class="var-name">$response</span>)
+									</div>
+																<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#_sanitizeLog" title="details" class="method-name">_sanitizeLog</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$xml</span>)
+									</div>
+								</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="var$_endpointMap" id="$_endpointMap"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$_endpointMap</span>
+						(line <span class="line-number">53</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">The portType/environment -&gt; endpoint map.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$_logDir" id="$_logDir"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>
+			<span class="var-name">$_logDir</span>
+			 = <span class="var-default"> '/tmp'</span>			(line <span class="line-number">80</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">If we're logging, what directory should we create log files in?  Note that a log name coincides with a symlink, logging will  *not* be done to avoid security problems. File names are  &lt;DateStamp&gt;.PayPal.log.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$_logger" id="$_logger"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">Log</span>
+			<span class="var-name">$_logger</span>
+						(line <span class="line-number">89</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">The PEAR Log object we use for logging.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$_logLevel" id="$_logLevel"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">integer</span>
+			<span class="var-name">$_logLevel</span>
+			 = <span class="var-default"> PEAR_LOG_INFO</span>			(line <span class="line-number">68</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">What level should we log at? Valid levels are:    PEAR_LOG_ERR   - Log only severe errors.</p>
+<p class="description"><p>PEAR_LOG_INFO  - (default) Date/time of operation, operation name, elapsed time, success or failure indication.    PEAR_LOG_DEBUG - Full text of SOAP requests and responses and other debugging messages.</p><p>See the PayPal SDK User Guide for more details on these log  levels.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$_profile" id="$_profile"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type"><a href="../PayPal/APIProfile.html">APIProfile</a></span>
+			<span class="var-name">$_profile</span>
+						(line <span class="line-number">44</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">The profile to use in API calls.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+						
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+
+<a name="methodCallerServices" id="CallerServices"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor CallerServices</span> (line <span class="line-number">98</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Construct a new CallerServices object.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">CallerServices</span>
+		<span class="method-name">
+			CallerServices
+		</span>
+					(<span class="var-type"><a href="../PayPal/APIProfile.html">APIProfile</a></span>&nbsp;<span class="var-name">$profile</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><a href="../PayPal/APIProfile.html">APIProfile</a></span>
+				<span class="var-name">$profile</span><span class="var-description">: The profile with the username, password,                              and any other information necessary to use                              the SDK.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodAddressVerify" id="AddressVerify"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">AddressVerify</span> (line <span class="line-number">965</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;AddressVerify
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$AddressVerifyReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$AddressVerifyReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodBillAgreementUpdate" id="BillAgreementUpdate"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">BillAgreementUpdate</span> (line <span class="line-number">931</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;BillAgreementUpdate
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$BillAgreementUpdateReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$BillAgreementUpdateReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodBillOutstandingAmount" id="BillOutstandingAmount"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">BillOutstandingAmount</span> (line <span class="line-number">2189</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;BillOutstandingAmount
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$BillOutstandingAmountReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$BillOutstandingAmountReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodBillUser" id="BillUser"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">BillUser</span> (line <span class="line-number">829</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;BillUser
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$BillUserReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$BillUserReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodBMButtonSearch" id="BMButtonSearch"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">BMButtonSearch</span> (line <span class="line-number">795</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;BMButtonSearch
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$BMButtonSearchReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$BMButtonSearchReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodBMCreateButton" id="BMCreateButton"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">BMCreateButton</span> (line <span class="line-number">591</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;BMCreateButton
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$BMCreateButtonReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$BMCreateButtonReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodBMGetButtonDetails" id="BMGetButtonDetails"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">BMGetButtonDetails</span> (line <span class="line-number">693</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;BMGetButtonDetails
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$BMGetButtonDetailsReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$BMGetButtonDetailsReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodBMGetInventory" id="BMGetInventory"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">BMGetInventory</span> (line <span class="line-number">761</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;BMGetInventory
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$BMGetInventoryReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$BMGetInventoryReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodBMManageButtonStatus" id="BMManageButtonStatus"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">BMManageButtonStatus</span> (line <span class="line-number">659</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;BMManageButtonStatus
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$BMManageButtonStatusReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$BMManageButtonStatusReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodBMSetInventory" id="BMSetInventory"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">BMSetInventory</span> (line <span class="line-number">727</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;BMSetInventory
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$BMSetInventoryReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$BMSetInventoryReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodBMUpdateButton" id="BMUpdateButton"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">BMUpdateButton</span> (line <span class="line-number">625</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;BMUpdateButton
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$BMUpdateButtonReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$BMUpdateButtonReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodbuildAuthString" id="buildAuthString"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">buildAuthString</span> (line <span class="line-number">277</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Override SOAP_Client::call() to always add our security header  first.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			buildAuthString
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$auth_token</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$auth_signature</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$auth_timestamp</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$auth_token</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$auth_signature</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$auth_timestamp</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcall" id="call"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">call</span> (line <span class="line-number">284</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;call
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$method</span>, <span class="var-type"></span>&nbsp;<span class="var-name">&$params</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$namespace</span> = <span class="var-default">false</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$soapAction</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$method</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$params</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$namespace</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$soapAction</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodCancelRecoup" id="CancelRecoup"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">CancelRecoup</span> (line <span class="line-number">523</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;CancelRecoup
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$CancelRecoupReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$CancelRecoupReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodCompleteRecoup" id="CompleteRecoup"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">CompleteRecoup</span> (line <span class="line-number">489</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;CompleteRecoup
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$CompleteRecoupReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$CompleteRecoupReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodCreateBillingAgreement" id="CreateBillingAgreement"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">CreateBillingAgreement</span> (line <span class="line-number">1951</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;CreateBillingAgreement
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$CreateBillingAgreementReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$CreateBillingAgreementReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodCreateMobilePayment" id="CreateMobilePayment"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">CreateMobilePayment</span> (line <span class="line-number">1067</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;CreateMobilePayment
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$CreateMobilePaymentReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$CreateMobilePaymentReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodCreateRecurringPaymentsProfile" id="CreateRecurringPaymentsProfile"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">CreateRecurringPaymentsProfile</span> (line <span class="line-number">2087</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;CreateRecurringPaymentsProfile
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$CreateRecurringPaymentsProfileReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$CreateRecurringPaymentsProfileReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodDoAuthorization" id="DoAuthorization"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">DoAuthorization</span> (line <span class="line-number">1849</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;DoAuthorization
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$DoAuthorizationReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$DoAuthorizationReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodDoCancel" id="DoCancel"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">DoCancel</span> (line <span class="line-number">1713</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;DoCancel
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$DoCancelReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$DoCancelReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodDoCapture" id="DoCapture"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">DoCapture</span> (line <span class="line-number">1747</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;DoCapture
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$DoCaptureReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$DoCaptureReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodDoDirectPayment" id="DoDirectPayment"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">DoDirectPayment</span> (line <span class="line-number">1645</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;DoDirectPayment
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$DoDirectPaymentReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$DoDirectPaymentReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodDoExpressCheckoutPayment" id="DoExpressCheckoutPayment"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">DoExpressCheckoutPayment</span> (line <span class="line-number">1271</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;DoExpressCheckoutPayment
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$DoExpressCheckoutPaymentReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$DoExpressCheckoutPaymentReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodDoMobileCheckoutPayment" id="DoMobileCheckoutPayment"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">DoMobileCheckoutPayment</span> (line <span class="line-number">1169</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;DoMobileCheckoutPayment
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$DoMobileCheckoutPaymentReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$DoMobileCheckoutPaymentReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodDoNonReferencedCredit" id="DoNonReferencedCredit"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">DoNonReferencedCredit</span> (line <span class="line-number">2019</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;DoNonReferencedCredit
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$DoNonReferencedCreditReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$DoNonReferencedCreditReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodDoReauthorization" id="DoReauthorization"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">DoReauthorization</span> (line <span class="line-number">1781</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;DoReauthorization
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$DoReauthorizationReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$DoReauthorizationReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodDoReferenceTransaction" id="DoReferenceTransaction"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">DoReferenceTransaction</span> (line <span class="line-number">1985</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;DoReferenceTransaction
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$DoReferenceTransactionReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$DoReferenceTransactionReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodDoUATPAuthorization" id="DoUATPAuthorization"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">DoUATPAuthorization</span> (line <span class="line-number">2053</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;DoUATPAuthorization
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$DoUATPAuthorizationReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$DoUATPAuthorizationReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodDoUATPExpressCheckoutPayment" id="DoUATPExpressCheckoutPayment"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">DoUATPExpressCheckoutPayment</span> (line <span class="line-number">1305</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;DoUATPExpressCheckoutPayment
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$DoUATPExpressCheckoutPaymentReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$DoUATPExpressCheckoutPaymentReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodDoVoid" id="DoVoid"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">DoVoid</span> (line <span class="line-number">1815</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;DoVoid
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$DoVoidReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$DoVoidReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodEnterBoarding" id="EnterBoarding"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">EnterBoarding</span> (line <span class="line-number">999</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;EnterBoarding
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$EnterBoardingReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$EnterBoardingReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodExecuteCheckoutOperations" id="ExecuteCheckoutOperations"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">ExecuteCheckoutOperations</span> (line <span class="line-number">1577</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;ExecuteCheckoutOperations
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$ExecuteCheckoutOperationsReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$ExecuteCheckoutOperationsReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodExternalRememberMeOptOut" id="ExternalRememberMeOptOut"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">ExternalRememberMeOptOut</span> (line <span class="line-number">2291</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;ExternalRememberMeOptOut
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$ExternalRememberMeOptOutReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$ExternalRememberMeOptOutReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodGetAccessPermissionDetails" id="GetAccessPermissionDetails"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">GetAccessPermissionDetails</span> (line <span class="line-number">1475</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;GetAccessPermissionDetails
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$GetAccessPermissionDetailsReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$GetAccessPermissionDetailsReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetAPIProfile" id="getAPIProfile"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getAPIProfile</span> (line <span class="line-number">235</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Get the current profile.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> The current profile.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../PayPal/APIProfile.html">APIProfile</a></span>
+		<span class="method-name">
+			&amp;getAPIProfile
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodGetAuthDetails" id="GetAuthDetails"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">GetAuthDetails</span> (line <span class="line-number">1373</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;GetAuthDetails
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$GetAuthDetailsReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$GetAuthDetailsReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodGetBalance" id="GetBalance"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">GetBalance</span> (line <span class="line-number">1203</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;GetBalance
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$GetBalanceReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$GetBalanceReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodGetBillingAgreementCustomerDetails" id="GetBillingAgreementCustomerDetails"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">GetBillingAgreementCustomerDetails</span> (line <span class="line-number">1917</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;GetBillingAgreementCustomerDetails
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$GetBillingAgreementCustomerDetailsReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$GetBillingAgreementCustomerDetailsReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodGetBoardingDetails" id="GetBoardingDetails"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">GetBoardingDetails</span> (line <span class="line-number">1033</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;GetBoardingDetails
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$GetBoardingDetailsReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$GetBoardingDetailsReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodGetExpressCheckoutDetails" id="GetExpressCheckoutDetails"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">GetExpressCheckoutDetails</span> (line <span class="line-number">1611</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;GetExpressCheckoutDetails
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$GetExpressCheckoutDetailsReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$GetExpressCheckoutDetailsReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodGetIncentiveEvaluation" id="GetIncentiveEvaluation"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">GetIncentiveEvaluation</span> (line <span class="line-number">1509</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;GetIncentiveEvaluation
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$GetIncentiveEvaluationReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$GetIncentiveEvaluationReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetLogger" id="getLogger"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getLogger</span> (line <span class="line-number">246</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Gets the PEAR Log object to use.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> A Log object, either provided by the user or               created by this function.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Log</span>
+		<span class="method-name">
+			&amp;getLogger
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodGetMobileStatus" id="GetMobileStatus"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">GetMobileStatus</span> (line <span class="line-number">1101</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;GetMobileStatus
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$GetMobileStatusReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$GetMobileStatusReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodGetPalDetails" id="GetPalDetails"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">GetPalDetails</span> (line <span class="line-number">1237</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;GetPalDetails
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$GetPalDetailsReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$GetPalDetailsReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodGetRecurringPaymentsProfileDetails" id="GetRecurringPaymentsProfileDetails"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">GetRecurringPaymentsProfileDetails</span> (line <span class="line-number">2121</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;GetRecurringPaymentsProfileDetails
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$GetRecurringPaymentsProfileDetailsReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$GetRecurringPaymentsProfileDetailsReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetResponseObject" id="getResponseObject"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getResponseObject</span> (line <span class="line-number">181</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Take the decoded array from SOAP_Client::__call() and turn it  into an object of the appropriate AbstractResponseType  subclass.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> The response object.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../PayPal/AbstractResponseType.html">AbstractResponseType</a></span>
+		<span class="method-name">
+			&amp;getResponseObject
+		</span>
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">$values</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$values</span><span class="var-description">: The decoded SOAP response.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span><span class="var-description">: The type of the response object.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodGetTransactionDetails" id="GetTransactionDetails"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">GetTransactionDetails</span> (line <span class="line-number">557</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;GetTransactionDetails
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$GetTransactionDetailsReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$GetTransactionDetailsReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodInitiateRecoup" id="InitiateRecoup"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">InitiateRecoup</span> (line <span class="line-number">455</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;InitiateRecoup
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$InitiateRecoupReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$InitiateRecoupReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodManagePendingTransactionStatus" id="ManagePendingTransactionStatus"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">ManagePendingTransactionStatus</span> (line <span class="line-number">1679</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;ManagePendingTransactionStatus
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$ManagePendingTransactionStatusReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$ManagePendingTransactionStatusReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodManageRecurringPaymentsProfileStatus" id="ManageRecurringPaymentsProfileStatus"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">ManageRecurringPaymentsProfileStatus</span> (line <span class="line-number">2155</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;ManageRecurringPaymentsProfileStatus
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$ManageRecurringPaymentsProfileStatusReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$ManageRecurringPaymentsProfileStatusReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodMassPay" id="MassPay"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">MassPay</span> (line <span class="line-number">897</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;MassPay
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$MassPayReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$MassPayReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodRefundTransaction" id="RefundTransaction"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">RefundTransaction</span> (line <span class="line-number">421</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;RefundTransaction
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$RefundTransactionReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$RefundTransactionReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodReverseTransaction" id="ReverseTransaction"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">ReverseTransaction</span> (line <span class="line-number">2257</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;ReverseTransaction
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$ReverseTransactionReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$ReverseTransactionReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodSetAccessPermissions" id="SetAccessPermissions"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">SetAccessPermissions</span> (line <span class="line-number">1407</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;SetAccessPermissions
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$SetAccessPermissionsReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$SetAccessPermissionsReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetAPIProfile" id="setAPIProfile"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setAPIProfile</span> (line <span class="line-number">225</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Use a given profile.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setAPIProfile
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">&$profile</span>, <span class="var-type"><a href="../PayPal/APIProfile.html">APIProfile</a></span>&nbsp;<span class="var-name">$profile</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><a href="../PayPal/APIProfile.html">APIProfile</a></span>
+				<span class="var-name">$profile</span><span class="var-description">: The profile with the username, password,                              and any other information necessary to use                              the SDK.</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$profile</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodSetAuthFlowParam" id="SetAuthFlowParam"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">SetAuthFlowParam</span> (line <span class="line-number">1339</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;SetAuthFlowParam
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$SetAuthFlowParamReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$SetAuthFlowParamReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodSetCustomerBillingAgreement" id="SetCustomerBillingAgreement"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">SetCustomerBillingAgreement</span> (line <span class="line-number">1883</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;SetCustomerBillingAgreement
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$SetCustomerBillingAgreementReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$SetCustomerBillingAgreementReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetEndpoint" id="setEndpoint"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setEndpoint</span> (line <span class="line-number">145</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets the WSDL endpoint based on $portType and on the environment  set in the user's profile.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> | PayPal_Error  An error if mapping can't be done, else true.</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			setEndpoint
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$portType</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$version</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$portType</span><span class="var-description">: The portType the current operation is part of.</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$version</span><span class="var-description">: The WSDL version being used.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodSetExpressCheckout" id="SetExpressCheckout"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">SetExpressCheckout</span> (line <span class="line-number">1543</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;SetExpressCheckout
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$SetExpressCheckoutReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$SetExpressCheckoutReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetLogger" id="setLogger"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setLogger</span> (line <span class="line-number">266</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Sets a custom PEAR Log object to use in logging.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setLogger
+		</span>
+					(<span class="var-type">Log</span>&nbsp;<span class="var-name">&$logger</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">Log</span>
+				<span class="var-name">&$logger</span><span class="var-description">: A PEAR Log instance.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodSetMobileCheckout" id="SetMobileCheckout"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">SetMobileCheckout</span> (line <span class="line-number">1135</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;SetMobileCheckout
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$SetMobileCheckoutReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$SetMobileCheckoutReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodTransactionSearch" id="TransactionSearch"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">TransactionSearch</span> (line <span class="line-number">863</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;TransactionSearch
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$TransactionSearchReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$TransactionSearchReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodUpdateAccessPermissions" id="UpdateAccessPermissions"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">UpdateAccessPermissions</span> (line <span class="line-number">1441</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;UpdateAccessPermissions
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$UpdateAccessPermissionsReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$UpdateAccessPermissionsReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodUpdateRecurringPaymentsProfile" id="UpdateRecurringPaymentsProfile"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">UpdateRecurringPaymentsProfile</span> (line <span class="line-number">2223</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;UpdateRecurringPaymentsProfile
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$UpdateRecurringPaymentsProfileReq</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$UpdateRecurringPaymentsProfileReq</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_decode" id="_decode"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_decode</span> (line <span class="line-number">316</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Override some of the default SOAP:: package _decode behavior to  handle simpleTypes and complexTypes with simpleContent.</p>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			&amp;_decode
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">&$soapval</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$soapval</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_getElapsed" id="_getElapsed"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">_getElapsed</span> (line <span class="line-number">416</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Return the difference between now and $start in microseconds.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Number of microseconds elapsed since $start</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">integer</span>
+		<span class="method-name">
+			_getElapsed
+		</span>
+					(<span class="var-type">integer</span>&nbsp;<span class="var-name">$start</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">integer</span>
+				<span class="var-name">$start</span><span class="var-description">: Start time including microseconds.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_getMicroseconds" id="_getMicroseconds"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_getMicroseconds</span> (line <span class="line-number">401</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Return the current time including microseconds.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> Current time with microseconds.</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">integer</span>
+		<span class="method-name">
+			_getMicroseconds
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="method_logTransaction" id="_logTransaction"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">_logTransaction</span> (line <span class="line-number">352</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Log the current transaction depending on the current log level.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			_logTransaction
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$operation</span>, <span class="var-type">integer</span>&nbsp;<span class="var-name">$elapsed</span>, <span class="var-type">object</span>&nbsp;<span class="var-name">$response</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$operation</span><span class="var-description">: The operation called.</span>			</li>
+					<li>
+				<span class="var-type">integer</span>
+				<span class="var-name">$elapsed</span><span class="var-description">: Microseconds taken.</span>			</li>
+					<li>
+				<span class="var-type">object</span>
+				<span class="var-name">$response</span><span class="var-description">: The response object.</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_sanitizeLog" id="_sanitizeLog"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_sanitizeLog</span> (line <span class="line-number">385</span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Strip sensitive information (API passwords and credit card  numbers) from raw XML requests/responses.</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> The sanitized XML.</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			_sanitizeLog
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$xml</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$xml</span><span class="var-description">: The XML to sanitize.</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+
+	<p class="notes" id="credit">
+		Documentation generated on Tue, 17 Jul 2012 09:23:32 +0000 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
+	</p>
+	</div></body>
+</html>

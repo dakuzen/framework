@@ -1,0 +1,32 @@
+<?
+	require_once("connectors/__prepend.inc");
+
+	$html_editor_cmodel = new BASE_CMODEL_HTML_EDITOR();
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link href="browser.css" type="text/css" rel="stylesheet">
+		<script type="text/javascript" src="js/common.js"></script>
+		<script language="javascript">
+
+			function SetResourceType( type ) {
+				window.parent.frames["frmFolders"].SetResourceType( type ) ;
+			}
+
+		</script>
+	</head>
+	<body bottomMargin="0" topMargin="0">
+		<table height="100%" cellSpacing="0" cellPadding="0" width="100%" border="0">
+			<tr>
+				<td nowrap>
+					Resource Type<BR>
+					<?=HTML_UTIL::get_dropdown("cmbType",$html_editor_cmodel->get_allowed_resource_type_list(),"",array("onchange"=>"SetResourceType(this.value);"));?>
+
+					</select>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>

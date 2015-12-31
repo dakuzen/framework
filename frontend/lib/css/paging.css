@@ -1,0 +1,46 @@
+.paging {
+	padding: 10px 0px 0px 0px;
+}
+
+
+.paging-link {
+	border : 1px solid #CCCCCC;
+	padding: 0px;
+}
+
+.paging-link:link {
+	color : #333;
+	text-decoration : none;
+	background: url(/lib/images/paging/th-bg.png);
+}
+
+.paging-link-page-selected:link {
+	
+}
+
+.paging-link-page-selected {
+	font-weight: bold;
+}
+
+
+.paging-link:hover {
+	background: url(/lib/images/paging/th-bg-hover.png);
+	text-decoration : none;
+}
+
+.paging-link span {
+	padding: 0px 6px 0 6px;
+}
+
+.paging-link-page, .paging-link-next, .paging-link-back {
+	width: 25px;
+	text-align : center;
+}
+
+#paging-pages {
+	text-align : center;
+}
+
+.page_limit {
+	background: url(/lib/images/paging/th-bg.png);
+}

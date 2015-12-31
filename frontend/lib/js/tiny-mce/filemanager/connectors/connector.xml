@@ -1,0 +1,265 @@
+<?php 
+	require_once("__prepend.inc");
+	
+	DEBUG_UTIL::enable_format_text();
+	
+	class FILE_MANAGER {
+	
+		protected $_enabled 			= true;
+		protected $_root_directory 		= "";
+		protected $_root_url			= "";
+		protected $_file_manager_xml		= null;
+		protected $_allowed_extensions 		= array();
+		protected $_allowed_resource_types 	= array();
+		
+		function __construct() {
+			
+			
+			$this->_allowed_extensions[BASE_CMODEL_HTML_EDITOR::TYPE_IMAGE]	= array('jpg','gif','jpeg','png') ;
+			$this->_allowed_extensions[BASE_CMODEL_HTML_EDITOR::TYPE_FLASH]	= array('swf','fla') ;
+			$this->_allowed_extensions[BASE_CMODEL_HTML_EDITOR::TYPE_FILE]	= array('pdf','doc','docx','xls','xlsx','txt') ;
+			$this->_allowed_extensions[BASE_CMODEL_HTML_EDITOR::TYPE_MEDIA]	= array('swf','fla','jpg','gif','jpeg','png','avi','mpg','mpeg');	
+			
+			$this->_file_manager_xml = new FILE_MANAGER_XML();
+			
+			$html_editor_cmodel = new BASE_CMODEL_HTML_EDITOR();
+			
+			$this->_root_directory 		= FILE_UTIL::get_sanitized_directory($html_editor_cmodel->get_root_directory());
+			$this->_root_url 		= $html_editor_cmodel->get_root_url();
+			$this->_allowed_resource_types	= $html_editor_cmodel->get_allowed_resource_types();			
+		}
+		
+		function process_request() {
+			
+			if(!$this->_enabled)
+				$this->_file_manager_xml->add_error('Uploads are currently disabled',1);
+
+			$get = REGISTRY::get_instance()->get_get_parms();
+
+			$command	= get_value($get,'Command');
+			$resource_type	= get_value($get,'Type');
+			$current_folder	= get_value($get,'CurrentFolder');			
+			
+			$this->process_command($command,$resource_type,$current_folder,$get);
+			
+			$this->_file_manager_xml->send_xml();
+		}
+		
+		function process_command($command,$resource_type,$current_folder,$get) {
+			
+			if(!$this->_root_directory) {
+				$this->_file_manager_xml->add_error('Invalid root directory',5);
+				return false;
+			}
+			
+			if(!$this->_root_url) {
+				$this->_file_manager_xml->add_error('Invalid root url',6);
+				return false;
+			}			
+			
+			if(!$current_folder || strpos($current_folder, '..')) {
+				$this->_file_manager_xml->add_error('Invalid current folder',2);
+				return false;			
+			}
+			
+			if(!$resource_type) 
+				$resource_type = get_value($this->_allowed_resource_types,0);
+			
+			if(!in_array( $resource_type, $this->_allowed_resource_types)) {
+				$this->_file_manager_xml->add_error('Invalid resource type',3);
+				return false;			
+			}
+			
+			$current_url = $this->get_url($resource_type,$current_folder);
+			
+			$this->_file_manager_xml->set_header($command, $resource_type, $current_folder, $current_url);
+	
+			switch ( $command ) {
+				case 'GetFolders' :
+					$this->process_folders_files($resource_type, $current_folder, false);
+					break ;
+				
+				case 'GetFoldersAndFiles' :
+					$this->process_folders_files($resource_type, $current_folder);
+					break ;
+				
+				case 'CreateFolder' :
+					$newFolderName = get_value($get,'NewFolderName');
+					$this->create_folder($resource_type, $current_folder, $newFolderName);
+					break ;
+				
+				case 'FileUpload' :
+					$this->process_upload($resource_type, $current_folder);
+					break ;
+			}
+			
+		}
+		
+		function get_directory($resource_type,$current_folder) {
+			$base_dir = $this->_root_directory.$resource_type.DIRECTORY_SEPARATOR;
+			return FILE_UTIL::get_sanitized_directory($base_dir.$current_folder);
+		}
+		
+		function get_url($resource_type,$current_folder) {
+			$url = $this->_root_url.$resource_type."/".$current_folder;
+			return STRING_UTIL::get_sanitized_url($url);
+		}		
+		
+		function process_folders_files($resource_type, $current_folder,$include_files=true) {
+			
+			$dir = $this->get_directory($resource_type, $current_folder);
+
+			$folder_list = $file_list = array() ;
+
+			$files = FILE_UTIL::get_directory_listing($dir);
+			
+			foreach($files as $file) {
+				
+				if (is_dir($dir.$file))
+					$folder_list[] = '<Folder name="'.$file.'" />' ;
+				
+				elseif($include_files) {
+					$size = filesize($dir.$file);
+					if ( $size > 0 ) {
+						$size = round( $size / 1024 ) ;
+						if ( $size < 1 ) 
+							$size = 1 ;
+					}
+
+					$file_list[] = '<File name="' . $file . '" size="' . $size . '" />' ;
+				}
+			}
+
+			natcasesort($folder_list);
+			$xml = '<Folders>' ;
+
+			foreach ( $folder_list as $folder )
+				$xml .= $folder ;
+
+			$xml .= '</Folders>';
+
+			natcasesort( $file_list );
+			
+			if($include_files) {
+				$xml .= '<Files>';
+
+				foreach ($file_list as $file)
+					$xml .= $file;
+
+				$xml .= '</Files>';
+			}
+			
+			$this->_file_manager_xml->append($xml);
+		}
+		
+		function create_folder($resource_type, $current_folder, $new_folder) {
+			
+			if (!$new_folder) {
+				$this->_file_manager_xml->add_error('No folder name supplied',102);
+				return false;			
+			}
+
+			if(strpos($new_folder,'..') !== false ) {
+				$this->_file_manager_xml->add_error('Invalid folder name supplied',103);
+				return false;	
+			}
+			
+			$dir = $this->get_directory($resource_type, $current_folder);
+			
+			FILE_UTIL::mkdir($dir);
+			
+			if(!is_writable($dir)) {
+				$this->_file_manager_xml->add_error("Permission denied " . $dir);
+				return false;	
+			} 
+			
+			$has_success = FILE_UTIL::mkdir($dir.$new_folder);
+			
+			if(!$has_success) {
+				$this->_file_manager_xml->add_error("Failed to create directory");
+				return false;	
+			}
+			
+			return true;
+		}
+
+		function process_upload($resource_type, $current_folder) {
+			
+			$message = "";
+			$has_success = false;
+			
+			$valid_extensions = get_value($this->_allowed_extensions,$resource_type,array());
+			
+			
+			$upload_util = new UPLOAD_UTIL("NewFile");
+			$upload_util->enable_override();
+			$upload_util->set_valid_extensions($valid_extensions);
+			
+			if($upload_util->is_file_upload_exist()) {
+				
+				$dir = $this->get_directory($resource_type, $current_folder);
+
+				FILE_UTIL::mkdir($dir);
+				
+				$upload_util->set_store_path($dir);
+
+				$has_success = $upload_util->upload();
+
+				if(!$has_success) {
+					$error_number = 100;
+					$message = $upload_util->get_error_message();
+				}
+			} else
+				$message = "Uploaded file does not exist";
+			
+			$this->_file_manager_xml->disable();
+			
+			echo '<script type="text/javascript">';			
+			echo 'window.parent.frames["frmUpload"].OnUploadCompleted(' . ($has_success ? 1 : 0). ',"'.$message.'") ;' ;
+			echo '</script>';				
+		}		
+	}
+	
+	
+	class FILE_MANAGER_XML {
+	
+		protected $_xml 	= "";
+		protected $_is_enabled	= true;
+	
+		function send_xml() {
+			
+			if($this->_is_enabled) {
+
+				header('Expires: Mon, 26 Jul 1997 05:00:00 GMT') ;
+				header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT') ;
+				header('Cache-Control: no-store, no-cache, must-revalidate') ;
+				header('Cache-Control: post-check=0, pre-check=0', false) ;
+				header('Pragma: no-cache') ;
+				header( 'Content-Type:text/xml; charset=utf-8' ) ;
+
+				echo '<?xml version="1.0" encoding="utf-8" ?>' ;
+				echo "<Connector>\n";
+				echo $this->_xml;
+				echo "</Connector>";
+			}	
+		}
+
+		function set_header($command, $resource_type, $current_folder, $current_url) {
+			$this->append('<CurrentFolder path="'.htmlspecialchars($current_folder).'" url="'.htmlspecialchars($current_url).'" />');
+		}
+
+
+		function add_error($message,$number="") {			
+			$this->append('<Error number="'.$number.'" message="'.htmlspecialchars($message).'" />');
+		}
+		
+		function append($xml) {			
+			$this->_xml .= $xml;
+		}
+		
+		function disable() { $this->_is_enabled = false; }
+	}
+	
+	
+	$file_manager = new FILE_MANAGER();
+	$file_manager->process_request();

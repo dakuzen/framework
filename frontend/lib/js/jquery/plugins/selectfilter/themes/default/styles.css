@@ -1,0 +1,64 @@
+
+.select-filter-search-input {
+	width: 250px;
+}
+
+.select-filter-search-button-pane {
+	float: left;
+	
+}
+
+.select-filter-search-label-pane,
+.select-filter-search-label-pane,
+.select-filter-search-input-pane {
+	float: left;
+	padding-right: 10px;
+	height: 23px;
+	line-height: 23px;
+}
+
+.select-filter-heading {
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.select-filter-done-button-pane {
+	padding-top: 10px;
+}
+
+#select-filter-result,
+#select-filter-selected {
+	border: 1px solid #ccc;	
+	overflow-y: scroll;
+}
+
+.select-filter-move-button {
+	padding: 5px 10px 5px 10px;
+}
+
+.select-filter-selected,
+.select-filter-result {
+	padding: 4px;
+	margin: 2px;
+	border: 1px solid #ccc;	
+	cursor: pointer;
+}
+
+.select-filter-selected.selected,
+.select-filter-result.selected {
+	background-color: #ccc;
+}
+
+.select-filter-search {
+	
+}
+
+.select-filter-info {
+	font-size: smaller;
+	clear: both;
+}
+
+.select-filter-selects {
+	clear: both;
+	padding-top: 15px;
+}

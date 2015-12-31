@@ -1,0 +1,133 @@
+
+#select-pane {
+	z-index: 999;
+	background: #fff;
+	position: absolute;
+}
+
+#select-container {
+	padding: 4px;
+}
+
+#select-pane .select-controls {
+	padding: 3px inherit 6px inherit;
+}
+
+#select-pane .select-check {
+	margin-right: 10px;
+}
+
+#select-pane ul {
+	max-height: 400px;
+	overflow-y: auto;
+	margin: 0px;
+	clear: both;
+	padding: 0;
+}
+
+#select-pane li {
+	margin: 0px;
+	padding: 4px 5px 4px 5px;
+	list-style: none;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;	
+}
+
+#select-pane li.hover {
+	background: #efefef;
+}
+
+#select-pane li label {
+	margin-left: 5px;
+}
+
+.select-base .filters {
+	height: 100%;
+}
+
+.select-base .filter {
+	padding: 0 4px 0 4px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	background: #0088cc;
+	color: #fff;
+	display: inline-block;
+	float: left;
+	height: 80%;
+	top: 10%;
+	margin-right: 5px;
+	position: relative;
+	line-height: 25px;
+	margin-bottom: 5px;
+}
+
+.select-base .filter a {
+	color: #fff;
+	text-decoration: none;
+}
+
+
+.select-base input.select-input {
+	float: left;
+	min-width: 50px;
+	width: auto;
+	clear: right;
+	height: 100%;
+	margin-bottom: 5px;
+}
+
+.select-base input.select-input,
+.select-base input.select-input:focus {
+	border: 0;
+	outline: 0;
+	outline: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+}
+
+.filter-list {
+	height: 100%;
+}
+
+.select-base {
+	min-width: 350px;
+	padding-left: 40px;
+	margin-bottom: 0;
+	color: #555;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	background-color: #fff;
+	border: 1px solid #ccc;
+	display: inline-block;
+	position: relative;
+	padding-top: 5px;
+}
+
+.select-base .icon-remove {
+	height: 11px;
+	background: url("img/remove.png") no-repeat;
+	background-size: 100% 100%;
+	width: 11px;
+	display: inline-block;
+	margin-left: 4px;
+}
+
+.select-base .select-icon {
+	margin-top: -5px;
+	position: absolute;
+	width: 32px;
+	height: 100%;
+	background: #eeeeee url("img/select-icon.png") no-repeat;
+	background-size: 70%;
+	background-position: 50% 50%;
+	border-right: 1px solid #ccc;
+	left: 0;
+}
+
+.select-base data {
+	display: none;
+}

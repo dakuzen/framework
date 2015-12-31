@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Untitled Page</title>
+	</head>
+	<body>
+		<h2>
+			PHP SDK</h2>
+		PHP application demonstrating PayPal Web Service calls, including Direct
+		Payment and Express Checkout. The latest upgrades, FAQs and announcements can
+		always be found at http://www.paypal.com/sdk. Developer Support for the SDK can
+		also be found at https://www.paypal.com/mts <br>
+		<br>
+		Please note the SDK is compatible with PHP versions 5.1.2 and higher.
+		<br>
+		<br>
+		You must also have the curl and openssl extensions enabled.<br>
+		
+    <h2>
+    Documentation</h2>
+		<p>
+			<a href="http://www.paypal.com/mts">PayPal Integration
+				Center</a>
+			<br>
+			<a href="https://www.paypal.com/IntegrationCenter/ic_documentation.html">PayPal
+				User Guides</a>
+			<br>
+			<a href="docs/apidoc/index.html">API Documentation</a>
+		</p>
+		<h2>
+			SAMPLES</h2>
+		<p>
+			Run the following PHP command from within your installation directory to
+			install the samples
+		</p>
+		<pre>php install.php</pre>
+		<p>
+			At the prompt for your target web directory, enter the name of the directory
+			where you wish to install the SDK samples (eg.
+			/usr/local/apache/htdocs/php-sdk). If your application is on a shared server,
+			enter the full path to a subdirectory of your public HTML directory into which
+			the installer will copy the SDK sample files. The directory should not
+			previously exist on your server.
+		</p>
+		If you see no error messages, the installation was successful. To verify
+		installation, browse to the installation directory and you should see the paypal_php_samples directory<P>To run the samples:</P>
+		Go to
+		<pre>
+http://www.mydomain.com/&lt;targetDir&gt;/paypal_php_samples/index.php
+<br >
+&nbsp;</pre>
+<h2>
+			Providing Proxy Support</h2>
+		<P>Right now, if the user is behind proxy,unable to make a API call to PayPal.
+		<p>"SDKProxyProperties.php"(&lt;installation directory&gt;/php-sdk/lib/PayPal/) is the configuration file for Proxy setup.</p>
+		<p>Update the following variables in "SDKProxyProperties.php" for Proxy configuration.</p>
+		<ul>
+			<li>USE_PROXY&nbsp;&nbsp;&nbsp; - Set this variable to TRUE to route all the API requests through Proxy(by default it is FALSE).</a></li>
+			<li>PROXY_HOST - Set this variable to Proxy Server name or IP address </a></li>
+			<li>PROXY_PORT - Set this variable to Proxy Server port </a></li>
+			<li>PROXY_USER - Set this variable to Proxy Server user id (optional) </a></li>
+			<li>PROXY_PASSWORD - Set this variable to Proxy Server password (optional) </a></li>
+		</ul>
+		
+			<h3>NOTE:</h3>
+			<p>Since PHP does not support "-" in variable names,sdk WSDL proxy generator will replace it by "_".<br>Before sending the xml request string, "_" has to be replaced by "-" back and this will be done by '/PayPal/SOAP/PatternReplace.php' which is called in '/PayPal/SOAP/client.php'.
+			Uncomment the line in client.php if any wsdl tag element with "-" is in use(like "cpp_header_image")</p>
+			<h2>LICENSING</h2>
+		<p>Read the "LICENSE.txt" file for important legal information regarding the PayPal
+			SDK.</p> 
+	</body>
+</html>

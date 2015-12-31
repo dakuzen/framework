@@ -1,0 +1,132 @@
+.coder * {
+	font-family: monospace;
+}
+
+#url {
+	font-size: small;
+}
+
+#metas {
+	display: none;
+}
+
+#metas .type {
+	float: left;
+	width: 25%;
+	padding-right: 15px;
+}
+
+#metas .content {
+	float: left;
+	width: 75%;
+	white-space: nowrap;
+}
+
+#metas .content a {
+	margin-left: 4px;
+}
+
+#metas .content input {
+	width: 97%;
+}
+
+#metas .type select {
+	width: 100%;
+}
+
+#metas .meta {
+	padding-bottom: 10px;
+	clear: both;
+}
+
+#imagemanager-body {
+	padding: 10px 40px 10px 40px;
+	min-height: 400px;
+	position: relative;
+}
+
+#imagemanager-body .location {
+	padding: 5px 0px 5px;
+	clear: both;
+}
+
+#imagemanager-body .upload {
+	float: right;
+}
+
+#imagemanager-body a {
+	text-decoration: none;
+}
+
+#imagemanager-body .location a:after {
+    content: " / ";
+}
+
+#imagemanager-body .location a:last-child:after {
+    content: "";
+}
+
+#redactor-modal-box {
+	z-index: 99999999;
+}
+
+#imagemanager-body .back {
+	display: none;
+}
+
+#imagemanager-body .clear {
+	clear: both;
+}
+
+#imagemanager-body .files {
+	max-height: 550px;
+	overflow-y: auto;
+}
+
+#imagemanager-body .item {
+	float: left;
+	margin: 5px;
+	padding: 5px;
+	border: 1px solid transparent;
+	text-decoration: none;
+	border-radius: 3px;
+}
+
+#imagemanager-body .preview {
+	width: 145px;
+	height: 145px;
+}
+
+#imagemanager-body .item-file:hover,
+#imagemanager-body .item-dir:hover,
+#imagemanager-body .item-file.selected {
+	border: 1px solid #ccc;
+}
+
+#imagemanager-body .item-file img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+#imagemanager-body .item-file img {
+
+}
+
+#imagemanager-body .filename {
+	width: 145px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+    font-size: 12px;
+    white-space: nowrap;
+    text-align: center;
+}
+
+#imagemanager-body .item-dir i {
+    font-size: 120px;
+}
+
+
+
+.redactor-toolbar {
+    box-shadow: none !important;
+}

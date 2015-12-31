@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs for page CallerServices.php</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="file-name">/PayPal/CallerServices.php</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+							<a href="#sec-classes">Classes</a>
+			|							<a href="#sec-includes">Includes</a>
+			|							<a href="#sec-constants">Constants</a>
+										</div>
+	<div class="info-box-body">	
+		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">File containing the API calling code. Partially generated from the  WSDL - CallerServices.php.in contains the base file with a  placeholder for generated functions and the WSDL version.</p>
+		
+			</div>
+</div>
+		
+	<a name="sec-classes"></a>	
+	<div class="info-box">
+		<div class="info-box-title">Classes</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+			<span class="disabled">Classes</span>
+			|							<a href="#sec-includes">Includes</a>
+				|										<a href="#sec-constants">Constants</a>
+															</div>
+		<div class="info-box-body">	
+			<table cellpadding="2" cellspacing="0" class="class-table">
+				<tr>
+					<th class="class-table-header">Class</th>
+					<th class="class-table-header">Description</th>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em; vertical-align: top">
+						<a href="../PayPal/CallerServices.html">CallerServices</a>
+					</td>
+					<td>
+											Interface class that wraps all WSDL ports into a unified API for  the user. Also handles PayPal-specific details like type handling,  error handling, etc.
+										</td>
+				</tr>
+							</table>
+		</div>
+	</div>
+
+	<a name="sec-includes"></a>	
+	<div class="info-box">
+		<div class="info-box-title">Includes</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-classes">Classes</a>
+				|						<span class="disabled">Includes</span>
+			|							<a href="#sec-constants">Constants</a>
+															</div>
+		<div class="info-box-body">	
+			<a name="_PayPal_php"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<span class="include-title">
+			<span class="include-type">require_once</span>
+			(<span class="include-name"><a href="../PayPal/_PayPal.php.html">'PayPal.php'</a></span>)
+			(line <span class="line-number">13</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Load files we depend on.</p>
+	
+</div>
+<a name="_PayPal/SOAP/Client_php"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<span class="include-title">
+			<span class="include-type">require_once</span>
+			(<span class="include-name">'PayPal/SOAP/Client.php'</span>)
+			(line <span class="line-number">14</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+</div>
+<a name="_Log_php"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<span class="include-title">
+			<span class="include-type">require_once</span>
+			(<span class="include-name">'Log.php'</span>)
+			(line <span class="line-number">16</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+</div>
+<a name="_PayPal/Type/XSDSimpleType_php"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<span class="include-title">
+			<span class="include-type">require_once</span>
+			(<span class="include-name"><a href="../PayPal/_PayPal---Type---XSDSimpleType.php.html">'PayPal/Type/XSDSimpleType.php'</a></span>)
+			(line <span class="line-number">15</span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	
+</div>
+		</div>
+	</div>
+	
+	<a name="sec-constants"></a>	
+	<div class="info-box">
+		<div class="info-box-title">Constants</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+							<a href="#sec-classes">Classes</a>
+				|										<a href="#sec-includes">Includes</a>
+				|						<span class="disabled">Constants</span>
+											</div>
+		<div class="info-box-body">	
+			<a name="definePAYPAL_WSDL_METHODS"><!-- --></a>
+<div class="evenrow">
+	
+	<div>
+		<span class="const-title">
+			<span class="const-name">PAYPAL_WSDL_METHODS</span> = 'a:56:{s:17:&quot;RefundTransaction&quot;;a:2:{s:5:&quot;param&quot;;s:28:&quot;RefundTransactionRequestType&quot;;s:6:&quot;result&quot;;s:29:&quot;RefundTransactionResponseType&quot;;}s:14:&quot;InitiateRecoup&quot;;a:2:{s:5:&quot;param&quot;;s:25:&quot;InitiateRecoupRequestType&quot;;s:6:&quot;result&quot;;s:26:&quot;InitiateRecoupResponseType&quot;;}s:14:&quot;CompleteRecoup&quot;;a:2:{s:5:&quot;param&quot;;s:25:&quot;CompleteRecoupRequestType&quot;;s:6:&quot;result&quot;;s:26:&quot;CompleteRecoupResponseType&quot;;}s:12:&quot;CancelRecoup&quot;;a:2:{s:5:&quot;param&quot;;s:23:&quot;CancelRecoupRequestType&quot;;s:6:&quot;result&quot;;s:24:&quot;CancelRecoupResponseType&quot;;}s:21:&quot;GetTransactionDetails&quot;;a:2:{s:5:&quot;param&quot;;s:32:&quot;GetTransactionDetailsRequestType&quot;;s:6:&quot;result&quot;;s:33:&quot;GetTransactionDetailsResponseType&quot;;}s:14:&quot;BMCreateButton&quot;;a:2:{s:5:&quot;param&quot;;s:25:&quot;BMCreateButtonRequestType&quot;;s:6:&quot;result&quot;;s:26:&quot;BMCreateButtonResponseType&quot;;}s:14:&quot;BMUpdateButton&quot;;a:2:{s:5:&quot;param&quot;;s:25:&quot;BMUpdateButtonRequestType&quot;;s:6:&quot;result&quot;;s:26:&quot;BMUpdateButtonResponseType&quot;;}s:20:&quot;BMManageButtonStatus&quot;;a:2:{s:5:&quot;param&quot;;s:31:&quot;BMManageButtonStatusRequestType&quot;;s:6:&quot;result&quot;;s:32:&quot;BMManageButtonStatusResponseType&quot;;}s:18:&quot;BMGetButtonDetails&quot;;a:2:{s:5:&quot;param&quot;;s:29:&quot;BMGetButtonDetailsRequestType&quot;;s:6:&quot;result&quot;;s:30:&quot;BMGetButtonDetailsResponseType&quot;;}s:14:&quot;BMSetInventory&quot;;a:2:{s:5:&quot;param&quot;;s:25:&quot;BMSetInventoryRequestType&quot;;s:6:&quot;result&quot;;s:26:&quot;BMSetInventoryResponseType&quot;;}s:14:&quot;BMGetInventory&quot;;a:2:{s:5:&quot;param&quot;;s:25:&quot;BMGetInventoryRequestType&quot;;s:6:&quot;result&quot;;s:26:&quot;BMGetInventoryResponseType&quot;;}s:14:&quot;BMButtonSearch&quot;;a:2:{s:5:&quot;param&quot;;s:25:&quot;BMButtonSearchRequestType&quot;;s:6:&quot;result&quot;;s:26:&quot;BMButtonSearchResponseType&quot;;}s:8:&quot;BillUser&quot;;a:2:{s:5:&quot;param&quot;;s:19:&quot;BillUserRequestType&quot;;s:6:&quot;result&quot;;s:20:&quot;BillUserResponseType&quot;;}s:17:&quot;TransactionSearch&quot;;a:2:{s:5:&quot;param&quot;;s:28:&quot;TransactionSearchRequestType&quot;;s:6:&quot;result&quot;;s:29:&quot;TransactionSearchResponseType&quot;;}s:7:&quot;MassPay&quot;;a:2:{s:5:&quot;param&quot;;s:18:&quot;MassPayRequestType&quot;;s:6:&quot;result&quot;;s:19:&quot;MassPayResponseType&quot;;}s:19:&quot;BillAgreementUpdate&quot;;a:2:{s:5:&quot;param&quot;;s:19:&quot;BAUpdateRequestType&quot;;s:6:&quot;result&quot;;s:20:&quot;BAUpdateResponseType&quot;;}s:13:&quot;AddressVerify&quot;;a:2:{s:5:&quot;param&quot;;s:24:&quot;AddressVerifyRequestType&quot;;s:6:&quot;result&quot;;s:25:&quot;AddressVerifyResponseType&quot;;}s:13:&quot;EnterBoarding&quot;;a:2:{s:5:&quot;param&quot;;s:24:&quot;EnterBoardingRequestType&quot;;s:6:&quot;result&quot;;s:25:&quot;EnterBoardingResponseType&quot;;}s:18:&quot;GetBoardingDetails&quot;;a:2:{s:5:&quot;param&quot;;s:29:&quot;GetBoardingDetailsRequestType&quot;;s:6:&quot;result&quot;;s:30:&quot;GetBoardingDetailsResponseType&quot;;}s:19:&quot;CreateMobilePayment&quot;;a:2:{s:5:&quot;param&quot;;s:30:&quot;CreateMobilePaymentRequestType&quot;;s:6:&quot;result&quot;;s:31:&quot;CreateMobilePaymentResponseType&quot;;}s:15:&quot;GetMobileStatus&quot;;a:2:{s:5:&quot;param&quot;;s:26:&quot;GetMobileStatusRequestType&quot;;s:6:&quot;result&quot;;s:27:&quot;GetMobileStatusResponseType&quot;;}s:17:&quot;SetMobileCheckout&quot;;a:2:{s:5:&quot;param&quot;;s:28:&quot;SetMobileCheckoutRequestType&quot;;s:6:&quot;result&quot;;s:29:&quot;SetMobileCheckoutResponseType&quot;;}s:23:&quot;DoMobileCheckoutPayment&quot;;a:2:{s:5:&quot;param&quot;;s:34:&quot;DoMobileCheckoutPaymentRequestType&quot;;s:6:&quot;result&quot;;s:35:&quot;DoMobileCheckoutPaymentResponseType&quot;;}s:10:&quot;GetBalance&quot;;a:2:{s:5:&quot;param&quot;;s:21:&quot;GetBalanceRequestType&quot;;s:6:&quot;result&quot;;s:22:&quot;GetBalanceResponseType&quot;;}s:13:&quot;GetPalDetails&quot;;a:2:{s:5:&quot;param&quot;;s:24:&quot;GetPalDetailsRequestType&quot;;s:6:&quot;result&quot;;s:25:&quot;GetPalDetailsResponseType&quot;;}s:24:&quot;DoExpressCheckoutPayment&quot;;a:2:{s:5:&quot;param&quot;;s:35:&quot;DoExpressCheckoutPaymentRequestType&quot;;s:6:&quot;result&quot;;s:36:&quot;DoExpressCheckoutPaymentResponseType&quot;;}s:28:&quot;DoUATPExpressCheckoutPayment&quot;;a:2:{s:5:&quot;param&quot;;s:39:&quot;DoUATPExpressCheckoutPaymentRequestType&quot;;s:6:&quot;result&quot;;s:40:&quot;DoUATPExpressCheckoutPaymentResponseType&quot;;}s:16:&quot;SetAuthFlowParam&quot;;a:2:{s:5:&quot;param&quot;;s:27:&quot;SetAuthFlowParamRequestType&quot;;s:6:&quot;result&quot;;s:28:&quot;SetAuthFlowParamResponseType&quot;;}s:14:&quot;GetAuthDetails&quot;;a:2:{s:5:&quot;param&quot;;s:25:&quot;GetAuthDetailsRequestType&quot;;s:6:&quot;result&quot;;s:26:&quot;GetAuthDetailsResponseType&quot;;}s:20:&quot;SetAccessPermissions&quot;;a:2:{s:5:&quot;param&quot;;s:31:&quot;SetAccessPermissionsRequestType&quot;;s:6:&quot;result&quot;;s:32:&quot;SetAccessPermissionsResponseType&quot;;}s:23:&quot;UpdateAccessPermissions&quot;;a:2:{s:5:&quot;param&quot;;s:34:&quot;UpdateAccessPermissionsRequestType&quot;;s:6:&quot;result&quot;;s:35:&quot;UpdateAccessPermissionsResponseType&quot;;}s:26:&quot;GetAccessPermissionDetails&quot;;a:2:{s:5:&quot;param&quot;;s:37:&quot;GetAccessPermissionDetailsRequestType&quot;;s:6:&quot;result&quot;;s:38:&quot;GetAccessPermissionDetailsResponseType&quot;;}s:22:&quot;GetIncentiveEvaluation&quot;;a:2:{s:5:&quot;param&quot;;s:33:&quot;GetIncentiveEvaluationRequestType&quot;;s:6:&quot;result&quot;;s:34:&quot;GetIncentiveEvaluationResponseType&quot;;}s:18:&quot;SetExpressCheckout&quot;;a:2:{s:5:&quot;param&quot;;s:29:&quot;SetExpressCheckoutRequestType&quot;;s:6:&quot;result&quot;;s:30:&quot;SetExpressCheckoutResponseType&quot;;}s:25:&quot;ExecuteCheckoutOperations&quot;;a:2:{s:5:&quot;param&quot;;s:36:&quot;ExecuteCheckoutOperationsRequestType&quot;;s:6:&quot;result&quot;;s:37:&quot;ExecuteCheckoutOperationsResponseType&quot;;}s:25:&quot;GetExpressCheckoutDetails&quot;;a:2:{s:5:&quot;param&quot;;s:36:&quot;GetExpressCheckoutDetailsRequestType&quot;;s:6:&quot;result&quot;;s:37:&quot;GetExpressCheckoutDetailsResponseType&quot;;}s:15:&quot;DoDirectPayment&quot;;a:2:{s:5:&quot;param&quot;;s:26:&quot;DoDirectPaymentRequestType&quot;;s:6:&quot;result&quot;;s:27:&quot;DoDirectPaymentResponseType&quot;;}s:30:&quot;ManagePendingTransactionStatus&quot;;a:2:{s:5:&quot;param&quot;;s:41:&quot;ManagePendingTransactionStatusRequestType&quot;;s:6:&quot;result&quot;;s:42:&quot;ManagePendingTransactionStatusResponseType&quot;;}s:8:&quot;DoCancel&quot;;a:2:{s:5:&quot;param&quot;;s:19:&quot;DoCancelRequestType&quot;;s:6:&quot;result&quot;;s:20:&quot;DoCancelResponseType&quot;;}s:9:&quot;DoCapture&quot;;a:2:{s:5:&quot;param&quot;;s:20:&quot;DoCaptureRequestType&quot;;s:6:&quot;result&quot;;s:21:&quot;DoCaptureResponseType&quot;;}s:17:&quot;DoReauthorization&quot;;a:2:{s:5:&quot;param&quot;;s:28:&quot;DoReauthorizationRequestType&quot;;s:6:&quot;result&quot;;s:29:&quot;DoReauthorizationResponseType&quot;;}s:6:&quot;DoVoid&quot;;a:2:{s:5:&quot;param&quot;;s:17:&quot;DoVoidRequestType&quot;;s:6:&quot;result&quot;;s:18:&quot;DoVoidResponseType&quot;;}s:15:&quot;DoAuthorization&quot;;a:2:{s:5:&quot;param&quot;;s:26:&quot;DoAuthorizationRequestType&quot;;s:6:&quot;result&quot;;s:27:&quot;DoAuthorizationResponseType&quot;;}s:27:&quot;SetCustomerBillingAgreement&quot;;a:2:{s:5:&quot;param&quot;;s:38:&quot;SetCustomerBillingAgreementRequestType&quot;;s:6:&quot;result&quot;;s:39:&quot;SetCustomerBillingAgreementResponseType&quot;;}s:34:&quot;GetBillingAgreementCustomerDetails&quot;;a:2:{s:5:&quot;param&quot;;s:45:&quot;GetBillingAgreementCustomerDetailsRequestType&quot;;s:6:&quot;result&quot;;s:46:&quot;GetBillingAgreementCustomerDetailsResponseType&quot;;}s:22:&quot;CreateBillingAgreement&quot;;a:2:{s:5:&quot;param&quot;;s:33:&quot;CreateBillingAgreementRequestType&quot;;s:6:&quot;result&quot;;s:34:&quot;CreateBillingAgreementResponseType&quot;;}s:22:&quot;DoReferenceTransaction&quot;;a:2:{s:5:&quot;param&quot;;s:33:&quot;DoReferenceTransactionRequestType&quot;;s:6:&quot;result&quot;;s:34:&quot;DoReferenceTransactionResponseType&quot;;}s:21:&quot;DoNonReferencedCredit&quot;;a:2:{s:5:&quot;param&quot;;s:32:&quot;DoNonReferencedCreditRequestType&quot;;s:6:&quot;result&quot;;s:33:&quot;DoNonReferencedCreditResponseType&quot;;}s:19:&quot;DoUATPAuthorization&quot;;a:2:{s:5:&quot;param&quot;;s:30:&quot;DoUATPAuthorizationRequestType&quot;;s:6:&quot;result&quot;;s:31:&quot;DoUATPAuthorizationResponseType&quot;;}s:30:&quot;CreateRecurringPaymentsProfile&quot;;a:2:{s:5:&quot;param&quot;;s:41:&quot;CreateRecurringPaymentsProfileRequestType&quot;;s:6:&quot;result&quot;;s:42:&quot;CreateRecurringPaymentsProfileResponseType&quot;;}s:34:&quot;GetRecurringPaymentsProfileDetails&quot;;a:2:{s:5:&quot;param&quot;;s:45:&quot;GetRecurringPaymentsProfileDetailsRequestType&quot;;s:6:&quot;result&quot;;s:46:&quot;GetRecurringPaymentsProfileDetailsResponseType&quot;;}s:36:&quot;ManageRecurringPaymentsProfileStatus&quot;;a:2:{s:5:&quot;param&quot;;s:47:&quot;ManageRecurringPaymentsProfileStatusRequestType&quot;;s:6:&quot;result&quot;;s:48:&quot;ManageRecurringPaymentsProfileStatusResponseType&quot;;}s:21:&quot;BillOutstandingAmount&quot;;a:2:{s:5:&quot;param&quot;;s:32:&quot;BillOutstandingAmountRequestType&quot;;s:6:&quot;result&quot;;s:33:&quot;BillOutstandingAmountResponseType&quot;;}s:30:&quot;UpdateRecurringPaymentsProfile&quot;;a:2:{s:5:&quot;param&quot;;s:41:&quot;UpdateRecurringPaymentsProfileRequestType&quot;;s:6:&quot;result&quot;;s:42:&quot;UpdateRecurringPaymentsProfileResponseType&quot;;}s:18:&quot;ReverseTransaction&quot;;a:2:{s:5:&quot;param&quot;;s:29:&quot;ReverseTransactionRequestType&quot;;s:6:&quot;result&quot;;s:30:&quot;ReverseTransactionResponseType&quot;;}s:24:&quot;ExternalRememberMeOptOut&quot;;a:2:{s:5:&quot;param&quot;;s:35:&quot;ExternalRememberMeOptOutRequestType&quot;;s:6:&quot;result&quot;;s:36:&quot;ExternalRememberMeOptOutResponseType&quot;;}}'
+			(line <span class="line-number">26</span>)
+		</span>
+	</div>
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">The WSDL version the SDK is built against.</p>
+	
+		
+</div>
+<a name="definePAYPAL_WSDL_VERSION"><!-- --></a>
+<div class="oddrow">
+	
+	<div>
+		<span class="const-title">
+			<span class="const-name">PAYPAL_WSDL_VERSION</span> = 87
+			(line <span class="line-number">21</span>)
+		</span>
+	</div>
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">The WSDL version the SDK is built against.</p>
+	
+		
+</div>
+		</div>
+	</div>
+	
+	
+	
+	<p class="notes" id="credit">
+		Documentation generated on Tue, 17 Jul 2012 09:23:32 +0000 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.4</a>
+	</p>
+	</div></body>
+</html>

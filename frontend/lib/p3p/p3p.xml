@@ -1,0 +1,46 @@
+<POLICIES xmlns="http://www.w3.org/2002/01/P3Pv1">
+<POLICY name="policy1" 
+	discuri="http://www.www.com">
+	<ENTITY>
+		<DATA-GROUP>
+			<DATA ref="#business.name">Jonh Doe Co.</DATA>
+			<DATA ref="#business.department"></DATA>
+			<DATA ref="#business.contact-info.postal.street">123 Somewhere Dr.</DATA>
+			<DATA ref="#business.contact-info.postal.city">Somewhere</DATA>
+			<DATA ref="#business.contact-info.postal.stateprov">Ontario</DATA>
+			<DATA ref="#business.contact-info.postal.postalcode">90210</DATA>
+			<DATA ref="#business.contact-info.telecom.telephone.intcode">555</DATA>
+			<DATA ref="#business.contact-info.telecom.telephone.loccode">555</DATA>
+			<DATA ref="#business.contact-info.telecom.telephone.number">5555</DATA>
+			<DATA ref="#business.contact-info.online.email">someone@somewhere.com</DATA>
+		</DATA-GROUP>
+	</ENTITY>
+	<ACCESS><nonident/></ACCESS>
+	<DISPUTES-GROUP>
+		<DISPUTES resolution-type="service" 
+			service="http://www.www.com"
+		>
+		<IMG src="http://www.www.com"/>
+		<REMEDIES><correct/></REMEDIES>
+		</DISPUTES>
+	</DISPUTES-GROUP>
+	<STATEMENT>
+		<PURPOSE>
+			<current required="always" />
+		</PURPOSE>
+		<RECIPIENT>
+			<same required="always"></same>
+			<other-recipient required="always"></other-recipient>
+			<delivery required="always"></delivery>
+			<public required="always"></public>
+			<unrelated required="always"></unrelated>
+		</RECIPIENT>
+		<RETENTION>
+			<no-retention/>
+		</RETENTION>
+		<DATA-GROUP>
+			something
+		</DATA-GROUP>
+	</STATEMENT>
+</POLICY>
+</POLICIES>

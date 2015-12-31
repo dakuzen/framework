@@ -1,0 +1,129 @@
+.tiles {
+	margin-left: 0;
+}
+
+.tiles .tile {
+	margin: 0;
+	background: #D8D5D2;
+	font-size: 50%;
+	float: left;
+	overflow: hidden;
+	width: 0;
+}
+
+.tiles .title {
+	color: #fff;
+	padding: 0 0 7px 7px;
+	display: block;
+	position: absolute;
+	text-transform: uppercase;
+	bottom: 0;
+	z-index: 99999;
+}
+
+.tiles .info {
+	color: #fff;
+	font-size: 50%;
+	padding: 6%;
+	overflow: hidden;
+	white-space: nowrap;
+	margin-right: 10px;
+	text-overflow:ellipsis;
+}
+
+
+.tiles .tile.three-one {
+	width: 300px;/* x2 */
+	height: 150px;
+}
+
+.tiles .tile.one-one {
+	width: 150px;
+	height: 150px;
+}
+
+.tiles .tile.two-two {
+	width: 300px;/* x2 */
+	height: 300px;/* x2 */
+}
+
+.tiles .tile.two-one {
+	width: 300px; /* x2 */
+	height: 150px;
+}
+
+.tiles .tile.two-one .icon {
+	width: 50%;
+	margin: auto;
+}
+
+
+/* @group three-two */
+
+.tiles .tile.three-two {
+	width: 450px; /* x4 */
+	height: 300px;	 /* x2 */
+}
+
+.tiles .tile.three-two .title {
+	width: 100%;
+	height: 15%;
+	display: table;	
+	padding: 0 0 0 2%;
+}
+
+.tiles .tile.three-two .title span{
+	display: table-cell;	
+	vertical-align: middle;
+}
+
+.tiles .content {
+	width: 100% !important;
+	height: 100% !important;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.tiles .tile.three-two .cycle img {
+	width: 100%;
+}
+
+.tiles .tile.three-one .icon {
+	width: 33%;
+	margin: auto;
+}
+
+/* @end */
+
+
+.tiles .tile .icon {
+	width: 100%;
+	height: 100%;
+	background-size: 50%;
+	background-position: 50% 60%;
+	background-repeat: no-repeat;
+}
+
+.tiles .tile.three-one .icon {
+	width: 20%;
+	height: 100%;
+	background-size: 100%;
+	background-repeat: no-repeat;
+	margin: auto;
+}
+
+.tiles .tile.three-one .title {
+	display: block;
+	width: 100%;
+}
+
+.tiles .cycle li {
+  display: none;
+  position: absolute; 
+  top: 0; 
+  left: 0;
+  width: 100%;
+  background-size: 100%;
+  background-position-y: 50%;
+}

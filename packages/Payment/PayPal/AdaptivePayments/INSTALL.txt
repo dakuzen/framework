@@ -1,0 +1,58 @@
+
+INSTALL.txt
+============
+
+The following instructions will guide you through installing an Apache/PHP environment.
+
+
+
+
+Windows
+------- 
+
+1) Install Apache Web server version 2.x
+
+	Download the 2.x release from http://httpd.apache.org/download.cgi
+	Start the self-installation process by double clicking the downloaded binary.
+		
+2) Install PHP 5.2.x(with curl and openssl support) and configure with Apache HTTP Server
+
+	Download PHP 5.2.x from php.net. 
+	Make sure that the curl and openssl extensions are selected while installation.
+		
+3) Enable PEAR Package Manager
+	 
+	To add PEAR support if you do not already have it,		
+
+	Open a command line window (i.e. Start->Run->cmd)
+	Go to the PHP installation directory (C:\php, for example). Type go-pear.bat and follow the instructions.
+	The PEAR extension will get installed in C:\php\PEAR directory.		
+	
+
+
+	
+Linux
+-----
+ 
+1) Install OpenSSL package for your linux distribution.
+
+	Download OpenSSL package from (http://www.openssl.org/source) or from Repositories of your Linux distro and install.
+	
+2) Install Apache HTTP Server version 2.x.
+
+	Download Apache HTTP Server 2.x version package from http://httpd.apache.org/download.cgi and install it.
+	
+3) Install the libcurl library with SSL enabled.
+
+	Download libcurl from http://curl.haxx.se/download or respective Package from Repositories of your Linux distro and install with SSL enabled.
+	
+4) Install the libxml library
+
+	Download LibXML from ftp://fr.rpmfind.net/pub/libxml or respective Package from Repositories of your Linux distro and install it.
+	
+5) Install PHP 5.2.x(with curl and openssl support) and configure with Apache HTTP Server.
+
+6) Install PEAR Package Manager.
+
+7) Grant write access to the Log file (logs/paypal_platform.log or as defined in paypal_sdk_clientproperties.php) by running 'chmod u+w <logfilename>' in a terminal window.
+
