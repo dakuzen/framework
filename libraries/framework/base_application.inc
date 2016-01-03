@@ -219,7 +219,7 @@
          * Returns main application directory
          * @return string
          */
-		static function get_main_application_directory() 	{ return self::get_instance_directory()."application/"; }
+		static function get_main_application_directory() 	{ return self::get_application_directory(); }
 
         /**
          * Returns application directory
