@@ -161,7 +161,15 @@
 					
 					$time = time();
 					foreach($this->get_processes() as $process) {
-						$cmd = "php ".APPLICATION::get_instance_directory()."application/command/cron.php ".$process." ".$time;	
+						
+						$cron_file = APPLICATION::get_instance_directory()."backend/command/cron.php";
+
+						//Legacy
+						if(!is_file($cron_file))
+							$cron_file = APPLICATION::get_instance_directory()."application/command/cron.php";
+
+						$cmd = "php ".$cron_file." ".$process." ".$time;	
+
 						echo SERVER_UTIL::shell_exec($cmd,true);
 					}
 				}
