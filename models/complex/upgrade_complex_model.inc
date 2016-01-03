@@ -8,6 +8,7 @@
 
 	class BASE_CMODEL_UPGRADE extends CMODEL {
 
+
         /**
          * instance directory
          * @var object
