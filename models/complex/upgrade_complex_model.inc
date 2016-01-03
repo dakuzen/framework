@@ -6,13 +6,13 @@
     * @subpackage Cmodels
     */
 
-	class BASE_CMODEL_UPGRADE extends MODEL {
+	class BASE_CMODEL_UPGRADE extends CMODEL {
 
         /**
          * instance directory
          * @var object
          */
-		protected $_instance_directory 	= DIR_INSTANCE;
+		protected $_instance_directory 	= "";
 
         /**
          * The db
@@ -31,7 +31,7 @@
          * @param string $instance_directory
          * @param object $db
          */
-		public function __construct($instance_directory="",$db=null) {
+		public function __construct($instance_directory=DIR_INSTANCE,$db=null) {
 
 			if($instance_directory)
 				$this->_instance_directory = $instance_directory;
@@ -45,7 +45,21 @@
          * Returns the upgrade directory
          * @return string
          */
-		public function get_upgrade_directory()		{ return $this->_instance_directory."application/upgrade/"; }
+		public function get_upgrade_directory()	{
+			
+			$dir = $this->_instance_directory."backend/upgrade/";
+
+			if(is_dir($dir))
+				return $dir;
+
+			//Legacy
+			$dir = $this->_instance_directory."application/upgrade/";
+
+			if(is_dir($dir))
+				return $dir;
+
+			throw new Exception("Failed to locate upgrade directory in ".$this->_instance_directory);
+		}
 
         /**
          * Returns the upgrade script directory

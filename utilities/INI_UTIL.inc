@@ -49,6 +49,10 @@
 			if($ini_file)
 				$this->load($ini_file);			
 		}
+
+		static function create($ini_file,$exception=true) {
+			return new INI_UTIL($ini_file,$exception);
+		}
 		
 		/**
 		 * Loads an ini file
@@ -132,6 +136,8 @@
 				unset($ini[$keys]);
 				$this->_ini = array_merge(array($keys=>$value),$ini);
 			}
+
+			return $this;
 		}
                 
         /**

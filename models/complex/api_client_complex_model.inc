@@ -6,19 +6,13 @@
     * @subpackage Cmodels
     */
 
-    class BASE_CMODEL_API_CLIENT {
+    class BASE_CMODEL_API_CLIENT extends CMODEL {
         
         /**
          * The data
          * @var array $data 
          */
-        protected $_data = array();
-       
-        /**
-         * The debug
-         * @var bool $debug
-         */
-        protected $_debug = false;                
+        protected $_data = array();                     
 
         /**
          * process the response
@@ -60,22 +54,6 @@
          */
         public function get_data() {
             return $this->_data;
-        } 
-
-        /**
-         * Set debug
-         */
-        public function debug($debug=true) {
-            $this->_debug = $debug;
-            return $this;
-        }                 
-
-        /**
-         * Is debug
-         * @return bool
-         */
-        public function is_debug() {
-            return $this->_debug;
         }
 
         /**
