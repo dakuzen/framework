@@ -1163,6 +1163,3 @@
 			return false;
 		}
 	}
-
-
-
