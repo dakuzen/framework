@@ -12,8 +12,8 @@
 			   1 => array("pipe", "w"),   // stdout is a pipe that the child will write to
 			   2 => array("pipe", "w")    // stderr is a pipe that the child will write to
 			);
-			
-			$process = proc_open($cmd, $descriptorspec, $pipes, realpath('./'), array());
+
+			$process = proc_open($cmd, $descriptorspec, $pipes, realpath('./'), null);
 			
 			if(!is_resource($process)) 
 				throw new Exception("Failed to get process resource");
@@ -25,11 +25,15 @@
 	        } 
 
 		    while($s = fgets($pipes[1])) {
-		    	$errors[] = $s;		        
+		    	$errors[] = $s;
 		        $callback($s);
-		    }		
+		    }
 
-			$return = proc_close($process);
+			$return = @proc_close($process);
+
+			@fclose($pipes[0]);
+			@fclose($pipes[1]);
+			@fclose($pipes[2]);
 
 			if($return)
 				throw new Exception(implode("\n",$errors));
