@@ -43,7 +43,7 @@
 
 		public function exec($cmd,&$output=null,$options=["capture"=>true]) {
 
-			if($capture)
+			if(value($options,"capture",true))
 				$cmd = $cmd." 2>&1";
 
 			$this->log($cmd);
