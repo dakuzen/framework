@@ -51,6 +51,8 @@
 			$return_var = null;
 			exec($cmd,$output,$return_var);
 
+			$this->log($output);
+
 			if($return_var)
 				throw new Exception(implode("\n",$output),$return_var);
 			
