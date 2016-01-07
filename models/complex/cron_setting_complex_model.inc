@@ -8,7 +8,7 @@
 		}
 
 		function duration($duration) {
-			return $this->set_timeout($duration);
+			return $this->timeout($duration);
 		}
 
 		function timeout($timeout) {
