@@ -169,7 +169,7 @@
 			if(!$this->_store_filename && is_array($this->_file))
 				$this->_store_filename = stripslashes(value($this->_file,"name",""));
 			
-			$this->_file_extension = strtolower(FILE_UTIL::get_file_extension($this->_store_filename));			
+			$this->_file_extension = strtolower(FILE_UTIL::get_file_extension(value($this->_file,"name","")));			
 		}
 
 		public static function create($file,$store_path="",$valid_extensions=array(),$store_filename="") { return new UPLOAD_UTIL($file,$store_path,$valid_extensions,$store_filename); }
