@@ -157,8 +157,7 @@
 
 				 	$error = DEBUG_UTIL::error(value($error,"type"),value($error,"message"),value($error,"file"),value($error,"line"));
 
-				 	if(DEBUG_UTIL::is_reportable(value($error,"type"),value($error,"message"),array(E_ERROR,E_USER_ERROR))) {
-
+				 	if(DEBUG_UTIL::is_reportable(value($error,"type"),value($error,"message"),array(E_ERROR,E_USER_ERROR,E_COMPILE_ERROR))) {
 
 				 		if(SYSTEM_MANAGER::is_system_mode_production()) {
 							DEBUG_UTIL::notify_error($error);

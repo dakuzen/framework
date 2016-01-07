@@ -373,7 +373,7 @@
 		static function enable_fatal_error_handler($handler) {
 
 			//Remove the E_ERROR & E_USER_ERROR error types so it does not echo out "Fatal Error:..."
-			DEBUG_UTIL::remove_error_reporting_level(E_USER_ERROR + E_ERROR);
+			DEBUG_UTIL::remove_error_reporting_level(E_USER_ERROR + E_ERROR + E_COMPILE_ERROR);
 				
 			if($handler) {
 				
