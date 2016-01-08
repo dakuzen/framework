@@ -8,18 +8,22 @@
 			$db_host = $ini_util->get("DB_HOST");
 			$db_name = $ini_util->get("DB_NAME");
 			$db_type = $ini_util->get("DB_TYPE");
+			$db_user = $ini_util->get("DB_USER");
+			$db_pass = $ini_util->get("DB_PASS");
 			
-			$registry = REGISTRY::instance();
-
-			$db_user = $registry->get_parm(array("args","user"));
-			$db_pass = $registry->get_parm(array("args","pass"));
-			$version = $registry->get_parm(array("args","version"));
+			$override_db_user = REGISTRY::instance()->get_parm(array("args","user"));
+			$override_db_pass = REGISTRY::instance()->get_parm(array("args","pass"));
+			$version = REGISTRY::instance()->get_parm(array("args","version"));
 							
-			if(!$db_user)
-				APPLICATION::display_warning_message("No database user name supplied. Use switch --user");
-				
-			if(!$db_pass)
-				APPLICATION::display_warning_message("No database user password supplied. Use switch --pass");
+			if($override_db_user)
+				$db_user = $override_db_user;
+			else
+				APPLICATION::display_warning_message("Defaulting to config.ini DB_USER. Use switch --user to override the DB user name.");
+
+			if($override_db_pass)
+				$db_pass = $override_db_pass;
+			else
+				APPLICATION::display_warning_message("Defaulting to config.ini DB_PASS. Use switch --pass to override the DB password.");
 			
 			APPLICATION::display_newline();
 			
