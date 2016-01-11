@@ -5,29 +5,22 @@
     * @package Framework
     * @subpackage Utilities
     *
-    *	$temp_cmodel = CMODEL_TEMP::create();
-    *
-	*	try {
-	*		foreach(UPLOAD_UTIL::files() as $file) {
-	*			$upload_util = UPLOAD_UTIL::create($file,$temp_cmodel->dir(),array("jpg"))->upload();
-	*			$object->commit($upload_util->file());
-	*		}
-	*	} catch(Exception $e) {
-	*		$this->error($e);
-	*	}  
+	*	Single file upload
 	*
-	*	$temp_cmodel->cleanup();  
+	*	$upload_util = UPLOAD_UTIL::create("file")->upload();
+	*	
+	*	$cmodel = CMODEL_DOCUMENT::create()
+	*					->set_filename($upload_util->filename())
+	*					->set_extension($upload_util->extension())
+	*					->commit_file($upload_util->file());
 	*
-	*	try {
-	*		foreach(UPLOAD_UTIL::uploads($temp_cmodel->dir(),array("jpg")) as $upload_util) {
-	*			$upload_util->upload();
-	*			$object->commit($upload_util->file());
-	*		}
-	*	} catch(Exception $e) {
-	*		$this->error($e);
-	*	}  
 	*
-	*	$temp_cmodel->cleanup();  	
+    *   Multiple files uploads
+    *  
+	*	foreach(UPLOAD_UTIL::uploads("files") as $upload_util) {
+	*		$upload_util->upload();
+	*		$cmodel->commit($upload_util->file());
+	*	}
 	*/
 
 	class UPLOAD_UTIL {
@@ -55,6 +48,12 @@
 		 * @var string $store_filename 
 		 */
 		private $_store_filename 		= null;
+
+		/**
+		 * The uploaded filename.
+		 * @var string $filename 
+		 */
+		private $_filename 		= null;		
 
 		/**
 		 * The store path of this class.
@@ -91,12 +90,6 @@
 		 * @var string $files_name 
 		 */
 		private $_files_name 			= "";
-
-		/**
-		 * The file extension of this class.
-		 * @var string $file_extension 
-		 */
-		private $_file_extension 		= "";
 
 		/**
 		 * The file of this class.
@@ -138,11 +131,6 @@
 		 */
 		public function __construct($files_name,$store_path="",$valid_extensions=array(),$store_filename="") {
 
-			$this
-				->set_store_path($store_path)
-				->set_valid_extensions($valid_extensions)
-				->set_store_filename($store_filename);
-
 			self::$UPLOAD_ERROR_LIST = array(	self::ERROR_MAX_FILE_SIZE=>"The uploaded file exceeds the max file size of %s",
 												self::ERROR_MAX_FORM_SIZE=>"The uploaded file exceeds the max size specified in the HTML form",
 												self::ERROR_PARTIAL=>"The uploaded file was only partially uploaded",
@@ -166,10 +154,19 @@
 			else
 				$this->_file = value($_FILES,$files_name,null);
 
-			if(!$this->_store_filename && is_array($this->_file))
-				$this->_store_filename = stripslashes(value($this->_file,"name",""));
-			
-			$this->_file_extension = strtolower(FILE_UTIL::get_file_extension(value($this->_file,"name","")));			
+			if($this->_file) {
+				if(!$store_filename)
+					$store_filename = basename(value($this->_file,"tmp_name",""));
+
+				if(!$store_path)
+					$store_path = dirname(value($this->_file,"tmp_name")).DIRECTORY_SEPARATOR;
+			}
+
+			$this
+				->set_store_path($store_path)
+				->set_valid_extensions($valid_extensions)
+				->set_store_filename($store_filename)
+				->set_filename(value($this->_file,"name",""));
 		}
 
 		public static function create($file,$store_path="",$valid_extensions=array(),$store_filename="") { return new UPLOAD_UTIL($file,$store_path,$valid_extensions,$store_filename); }
@@ -182,10 +179,10 @@
 			return !empty($_FILES);
 		}
 
-		public static function uploads($dir,$extensions=array()) {
+		public static function uploads($name,$dir=null,$extensions=array()) {
 			
 			$upload_utils = array();			
-			foreach(UPLOAD_UTIL::files() as $file)
+			foreach(UPLOAD_UTIL::files($name) as $file)
 				$upload_utils[] = UPLOAD_UTIL::create($file,$dir,$extensions);
 
 			return $upload_utils;
@@ -194,7 +191,7 @@
 		public static function files($name="") {
 
 			if(!$_FILES)
-				return array();
+				throw new Exception("Missing file");			
 			
 			/*
 		    [file] => Array
@@ -333,6 +330,8 @@
                  * @param $filename the filename
 		 */
 		function set_store_filename($filename) 	{ $this->_store_filename = $filename; return $this; }
+
+		function set_filename($filename) 	{ $this->_filename = $filename; return $this; }
 		
 		/**
 		 * Gets the store file name
@@ -349,14 +348,14 @@
 		function get_store_file() 		{ return $this->get_store_path().$this->get_store_filename(); }
 		function file() 				{ return $this->get_store_file(); }
 		function extension() 			{ return $this->get_file_extension(); }
-		function filename() 			{ return $this->get_store_filename(); }
+		function filename() 			{ return $this->_filename; }
 		
 		/**
 		 * Gets the file extension
 		 *
 		 * @return string
 		 */
-		function get_file_extension() 		{ return $this->_file_extension; }
+		function get_file_extension() 		{ return strtolower(FILE_UTIL::get_file_extension($this->filename())); }
 
 		function is_extension($ext) 		{ return $this->extension()===$ext; }
 		
@@ -408,7 +407,7 @@
 			if(in_array("tif",$valid_extension))
 				$valid_extension[] = "tiff";
 			
-			return in_array($this->_file_extension,$valid_extension); 
+			return in_array($this->extension(),$valid_extension); 
 		}
 		
 		/**
@@ -421,11 +420,11 @@
 			return get_value($this->_file, 'tmp_name');
 		}
 
-                /**
-                 * Returns file name
-                 * 
-                 * @return string 
-                 */
+        /**
+         * Returns file name
+         * 
+         * @return string 
+         */
 		function get_file_name(){
 			return get_value($this->_file,"name");
 		}
@@ -569,19 +568,22 @@
 				$this->_store_filename = FILE_UTIL::get_safe_file($this->_store_filename);
 				
 				$destination_file = FILE_UTIL::get_sanitized_path($this->_store_path."/".$this->_store_filename);
-				
-				if(!$this->_override && is_file($destination_file))
-					return $this->error(self::ERROR_FILE_EXISTS);
 
-				if(!is_dir($this->_store_path)) 
-					return $this->error(self::ERROR_DEST_DIR_NOT_CREATED);
+				if($destination_file!=$this->_file['tmp_name']) {
+					
+					if(!$this->_override && is_file($destination_file))
+						return $this->error(self::ERROR_FILE_EXISTS);
 
-				$move_result = move_uploaded_file($this->_file['tmp_name'], $destination_file);
+					if(!is_dir($this->_store_path)) 
+						return $this->error(self::ERROR_DEST_DIR_NOT_CREATED);
 
-				if (!$move_result) 
-					return $this->error(self::ERROR_UPLOADING_FILE);
+					$move_result = move_uploaded_file($this->_file['tmp_name'], $destination_file);
 
-				FILE_UTIL::chmod($destination_file,"0770");
+					if (!$move_result) 
+						return $this->error(self::ERROR_UPLOADING_FILE);
+
+					FILE_UTIL::chmod($destination_file,"0770");
+				}
 			}
 
 			return $this;

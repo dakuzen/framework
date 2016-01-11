@@ -55,6 +55,7 @@
 		public function path($name)					{ return $this->_rest_server_cmodel->path($name); }
 		public function server() 					{ return $this->_rest_server_cmodel; }
 		public function code($code) 				{ return $this->_rest_server_cmodel->code($code); }
+		public function end($code=200) 				{ $this->_rest_server_cmodel->code($code); die; }
 
 		public function fail($message,$code=BASE_CMODEL_API_RESPONSE::CODE_FAIL) 	{ return $this->_rest_server_cmodel->response()->fail($message,$code); }
 
