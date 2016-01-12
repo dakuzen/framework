@@ -270,8 +270,9 @@
 			$types["json"] 	= "text/json";
 			$types["xml"] 	= "text/xml";
 			$types["html"] 	= "text/html";
+			$types["svg"] 	= "image/svg+xml";
 			
-			return get_value($types,$file_type,"application/force-download");
+			return value($types,$file_type,"application/force-download");
 		}
 
 		function stream_json($json,$die=false,$name="json.json") {
