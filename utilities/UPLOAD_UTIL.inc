@@ -347,6 +347,7 @@
 		 */
 		function get_store_file() 		{ return $this->get_store_path().$this->get_store_filename(); }
 		function file() 				{ return $this->get_store_file(); }
+		function exists() 				{ return !!$this->_file; }
 		function extension() 			{ return $this->get_file_extension(); }
 		function filename() 			{ return $this->_filename; }
 		
@@ -494,96 +495,94 @@
 		    if((int)value($_SERVER,"CONTENT_LENGTH")>=$multiplier*$post_max_size)
 		        throw new Exception("Upload file size limit exceeded",500);
 		        
-			if(!$this->_file) {
-				return $this->error(self::ERROR_INTERNAL_CONFIG_ERROR);
-			} else {
+			if(!$this->_file)
+				return $this->error(self::ERROR_INTERNAL_CONFIG_ERROR);			
 
-				if($error=get_value($this->_file,"error")) {
-					switch($error) {
-						case UPLOAD_ERR_INI_SIZE:
-							
-							$updated = sprintf(self::$UPLOAD_ERROR_LIST[self::ERROR_MAX_FILE_SIZE],ini_get("upload_max_filesize"));
+			if($error=get_value($this->_file,"error")) {
+				switch($error) {
+					case UPLOAD_ERR_INI_SIZE:
+						
+						$updated = sprintf(self::$UPLOAD_ERROR_LIST[self::ERROR_MAX_FILE_SIZE],ini_get("upload_max_filesize"));
 
-							self::$UPLOAD_ERROR_LIST[self::ERROR_MAX_FILE_SIZE] = $updated;
+						self::$UPLOAD_ERROR_LIST[self::ERROR_MAX_FILE_SIZE] = $updated;
 
-							return $this->error(self::ERROR_MAX_FILE_SIZE);
+						return $this->error(self::ERROR_MAX_FILE_SIZE);
 
-						case UPLOAD_ERR_FORM_SIZE:
-							return $this->error(self::ERROR_MAX_FORM_SIZE);
+					case UPLOAD_ERR_FORM_SIZE:
+						return $this->error(self::ERROR_MAX_FORM_SIZE);
 
-						case UPLOAD_ERR_PARTIAL:
-							return $this->error(self::ERROR_PARTIAL);
+					case UPLOAD_ERR_PARTIAL:
+						return $this->error(self::ERROR_PARTIAL);
 
-						case UPLOAD_ERR_NO_FILE:
-							return $this->error(self::ERROR_NO_FILE);
+					case UPLOAD_ERR_NO_FILE:
+						return $this->error(self::ERROR_NO_FILE);
 
-						case UPLOAD_ERR_NO_TMP_DIR:
-							return $this->error(self::ERROR_NO_TMP_DIR);
+					case UPLOAD_ERR_NO_TMP_DIR:
+						return $this->error(self::ERROR_NO_TMP_DIR);
 
-						case UPLOAD_ERR_CANT_WRITE:
-							return $this->error(self::ERROR_CANT_WRITE);
+					case UPLOAD_ERR_CANT_WRITE:
+						return $this->error(self::ERROR_CANT_WRITE);
 
-						case UPLOAD_ERR_EXTENSION:
-							return $this->error(self::ERROR_EXTENSION);
+					case UPLOAD_ERR_EXTENSION:
+						return $this->error(self::ERROR_EXTENSION);
 
-					}
 				}
+			}
 
-				//if(!$this->is_post_file_exist()) {
-				//	$this->error(self::ERROR_NO_FILES_ARRAY);
-				//	return false;
-				//}
+			//if(!$this->is_post_file_exist()) {
+			//	$this->error(self::ERROR_NO_FILES_ARRAY);
+			//	return false;
+			//}
 
-				if($this->_store_path==null) 
-					return $this->error(self::ERROR_NO_STORE_PATH);
+			if($this->_store_path==null) 
+				return $this->error(self::ERROR_NO_STORE_PATH);
 
-				if(trim($this->_store_filename)=="") 
-					return $this->error(self::ERROR_NO_FILENAME_SUPPLIED);
+			if(trim($this->_store_filename)=="") 
+				return $this->error(self::ERROR_NO_FILENAME_SUPPLIED);
 
-				if(!$this->is_valid_file_extension()) 
-					return $this->error(self::ERROR_FILE_EXT_NOT_VALID);
+			if(!$this->is_valid_file_extension()) 
+				return $this->error(self::ERROR_FILE_EXT_NOT_VALID);
 
-				if(!VALIDATE_UTIL::is_valid_filename($this->_store_filename))
-					return $this->error(self::ERROR_STORE_FILENAME_INVALID);
+			if(!VALIDATE_UTIL::is_valid_filename($this->_store_filename))
+				return $this->error(self::ERROR_STORE_FILENAME_INVALID);
 
-				/*
-				if($this->_check_mime_type) {
+			/*
+			if($this->_check_mime_type) {
 
-					$file_mime_util_obj = new FILE_MIME_UTIL($this->_file['tmp_name']);
+				$file_mime_util_obj = new FILE_MIME_UTIL($this->_file['tmp_name']);
 
-					$has_valid_type = false;
+				$has_valid_type = false;
 
-					foreach(array_keys($this->_valid_mime_types) as $type)
-						if($file_mime_util_obj->is_type($type))
-							$has_valid_type = true;
+				foreach(array_keys($this->_valid_mime_types) as $type)
+					if($file_mime_util_obj->is_type($type))
+						$has_valid_type = true;
 
 
-					if(!$has_valid_type) {
-						$this->error(self::ERROR_MIME_INVALID);
-						return false;
-					}
+				if(!$has_valid_type) {
+					$this->error(self::ERROR_MIME_INVALID);
+					return false;
 				}
-				*/
+			}
+			*/
+			
+			$this->_store_filename = FILE_UTIL::get_safe_file($this->_store_filename);
+			
+			$destination_file = FILE_UTIL::get_sanitized_path($this->_store_path."/".$this->_store_filename);
+
+			if($destination_file!=$this->_file['tmp_name']) {
 				
-				$this->_store_filename = FILE_UTIL::get_safe_file($this->_store_filename);
-				
-				$destination_file = FILE_UTIL::get_sanitized_path($this->_store_path."/".$this->_store_filename);
+				if(!$this->_override && is_file($destination_file))
+					return $this->error(self::ERROR_FILE_EXISTS);
 
-				if($destination_file!=$this->_file['tmp_name']) {
-					
-					if(!$this->_override && is_file($destination_file))
-						return $this->error(self::ERROR_FILE_EXISTS);
+				if(!is_dir($this->_store_path)) 
+					return $this->error(self::ERROR_DEST_DIR_NOT_CREATED);
 
-					if(!is_dir($this->_store_path)) 
-						return $this->error(self::ERROR_DEST_DIR_NOT_CREATED);
+				$move_result = move_uploaded_file($this->_file['tmp_name'], $destination_file);
 
-					$move_result = move_uploaded_file($this->_file['tmp_name'], $destination_file);
+				if (!$move_result) 
+					return $this->error(self::ERROR_UPLOADING_FILE);
 
-					if (!$move_result) 
-						return $this->error(self::ERROR_UPLOADING_FILE);
-
-					FILE_UTIL::chmod($destination_file,"0770");
-				}
+				FILE_UTIL::chmod($destination_file,"0770");
 			}
 
 			return $this;
