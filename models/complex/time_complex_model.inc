@@ -37,7 +37,7 @@
 
             if(!is_numeric($time)) {
 
-                //This is using the input timezone to calculate the time. Sadly this is 
+                //This is using the input timezone to calculate the time. Sadly this is
                 //the only way of doing this right now.
                 $system_timezone = date_default_timezone_get();
 
@@ -180,7 +180,7 @@
         function weekday()                      { return $this->_format("w"); }
         function gmt()                          { return $this->_format("P"); }
         function timezone_abr()                 { return $this->_format("e"); }
-        function short_date()                   { return $this->_format("Y-m-d"); }     
+        function short_date()                   { return $this->_format("Y-m-d"); }
         function db($options=array())           { return $this->_format("Y-m-d H:i:s",null,$options); }
         function db_date()                      { return $this->_format("Y-m-d"); }
         function db_time()                      { return $this->_format("H:i:s"); }
@@ -195,7 +195,7 @@
 
         function format() {
             $options["format_timezone"] = value($this->_options,"format_timezone");
-            return CMODEL_FORMAT::create($this,$options); 
+            return CMODEL_FORMAT::create($this,$options);
         }
 
         function age($abr=false,$suffix=true,$round=true) {
@@ -221,6 +221,27 @@
                 return $this->time($this->hour(),$this->minute(),$value);
             return (int)$this->_format("s");
         }
+
+
+        function week_of_month() {
+			$maxday    = date("t",$this->time());
+			$thismonth = getdate($this->time());
+			$timeStamp = mktime(0,0,0,$thismonth['mon'],1,$thismonth['year']);    //Create time stamp of the first day from the give date.
+			$startday  = date('w',$timeStamp);    //get first day of the given month
+			$day = $thismonth['mday'];
+			$weeks = 0;
+			$week_num = 0;
+
+			for ($i=0; $i<($maxday+$startday); $i++) {
+				if(($i % 7) == 0){
+					$weeks++;
+				}
+				if($day == ($i - $startday + 1)){
+					$week_num = $weeks;
+				}
+			}
+			return $week_num;
+		}
 
         function date($year=null,$month=null,$day=null) {
 
