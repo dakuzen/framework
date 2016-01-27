@@ -53,7 +53,13 @@
 		 * The uploaded filename.
 		 * @var string $filename 
 		 */
-		private $_filename 		= null;		
+		private $_filename 		= null;	
+
+		/**
+		 * The uploaded filesize.
+		 * @var string $filesize 
+		 */
+		private $_filesize 		= null;				
 
 		/**
 		 * The store path of this class.
@@ -166,7 +172,8 @@
 				->set_store_path($store_path)
 				->set_valid_extensions($valid_extensions)
 				->set_store_filename($store_filename)
-				->set_filename(value($this->_file,"name",""));
+				->set_filename(value($this->_file,"name",""))
+				->set_filesize(value($this->_file,"size",0));
 		}
 
 		public static function create($file,$store_path="",$valid_extensions=array(),$store_filename="") { return new UPLOAD_UTIL($file,$store_path,$valid_extensions,$store_filename); }
@@ -332,6 +339,8 @@
 		function set_store_filename($filename) 	{ $this->_store_filename = $filename; return $this; }
 
 		function set_filename($filename) 	{ $this->_filename = $filename; return $this; }
+
+		function set_filesize($filesize) 	{ $this->_filesize = $filesize; return $this; }
 		
 		/**
 		 * Gets the store file name
@@ -350,6 +359,7 @@
 		function exists() 				{ return !!$this->_file; }
 		function extension() 			{ return $this->get_file_extension(); }
 		function filename() 			{ return $this->_filename; }
+		function filesize() 			{ return $this->_filesize; }
 		
 		/**
 		 * Gets the file extension
