@@ -10,7 +10,7 @@
     * CMODEL_TIME::create(time())->age(); //returns "2 days ago"
     */
 
-	class BASE_CMODEL_TIME {
+	class BASE_CMODEL_TIME extends OBJECT {
 
         const SECONDS_DAY = CONSTANT::SECONDS_DAY;
         const TIMEZONE_UTC = "UTC";
@@ -19,9 +19,9 @@
          * The time
          * @var integer $time
          */
-		private $_time      = 0;
-        private $_date_time = null;
-        private $_options   = array();
+		protected $_time      = 0;
+        protected $_date_time = null;
+        protected $_options   = array();
 
         /**
          * Constructor
