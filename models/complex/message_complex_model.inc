@@ -193,7 +193,22 @@
 			return DB::complete_transaction();			
 		}
 
-		public function get($tag) {		
+		public static function create($tag=null) {
+
+			if(!$tag) {
+				preg_match("/CMODEL_MESSAGE_(.*)/",get_called_class(),$match);
+				$tag = value($match,1);
+			}
+			
+			$message_cmodel = self::get($tag);
+
+			if(!$message_cmodel)
+				throw new Exception("Failed to load ".$tag." message");
+
+			return $message_cmodel;
+		}
+
+		public function get($tag) {
 			return BASE_HMODEL_MESSAGE::create(false)
 								->where("tag","=",$tag)
 								->get();
