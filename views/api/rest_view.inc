@@ -109,7 +109,7 @@
 		            
 		            } elseif(!is_null($this->get("wadl"))) {
 
-		            	$base = SYSTEM_MANAGER::get_system_url(false).SERVER_UTIL::get_redirect_url();
+		            	$base = URL_UTIL::remove_query(SERVER_UTIL::get_redirect_url());
 		            	
 		            	$xml_writer_util = XML_WRITER_UTIL::create()
 	            		->open("application",array("xmlns:postman"=>"http://postman","postman:name"=>"My WADL API","postman:guid"=>"83j344-34hs8a-9jhd09-sd98u3-asd83d"))
