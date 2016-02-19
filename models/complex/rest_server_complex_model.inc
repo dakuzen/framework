@@ -92,18 +92,7 @@
         /* Cross-Origin Resource Sharing */
         public function cors() {
         	
-            $headers = [];
-            foreach(getallheaders() as $name=>$value) {
-                if(strcasecmp($name,"Access-Control-Request-Headers")===0) {
-                    $headers = array_merge($headers,array($value));
-                }
-            }
-
-            SERVER_UTIL::add_header("Access-Control-Allow-Origin","*");
-            SERVER_UTIL::add_header("Access-Control-Allow-Methods","GET, POST, PUT, DELETE");
-            
-            if($headers)
-                SERVER_UTIL::add_header("Access-Control-Allow-Headers",implode(",",$headers));
+            HTTP_UTIL::cors();
             
             return $this;
         }
