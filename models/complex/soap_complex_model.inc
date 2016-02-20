@@ -17,13 +17,34 @@
 			public function __construct($wsdl,$options=array()) {
 
 				$options["uri"] 		= value($options,"uri","http://service.org");
-				$options["exceptions"] 	= value($options,"exceptions",1);
+				$options["exceptions"] 	= true;
 
-				if(preg_match("/^(https?)/",strtolower($wsdl),$matches))
-					if(!in_array(value($matches,1),stream_get_wrappers()))
-						throw new Exception("Unable to find the wrapper ".value($matches,1)." - did you forget to enable it?");
+				$exception = null;
+				
+				try {
+					
+					DEBUG_UTIL::disable_fatal_error_handler();
+					DEBUG_UTIL::enable_exception_error_handler();
 
-		    	return parent::__construct($wsdl,$options);
+					if(preg_match("/^(https?)/i",strtolower($wsdl),$matches))
+						if(!in_array(value($matches,1),stream_get_wrappers()))
+							throw new Exception("Unable to find the wrapper ".value($matches,1)." - did you forget to enable it?");
+
+			    	$parent = @parent::__construct($wsdl,$options);
+			    
+			    } catch(Exception $exception) {
+			    
+			    }
+
+			    DEBUG_UTIL::restore_error_handler();
+			    
+			    //HACK: Cannot enable this becuase it will show the last error and in this case its an uncatchable error from SoapClient
+			    //DEBUG_UTIL::enable_fatal_error_handler();
+
+			    if($exception)
+			    	throw $exception;
+
+		    	return $parent;
 		    }
 
 			public static function create($wsdl,$options=array()) { return new BASE_CMODEL_SOAP($wsdl,$options); }
