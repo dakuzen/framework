@@ -325,5 +325,21 @@
 			//header('P3P:policyref="/lib/p3p/p3p.xml",CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
 
 			header('P3P:CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
-		}		
+		}	
+
+		static function cors() {
+		
+			$headers = [];
+            foreach(getallheaders() as $name=>$value) {
+                if(strcasecmp($name,"Access-Control-Request-Headers")===0) {
+                    $headers = array_merge($headers,array($value));
+                }
+            }
+
+            SERVER_UTIL::add_header("Access-Control-Allow-Origin","*");
+            SERVER_UTIL::add_header("Access-Control-Allow-Methods","GET, POST, PUT, DELETE");
+            
+            if($headers)
+                SERVER_UTIL::add_header("Access-Control-Allow-Headers",implode(",",$headers));
+        }
 	}

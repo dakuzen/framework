@@ -30,7 +30,7 @@
 		const ERROR_FILE_EXISTS				= 2;
 		const ERROR_DEST_DIR_NOT_CREATED	= 3;
 		const ERROR_NO_FILENAME_SUPPLIED	= 4;
-		const ERROR_NO_STORE_PATH			= 5;
+		const ERROR_NO_STORE_DIR			= 5;
 		const ERROR_FILE_EXT_NOT_VALID		= 6;
 		const ERROR_UPLOADING_FILE			= 7;
 		const ERROR_MIME_INVALID			= 8;
@@ -63,9 +63,9 @@
 
 		/**
 		 * The store path of this class.
-		 * @var string $store_path 
+		 * @var string $store_dir
 		 */
-		private $_store_path			= null;
+		private $_store_dir			= null;
 
 		/**
 		 * The valid extensions of this class.
@@ -135,48 +135,36 @@
 		 * 
 		 * @param mix $files_name file name indexes
 		 */
-		public function __construct($files_name,$store_path="",$valid_extensions=array(),$store_filename="") {
+		public function __construct($files_name,$store_dir="",$valid_extensions=array(),$store_filename="") {
 
-			self::$UPLOAD_ERROR_LIST = array(	self::ERROR_MAX_FILE_SIZE=>"The uploaded file exceeds the max file size of %s",
-												self::ERROR_MAX_FORM_SIZE=>"The uploaded file exceeds the max size specified in the HTML form",
-												self::ERROR_PARTIAL=>"The uploaded file was only partially uploaded",
-												self::ERROR_NO_FILE=>"No file was uploaded",
-												self::ERROR_NO_TMP_DIR=>"Missing a temporary folder",
-												self::ERROR_CANT_WRITE=>"Failed to write file",
-												self::ERROR_EXTENSION=>"File upload stopped by extension",
-												self::ERROR_INTERNAL_CONFIG_ERROR=>"The file failed to upload",
-												self::ERROR_STORE_FILENAME_INVALID=>"The store filename is invalid",
-												self::ERROR_NO_FILES_ARRAY=>"No form array passed",
-												self::ERROR_FILE_EXISTS=>"The file already exists",
-												self::ERROR_DEST_DIR_NOT_CREATED=>"The destination directory could not be created",
-												self::ERROR_NO_FILENAME_SUPPLIED=>"No filename supplied",
-												self::ERROR_NO_STORE_PATH=>"No store path supplied",
-												self::ERROR_FILE_EXT_NOT_VALID=>"The file extension is not valid",
-												self::ERROR_UPLOADING_FILE=>"There was an error while trying to upload the file",
-												self::ERROR_MIME_INVALID=>"The MIME type is invalid");	
-			
 			if(is_array($files_name) && array_key_exists("name",$files_name))
 				$this->_file = $files_name;
 			else
 				$this->_file = value($_FILES,$files_name,null);
 
-			if($this->_file) {
-				if(!$store_filename)
-					$store_filename = basename(value($this->_file,"tmp_name",""));
-
-				if(!$store_path)
-					$store_path = dirname(value($this->_file,"tmp_name")).DIRECTORY_SEPARATOR;
-			}
-
 			$this
-				->set_store_path($store_path)
+				->set_store_directory($store_dir)
 				->set_valid_extensions($valid_extensions)
 				->set_store_filename($store_filename)
 				->set_filename(value($this->_file,"name",""))
 				->set_filesize(value($this->_file,"size",0));
+
+			if($this->_file) {
+
+				if($this->get_store_directory())
+					$this->set_store_filename(value($this->_file,"name"));
+
+				if(!$this->get_store_filename())
+					$this->set_store_filename(basename(value($this->_file,"tmp_name","")));
+
+				if(!$this->get_store_directory())
+					$this->set_store_directory(dirname(value($this->_file,"tmp_name")).DIRECTORY_SEPARATOR);
+			}
 		}
 
-		public static function create($file,$store_path="",$valid_extensions=array(),$store_filename="") { return new UPLOAD_UTIL($file,$store_path,$valid_extensions,$store_filename); }
+		public static function create($file,$store_dir="",$valid_extensions=array(),$store_filename="") { 
+			return new UPLOAD_UTIL($file,$store_dir,$valid_extensions,$store_filename); 
+		}
 		
 		public static function has_files($name=null) {
 
@@ -324,13 +312,34 @@
 		 * 
 		 * @return string
 		 */
-		function get_error_message() 		{ return get_value(self::$UPLOAD_ERROR_LIST,$this->_error_code); }
+
+		function render_error_message($code,$vars="") 		{ return sprintf(value([self::ERROR_MAX_FILE_SIZE=>"The uploaded file exceeds the max file size of %s",
+																					self::ERROR_MAX_FORM_SIZE=>"The uploaded file exceeds the max size specified in the HTML form",
+																					self::ERROR_PARTIAL=>"The uploaded file was only partially uploaded",
+																					self::ERROR_NO_FILE=>"No file was uploaded",
+																					self::ERROR_NO_TMP_DIR=>"Missing a temporary folder",
+																					self::ERROR_CANT_WRITE=>"Failed to write file",
+																					self::ERROR_EXTENSION=>"File upload stopped by extension",
+																					self::ERROR_INTERNAL_CONFIG_ERROR=>"The file failed to upload",
+																					self::ERROR_STORE_FILENAME_INVALID=>"The store filename is invalid",
+																					self::ERROR_NO_FILES_ARRAY=>"No form array passed",
+																					self::ERROR_FILE_EXISTS=>"The file already exists",
+																					self::ERROR_DEST_DIR_NOT_CREATED=>"The destination directory could not be created",
+																					self::ERROR_NO_FILENAME_SUPPLIED=>"No filename supplied",
+																					self::ERROR_NO_STORE_DIR=>"No store directory supplied",
+																					self::ERROR_FILE_EXT_NOT_VALID=>"The file extension is not valid",
+																					self::ERROR_UPLOADING_FILE=>"There was an error while trying to upload the file",
+																					self::ERROR_MIME_INVALID=>"The MIME type is invalid"], $code),$vars); }
+
+		function get_error_message($code=null) 		{ return $this->render_error_message($this->_error_code); }
 		
 		/**
 		 * Sets the store path 
                  * @param $path the path
 		 */
-		function set_store_path($path) 		{ $this->_store_path = $path; return $this; }
+		function set_store_path($dir) 		{ return $this->set_store_directory($dir); }
+
+		function set_store_directory($dir) 		{ $this->_store_dir = $dir; return $this; }
 		
 		/**
 		 * Sets the store file name
@@ -354,10 +363,11 @@
 		 *
 		 * @return string
 		 */
-		function get_store_file() 		{ return $this->get_store_path().$this->get_store_filename(); }
+		function get_store_file() 		{ return $this->get_store_directory().$this->get_store_filename(); }
 		function file() 				{ return $this->get_store_file(); }
 		function exists() 				{ return !!$this->_file; }
 		function extension() 			{ return $this->get_file_extension(); }
+		function is_extension($ext) 	{ return $this->extension()===$ext; }
 		function filename() 			{ return $this->_filename; }
 		function filesize() 			{ return $this->_filesize; }
 		
@@ -368,14 +378,15 @@
 		 */
 		function get_file_extension() 		{ return strtolower(FILE_UTIL::get_file_extension($this->filename())); }
 
-		function is_extension($ext) 		{ return $this->extension()===$ext; }
+		
 		
 		/**
 		 * Gets path
 		 *
 		 * @return string
 		 */
-		function get_store_path() 		{ return $this->_store_path; }
+		function get_store_path() 		{ return $this->_store_dir; }
+		function get_store_directory()	{ return $this->_store_dir; }
 		
 		/**
 		 * Adds mime type
@@ -428,7 +439,7 @@
 		 */		
 		
 		function get_temp_file() {
-			return get_value($this->_file, 'tmp_name');
+			return value($this->_file, 'tmp_name');
 		}
 
         /**
@@ -437,7 +448,7 @@
          * @return string 
          */
 		function get_file_name(){
-			return get_value($this->_file,"name");
+			return value($this->_file,"name");
 		}
 
 		/**
@@ -454,7 +465,7 @@
 				
 				$this->_valid_extensions[] = $extension;
 				
-				//if($mime_exts=get_value($mime_ext_list,$extension,array())) {
+				//if($mime_exts=value($mime_ext_list,$extension,array())) {
 				//	foreach($mime_exts as $mime)
 						//$this->add_mime_type($extension);
 				//}
@@ -470,7 +481,7 @@
 		 */
 		 
 		function is_file_upload_exist() {
-			return (is_array($this->_file) && ((get_value($this->_file,"name")) || count($this->_file)==0));
+			return (is_array($this->_file) && ((value($this->_file,"name")) || count($this->_file)==0));
 		}
 
 		/**
@@ -484,7 +495,7 @@
 			$this->_error_code = $code;
 
 			if($this->_exception) {
-				$message = $message ? $message : get_value(self::$UPLOAD_ERROR_LIST,$code);
+				$message = $message ? $message : $this->render_error_message($code);
 				throw new Exception($message,$this->_error_code);
 			}
 
@@ -508,15 +519,11 @@
 			if(!$this->_file)
 				return $this->error(self::ERROR_INTERNAL_CONFIG_ERROR);			
 
-			if($error=get_value($this->_file,"error")) {
+
+			if($error=value($this->_file,"error")) {
 				switch($error) {
 					case UPLOAD_ERR_INI_SIZE:
-						
-						$updated = sprintf(self::$UPLOAD_ERROR_LIST[self::ERROR_MAX_FILE_SIZE],ini_get("upload_max_filesize"));
-
-						self::$UPLOAD_ERROR_LIST[self::ERROR_MAX_FILE_SIZE] = $updated;
-
-						return $this->error(self::ERROR_MAX_FILE_SIZE);
+						return $this->error(self::ERROR_MAX_FILE_SIZE,$this->render_error_message(self::ERROR_MAX_FILE_SIZE,ini_get("upload_max_filesize")));
 
 					case UPLOAD_ERR_FORM_SIZE:
 						return $this->error(self::ERROR_MAX_FORM_SIZE);
@@ -539,13 +546,8 @@
 				}
 			}
 
-			//if(!$this->is_post_file_exist()) {
-			//	$this->error(self::ERROR_NO_FILES_ARRAY);
-			//	return false;
-			//}
-
-			if($this->_store_path==null) 
-				return $this->error(self::ERROR_NO_STORE_PATH);
+			if($this->_store_dir==null) 
+				return $this->error(self::ERROR_NO_STORE_DIR);
 
 			if(trim($this->_store_filename)=="") 
 				return $this->error(self::ERROR_NO_FILENAME_SUPPLIED);
@@ -556,35 +558,16 @@
 			if(!VALIDATE_UTIL::is_valid_filename($this->_store_filename))
 				return $this->error(self::ERROR_STORE_FILENAME_INVALID);
 
-			/*
-			if($this->_check_mime_type) {
-
-				$file_mime_util_obj = new FILE_MIME_UTIL($this->_file['tmp_name']);
-
-				$has_valid_type = false;
-
-				foreach(array_keys($this->_valid_mime_types) as $type)
-					if($file_mime_util_obj->is_type($type))
-						$has_valid_type = true;
-
-
-				if(!$has_valid_type) {
-					$this->error(self::ERROR_MIME_INVALID);
-					return false;
-				}
-			}
-			*/
-			
 			$this->_store_filename = FILE_UTIL::get_safe_file($this->_store_filename);
 			
-			$destination_file = FILE_UTIL::get_sanitized_path($this->_store_path."/".$this->_store_filename);
+			$destination_file = FILE_UTIL::get_sanitized_path($this->_store_dir."/".$this->_store_filename);
 
 			if($destination_file!=$this->_file['tmp_name']) {
 				
 				if(!$this->_override && is_file($destination_file))
 					return $this->error(self::ERROR_FILE_EXISTS);
 
-				if(!is_dir($this->_store_path)) 
+				if(!is_dir($this->_store_dir)) 
 					return $this->error(self::ERROR_DEST_DIR_NOT_CREATED);
 
 				$move_result = move_uploaded_file($this->_file['tmp_name'], $destination_file);

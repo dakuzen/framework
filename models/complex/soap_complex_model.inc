@@ -53,8 +53,8 @@
 			
 			public function get_request($formatted=false) 	{ return $formatted ? XML_READER_UTIL::get_pretty_xml($this->_request) : $this->_request ; }
 			public function get_response($formatted=false) 	{ return $formatted ? XML_READER_UTIL::get_pretty_xml($this->_response) : $this->_response ; }
-			public function request()	 					{ return $this->get_request(); }
-			public function response()	 					{ return $this->get_response(); }
+			public function request($formatted=false)		{ return $this->get_request($formatted); }
+			public function response($formatted=false)	 	{ return $this->get_response($formatted); }
 			public function last_call() 					{ return $this->_last_call; }
 
 			public function audit($value) { 

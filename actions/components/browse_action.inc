@@ -156,24 +156,25 @@
 					
 					$ajax_response_cmodel->add_data("dir",$dir);	
 
-					$temp_dir = MODEL_PATH::get_temporary_directory();
-					FILE_UTIL::mkdir($temp_dir);
-					
-					$upload_util = UPLOAD_UTIL::create("file",$temp_dir,array_merge($this->_valid_extensions,array("zip")))->upload();
+					$temp_cmodel = CMODEL_TEMP::create();					
+					$upload_util = UPLOAD_UTIL::create("file",$temp_cmodel->dir(),array_merge($this->_valid_extensions,array("zip")));
 
-					if($upload_util->get_file_extension()=="zip") {
+					$upload_util
+
+						->upload();
+
+					if($upload_util->extension()=="zip") {						
 						$has_success = $this->_file_browser_cmodel->file_unzip($upload_util->get_store_file(),$dir,$this->_valid_extensions);
 									
 					} else {
 					
 						$file = $dir.$upload_util->get_store_filename();
-
 						$has_success = $this->_file_browser_cmodel->copy($upload_util->get_store_file(),$file);
 					}
 
 					$ajax_response_cmodel->success($has_success);	
 				
-					FILE_UTIL::rmdir($temp_dir);
+					$temp_cmodel->cleanup();
 
 				} catch(Exception $e) {
 					$ajax_response_cmodel->add_error($e->getMessage()); 

@@ -199,6 +199,14 @@
 			return (string)$value;
 		}
 
+		function name($node=null) {
+
+			$node = $node ? $node : $this->_node;
+			
+			return $node->nodeName;
+		}
+
+
 		function values($path,$node=null) {
 
 			$node = $node ? $node : $this->_node;
