@@ -94,8 +94,12 @@
 				curl_setopt($this->_curl,CURLOPT_POSTFIELDS,$body);
 			}
 
+			$headers = [];
+			foreach($http_request->get_header()->get_formatted() as $name=>$value)
+				$headers[] = $name.":".$value;
+
 			curl_setopt($this->_curl,CURLOPT_VERBOSE, 1);	
-			curl_setopt($this->_curl,CURLOPT_HTTPHEADER,$http_request->get_header()->get_formatted());
+			curl_setopt($this->_curl,CURLOPT_HTTPHEADER, $headers);
 
 			$response = curl_exec($this->_curl);
 

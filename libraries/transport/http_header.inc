@@ -52,8 +52,7 @@
 		}
 
 		public function sets($fields) { 
-			$this->fields = $fields;
-			return $this;
+			return $this->populate($fields);
 		}
 
 		/**
@@ -82,7 +81,7 @@
 					foreach($parts as &$part)
 						$part = ucfirst($part);
 
-					$key = implode("-",$parts).":";
+					$key = implode("-",$parts);
 				}
 
 				$headers[$key] = $header;
