@@ -69,9 +69,7 @@
 				$http_request->get_header()->set("Content-Type","application/x-www-form-urlencoded");
 		
 			// post data
-			if($http_request->get_body()) {
-
-				$body = $this->get_body();
+			if($body=$http_request->get_body()) {
 
 				if(is_array($body)) {
 
