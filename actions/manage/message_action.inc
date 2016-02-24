@@ -3,17 +3,15 @@
 		
 		protected $_has_success 	= false;
 		protected $_message_cmodel 	= null;
-		protected $_registry	 	= null;
 		
 		function __construct($roles=array()) {			
 			$this->set_roles($roles);			
-			$this->_registry = REGISTRY::get_instance();
 			$this->debug_format_text();
 		}
 
 		function populate() {
 
-			$message_id = $this->_registry->get_numeric_post_parm("mid");
+			$message_id = $this->post("mid");
 			
 			$message_handler = new BASE_HMODEL_MESSAGE();
 			$message_handler->set_message_id($message_id);
@@ -24,32 +22,33 @@
 				
 				$this->_message_cmodel = $message_cmodel;
 				
-				$this->_message_cmodel->set_state($this->_registry->post("form","state"));
-				$this->_message_cmodel->set_name($this->_registry->post("form","name"));
-				$this->_message_cmodel->set_description($this->_registry->post("form","description"));			
+				$this->_message_cmodel
+						->set_state($this->post("form","state"))
+						->set_name($this->post("form","name"))
+						->set_description($this->post("form","description"));			
 
 				if($message_cmodel->has_email()) {
-					$email_message_cmodel = $message_cmodel->get_email_message();
-					$email_message_cmodel->set_format($this->_registry->post("email","format"));
-					$email_message_cmodel->set_subject(XSS_UTIL::decode($this->_registry->post("email","subject")));
-					$email_message_cmodel->set_body(XSS_UTIL::decode($this->_registry->post("email","body")));			
-					$email_message_cmodel->set_message_template_id($this->_registry->get_numeric_post_parm("email","message_template_id"));
-					$email_message_cmodel->set_from_email($this->_registry->post("email","from_email"));
-					$email_message_cmodel->set_from_name($this->_registry->post("email","from_email"));
-					$email_message_cmodel->set_to_recipients($this->_registry->post("email","to_recipients"));
-					$email_message_cmodel->set_cc_recipients($this->_registry->post("email","cc_recipients"));
-					$email_message_cmodel->set_bcc_recipients($this->_registry->post("email","bcc_recipients"));
+					$email_message_cmodel = $message_cmodel->get_email_message()
+												->set_format($this->post("email","format"))
+												->set_subject(XSS_UTIL::decode($this->post("email","subject")))
+												->set_body(XSS_UTIL::decode($this->post("email","body")))		
+												->set_message_template_id($this->post("email","message_template_id"))
+												->set_from_email($this->post("email","from_email"))
+												->set_from_name($this->post("email","from_email"))
+												->set_to_recipients($this->post("email","to_recipients"))
+												->set_cc_recipients($this->post("email","cc_recipients"))
+												->set_bcc_recipients($this->post("email","bcc_recipients"));
 				}
 
 				if($message_cmodel->has_sms()) {
-					$sms_message_cmodel = $message_cmodel->get_sms_message();
-					$sms_message_cmodel->set_from_number($this->_registry->post("sms","from_number"));
-					$sms_message_cmodel->set_message(XSS_UTIL::decode($this->_registry->post("sms","message")));
+					$sms_message_cmodel = $message_cmodel->get_sms_message()
+												->set_from_number($this->post("sms","from_number"))
+												->set_message(XSS_UTIL::decode($this->post("sms","message")));
 				}
 
 				if($message_cmodel->has_internal()) {
 					$internal_message_cmodel = $message_cmodel->get_internal_message();
-					$internal_message_cmodel->set_message(XSS_UTIL::decode($this->_registry->post("internal","message")));				
+					$internal_message_cmodel->set_message(XSS_UTIL::decode($this->post("internal","message")));				
 				}
 			}
 		}
@@ -97,7 +96,7 @@
 
 			$this->populate();
 
-			$valid 	= $this->_registry->post("validate") ? $this->validate() : true;
+			$valid 	= $this->post("validate") ? $this->validate() : true;
 
 			if($valid) {
 

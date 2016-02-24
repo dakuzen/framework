@@ -1,5 +1,5 @@
 <?
-	class BASE_CMODEL_WKHTMLTOPDF {
+	class BASE_CMODEL_WKHTMLTOPDF extends CMODEL {
 
 		const FORMAT_PDF 		= "pdf";
 		const FORMAT_JPG 		= "jpg";
@@ -74,7 +74,10 @@
 			$this->_options["--page-height"] 	= $height;
 		}
 
-		public function save($object) {
+		public function save($object,$pdf_file="") {
+
+			if($pdf_file)
+				$this->_pdf_file = $pdf_file;
 
 			$temp_cmodel = BASE_CMODEL_TEMP::create("html");
 

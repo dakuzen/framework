@@ -44,47 +44,28 @@
 
 		public function stream($path) {
 
-
-			//$url = $this->url($path);
-
 			$path = $this->path($path);
 
 			$this->aws()->s3()->registerStreamWrapper();
 			$url = 's3://'.value($this->_options,"bucket").$path;
 
-			/*
-			$context = stream_context_create(array(
-			    's3' => array(
-			        'seekable' => true
-			    )
-			));
-
-			if ($stream = fopen($url, 'r', false)) {
-
-			    // Read bytes from the stream
-			    fread($stream, 1024);
-			    // Seek back to the beginning of the stream
-			    fseek($stream, 0);
-			    // Read the same bytes that were previously read
-			    fread($stream, 1024);
-			    fclose($stream);
-			}
-			*/
-
 			self::error_handler();
 
 			// Open a stream in read-only mode
-			if ($stream = fopen($url, 'r')) {
+			if ($stream=fopen($url, 'r')) {
 
-				HTTP_UTIL::output_headers(0,basename($path));
+				http_response_code(200);
+				HTTP_UTIL::output_headers(0,basename($path),true);
 
 			    // While the stream is still open
-			    while (!feof($stream)) {
+			    while (!@feof($stream)) {
 			        // Read 1024 bytes from the stream
-			        echo fread($stream, 1024);
+			        //echo fread($stream, 1024);
+
+			     	echo @fread($stream, 1024);
 			    }
 			    // Be sure to close the stream resource when you're done with it
-			    fclose($stream);
+			    @fclose($stream);
 			}
 
 			self::reset_error_handler();
@@ -266,7 +247,18 @@
 			return preg_replace(array("/\\\/","/\/{2,}/"),array("/","/"),$path);
 		}
 
-		public function response() { return $this->_response; }
+		public function response($property=null) { 
+			
+			if(!is_null($property)) {
+
+				if(!isset($this->_response[$property]))
+					throw new Exception("Failed to load ".$property." property");
+				
+				return $this->_response[$property];
+			}
+
+			return $this->_response; 
+		}
 
 		public function sanitize_path($path) {
 			return ltrim($this->sanitize($path),"/");
