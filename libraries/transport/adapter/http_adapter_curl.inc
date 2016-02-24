@@ -113,9 +113,8 @@
 			$http_request->get_header()->populate(value($info,"request_header"));
 
 			$header_size = curl_getinfo($this->_curl, CURLINFO_HEADER_SIZE);
-			$header = substr($response, 0, $header_size);
-			$body = substr($response, $header_size);
-
+			$header = (string)substr($response, 0, $header_size);
+			$body = (string)substr($response, $header_size);
 
 			$response_header = new HTTP_HEADER($header);
 
