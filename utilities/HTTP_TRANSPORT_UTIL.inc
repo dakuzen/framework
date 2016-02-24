@@ -57,9 +57,7 @@
 		protected $_error_message	= "";
 		
 		const TRANSPORT_TYPE_CURL 		= "curl";
-		const TRANSPORT_TYPE_HTTP 		= "http";
 		const TRANSPORT_TYPE_FOPEN 		= "fopen";
-		const TRANSPORT_TYPE_PHPSOCKET 	= "phpsocket";
 
 		/**
 		 * Inializes data for the transport util
@@ -75,7 +73,7 @@
 			$this->_http_request = new HTTP_REQUEST("",value($options,"type"));
 
 			if(array_key_exists("request_timeout",$options))
-				$this->_http_request->getAdapter()->set_request_timeout(value($options,"request_timeout"));
+				$this->_http_request->set_request_timeout(value($options,"request_timeout"));
 
 			$this->_http_response 	= new HTTP_RESPONSE();
 		}
@@ -179,14 +177,11 @@
 						->set_url($this->_url)
 						->set_username($username)
 						->set_password($password)
-						->set_body($body);
-
-					if($method)
-						$this->_http_request->set_verb($method);
-					
-					$this->_http_request->setHeaders($headers);
+						->set_body($body)
+						->set_verb($method)
+						->set_headers($headers);
 			
-					$this->_http_response = $this->_http_request->sendRequest();
+					$this->_http_response = $this->_http_request->send();
 
 					if($this->_debug)
 						p("Response:",$this->_http_response);
@@ -259,7 +254,7 @@
 				$this->_http_request = new HTTP_REQUEST("",self::TRANSPORT_TYPE_FOPEN);
 				$this->_http_request->set_url($this->_url);
 				
-				$this->_http_response = $this->_http_request->writeRequest($file);
+				$this->_http_response = $this->_http_request->write($file);
 				
 				$is_redirect = $this->_http_response->is_code_redirect();
 				

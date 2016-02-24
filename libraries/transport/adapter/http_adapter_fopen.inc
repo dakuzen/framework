@@ -1,43 +1,43 @@
-<?php
+<?
 	/**
-        * Class HTTP_ADAPTER_FOPEN  
-        *
-        * @package Library
-        * @subpackage Transport
-        */
+    * Class HTTP_ADAPTER_FOPEN  
+    *
+    * @package Library
+    * @subpackage Transport
+    */
 	class HTTP_ADAPTER_FOPEN extends HTTP_ADAPTER {
 		
-                /**
-                 * The phpErrorStr
-                 * @var string $phpErrorStr
-                 */
+        /**
+         * The phpErrorStr
+         * @var string $phpErrorStr
+         */
 		private $_phpErrorStr;
 
-                /**
-                 * Constructor
-                 * @throws HTTP_EXCEPTION 
-                 */
+        /**
+         * Constructor
+         * @throws HTTP_EXCEPTION 
+         */
 		public function __construct() {
 			if(!ini_get("allow_url_fopen")) 
 				throw new HTTP_EXCEPTION("allow_url_fopen is off, the http:// stream wrapper will not function");
 		}
-		
-                /**
-                 * sendRequest
-                 * @return object HTTP_RESPONSE
-                 * @throws HTTP_EXCEPTION 
-                 */
-		private function _sendRequest() {
 
-			$proxyurl = !is_null($this->proxy) ? $this->proxy->url : "";
+        /**
+         * sendRequest
+         * @return object HTTP_RESPONSE
+         * @throws HTTP_EXCEPTION 
+         */
+		private function _sendRequest($http_request) {
+
+			$proxyurl = !is_null($http_request->get_proxy()) ? $http_request->get_proxy()->url : "";
 		
-			$ctx = stream_context_create(array($this->uri->protocol => array(	"method" => $this->verb,
-												"content" => $this->body,
-												"header" => $this->get_formatted_header(),
+			$ctx = stream_context_create(array($http_request->get_protocol() => array(	"method" =>$http_request->get_verb(),
+												"content" => $http_request->get_body(),
+												"header" => $http_request->get_header()->get_formatted(),
 												"proxy"  => $proxyurl)));
 						
 			set_error_handler(array($this,"_errorHandler"));
-			$fp = fopen($this->uri->url, "rb", false, $ctx);
+			$fp = fopen($http_request->get_url(), "rb", false, $ctx);
 			
 			if (!is_resource($fp)) {
 				// php sucks
@@ -48,83 +48,78 @@
 			
 				restore_error_handler();
 			
-				throw new HTTP_EXCEPTION("Url ".$this->uri->url." could not be opened (fopen Adapter (".$this->_phpErrorStr."))");
+				throw new HTTP_EXCEPTION("Url ".$http_request->get_url()." could not be opened (fopen Adapter (".$this->_phpErrorStr."))");
 			} else 
 				restore_error_handler();
 			
-			stream_set_timeout($fp, $this->requestTimeout);	
+			stream_set_timeout($fp, $http_request->get_request_timeout());	
 			
 			return $fp;
 		}
 		
-                /**
-                 * write Request
-                 * @param string $file
-                 * @return object
-                 * @throws HTTP_EXCEPTION 
-                 */
-		public function writeRequest($file) {
+        /**
+         * write Request
+         * @param string $file
+         * @return object
+         * @throws HTTP_EXCEPTION 
+         */
+		public function write($http_request, $file) {
 			
-			$fp = $this->_sendRequest();
+			$fp = $this->_sendRequest($http_request);
 
 			$http_response = $this->process_http_request($fp);
 			
-			$has_success = $http_response->is_code_success();
+			$wfp = fopen($file,"w");
 			
-			if($has_success) {
-				
-				$wfp = fopen($file,"w");
-				
-				if($wfp) {
-					stream_copy_to_stream($fp,$wfp);
-				
-					if (!$wfp)
-						throw new HTTP_EXCEPTION("Cannot open file ".$file." for writting");
+			if(!$wfp)
+				throw new HTTP_EXCEPTION("Cannot open file ".$file." for writting");
 
-					while (!feof($fp)) {
+			stream_copy_to_stream($fp,$wfp);
+		
+			if (!$wfp)
+				throw new HTTP_EXCEPTION("Cannot open file ".$file." for writting");
 
-						$data = fread($fp, 8192);
+			while (!feof($fp)) {
 
-						fwrite($wfp, $data);
-					}
+				$data = fread($fp, 8192);
 
-					fclose($wfp);
-  				}
-			}	
-			
+				fwrite($wfp, $data);
+			}
+
+			fclose($wfp);
+		
 			fclose($fp);
 			
 			return $http_response;
 		}
 
-                /**
-                 * send Request
-                 * @return object
-                 * @throws HTTP_EXCEPTION 
-                 */
-		public function sendRequest() {
+        /**
+         * send Request
+         * @return object
+         * @throws HTTP_EXCEPTION 
+         */
+		public function send($http_request) {
 			
-			$fp = $this->_sendRequest();
+			$fp = $this->_sendRequest($http_request);
 			
 			$body = stream_get_contents($fp);
-			
+
 			if($body===false) 
-				throw new HTTP_EXCEPTION("Url ".$this->uri->url." did not return a response");
+				throw new HTTP_EXCEPTION("Url ".$http_request->get_url()." did not return a response");
 			
-			$http_response = $this->process_http_request($fp);
-			$http_response->set_body($body);
+			$http_response = $this->process_http_request($fp,$body);
 			
 			fclose($fp);
 			
 			return $http_response;
 		}
 		
-                /**
-                 * process http request
-                 * @param string $fp
-                 * @param string $body
-                 * @return object HTTP_RESPONSE 
-                 */
+        /**
+         * process http request
+         * @param string $fp
+         * @param string $body
+         * @return object HTTP_RESPONSE 
+         */
 		private function process_http_request($fp,$body="") {
 			
 			$meta = stream_get_meta_data($fp);
@@ -135,17 +130,14 @@
 			
 			$this->cookies = $this->headers = array();
 
-			foreach($headers as $line) 
-				$this->processHeader($line);
-			
-			return new HTTP_RESPONSE(get_value($response,"code"),"",new HTTP_HEADER($this->headers),$this->cookies,get_value($response,"httpVersion"));
+			return new HTTP_RESPONSE(value($response,"code"),$body,new HTTP_HEADER($this->headers),$this->cookies,get_value($response,"httpVersion"));
 		}
 		
-                /**
-                 * error Handler
-                 * @param string $errno
-                 * @param string $errstr 
-                 */
+    /**
+     * error Handler
+     * @param string $errno
+     * @param string $errstr 
+     */
 		private function _errorHandler($errno,$errstr) { $this->_phpErrorStr = $errstr; }
 	}
 
