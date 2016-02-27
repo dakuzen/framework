@@ -268,6 +268,15 @@ $.default.transmit = { log: function(type,message) {
 								FF.msg.success(message);
 						}};
 
+$.ajaxSetup({ error: function( event, jqxhr, settings, thrownError ) {
+					  
+					  if(event.responseJSON && event.responseJSON.errors)
+					  	FF.msg.error(event.responseJSON.errors);
+					  else
+					  	FF.msg.error(event.responseText);
+			}});
+	
+
 $.go.it = function(url,opt1,opt2,opt3,el) {
 
 	var options = FF.util.is_object(opt3) ? $.extend({},opt3) : {};
@@ -338,9 +347,6 @@ $.go.it = function(url,opt1,opt2,opt3,el) {
 		if(complete=$.default.go.complete)
 			if(complete($.parseJSON(response.responseText))===false)
 				return;
-
-		if(parseInt(response.status)>=400)
-			FF.msg.error(response.statusText);
 
 	},this,options.complete);
 

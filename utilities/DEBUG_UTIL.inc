@@ -29,6 +29,8 @@
 		 */
 		static $_PREVIOUS_ERROR_HANDLER 	= "";
 
+		static $_PREVIOUS_ERROR_REPORTING 	= null;
+
 		/**
 		 * ERROR HANDLER
 		 * @var string $ERROR_HANDLER 
@@ -236,8 +238,14 @@
 			self::set_error_handler(array("DEBUG_UTIL","exception_error_handler"));
 		}
 
-		static function set_error_handler($function) {
-			self::$_PREVIOUS_ERROR_HANDLER = set_error_handler($function);
+		static function set_error_handler($function,$error_reporting=0) {
+
+			if(!is_null($error_reporting)) {
+				self::$_PREVIOUS_ERROR_REPORTING = ini_get('error_reporting');
+				error_reporting($error_reporting);
+			}
+
+			set_error_handler($function);
 		}
 
 		static function disable_error_handler() {
@@ -245,6 +253,12 @@
 		}
 
 		static function restore_error_handler() {
+
+			if(!is_null(self::$_PREVIOUS_ERROR_REPORTING)) {
+				self::set_error_reporting(self::$_PREVIOUS_ERROR_REPORTING);
+				self::$_PREVIOUS_ERROR_REPORTING = null;
+			}
+
 			restore_error_handler();
 		}
 		
@@ -370,7 +384,7 @@
 		 * Besure for all registerd functions that they are all set to a public scope
                  * @param boolean $handler
 		 */
-		static function enable_fatal_error_handler($handler) {
+		static function set_fatal_error_handler($handler) {
 
 			//Remove the E_ERROR & E_USER_ERROR error types so it does not echo out "Fatal Error:..."
 			DEBUG_UTIL::remove_error_reporting_level(E_USER_ERROR + E_ERROR + E_COMPILE_ERROR);
@@ -385,7 +399,15 @@
         /**
          * Disable fatal error handler
          */
-		static function disable_fatal_error_handler() {
+		static function disable_fatal_error_handler() {			
+			self::$_SHUTDOWN_CALLBACK->enable(false);
+		}
+
+		static function enable_fatal_error_handler() {			
+			self::$_SHUTDOWN_CALLBACK->enable(true);
+		}
+
+		static function unregister_fatal_error_handler() {
 			
 			if(DEBUG_UTIL::$_SHUTDOWN_CALLBACK)
 				DEBUG_UTIL::$_SHUTDOWN_CALLBACK->unregister();
@@ -609,6 +631,8 @@
          * @var string $callback
          */
 		private $callback;
+
+		private $enabled = true;
         
         /**
          * Constructor
@@ -627,7 +651,7 @@
          */
 		public function call() {
 
-			if(!$this->callback)
+			if(!$this->callback || !$this->enabled)
 				return false;
 
 			return call_user_func($this->callback);
@@ -638,5 +662,9 @@
          */
 		public function unregister() {
 			$this->callback = false;
+		}
+
+		public function enable($enable) {
+			$this->enabled = $enable;
 		}
 	}	

@@ -134,7 +134,9 @@
 		 * Returns the content type
 		 * @return string 
 		 */
-		public function get_content_type() 	{ return $this->_header->get_content_type(); }
+		public function get_content_type() 	{   
+
+			p($this->_header); return $this->_header->get_content_type(); }
 		
 		/**
 		 * Set request header

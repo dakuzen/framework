@@ -151,7 +151,7 @@
 					$logger_cmodel->notify();
 			}
 
-			DEBUG_UTIL::enable_fatal_error_handler(function() {
+			DEBUG_UTIL::set_fatal_error_handler(function() {
 
 				if($error=error_get_last()) {
 
