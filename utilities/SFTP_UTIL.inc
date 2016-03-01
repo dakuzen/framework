@@ -42,19 +42,39 @@
         }
 
         public function mkdir($dir) {
-        	return $this->_connection->mkdir($dir);
+        	$result = $this->_connection->mkdir($dir);
+
+        	if(!$result)
+        		throw new Exception("Failed to make directory");
+        	
+        	return $this;
         }
 
         public function cd($dir) {
-        	return $this->_connection->chdir($dir);
+        	$result = $this->_connection->chdir($dir);
+
+        	if(!$result)
+        		throw new Exception("Failed to change directory");
+        	
+        	return $this;
         }
 
         public function mv($source,$dest) {
-        	return $this->_connection->rename($source,$dest);
+        	$result = $this->_connection->rename($source,$dest);
+
+        	if(!$result)
+        		throw new Exception("Failed to move file");
+        	
+        	return $this;
         }
 
         public function delete($file) {
-        	return $this->_connection->delete($file);
+        	$result = $this->_connection->delete($file);
+
+        	if(!$result)
+        		throw new Exception("Failed to delete file");
+        	
+        	return $this;
         }
  
         /**
