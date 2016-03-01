@@ -265,7 +265,7 @@
          * set password
          * @param string $password 
          */
-		public function set_password($password) 	{ $this->_password = $password; return $this; }
+		public function set_password($password) 	{ $this->password = $password; return $this; }
 
         /**
          * attach

@@ -37,28 +37,29 @@
 
             if(!is_numeric($time)) {
 
-                if(preg_match("/(.*)([\+\-])(\d{2}):(\d{2})$/",$time,$match)) {
+                if(preg_match("/(.*)([\+\-])(\d{2}):?(\d{2})$/",$time,$match)) {
 
                     $time = $match[1];
-                    $offset = (((int)$match[3]) * 60 * 60) + (((int)$match[2]) * 60);
+                    $offset = (((int)$match[3]) * 60 * 60) + (((int)$match[4]) * 60);
 
                     if($match[2]=="-")
                         $offset *= -1;
 
                     $this->_options["timezone"] = timezone_name_from_abbr("", $offset, 0);
+				}
 
-                } else {
 
-                    //This is using the input timezone to calculate the time. Sadly this is
-                    //the only way of doing this right now.
-                    $system_timezone = date_default_timezone_get();
+				$time = preg_replace("/(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})/","$1 $2",$time);
 
-                    date_default_timezone_set($this->option("timezone"));                    
-
+                if($this->option("timezone")) {
+                	$system_timezone = date_default_timezone_get();
+                    date_default_timezone_set($this->option("timezone"));
+ 					$time = strtotime($time);
                     date_default_timezone_set($system_timezone);
+                } else {
+                	$time = strtotime($time);
                 }
 
-                $time = strtotime(str_replace("T"," ",$time));
             }
 
             $this->time($time);

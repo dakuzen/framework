@@ -187,8 +187,11 @@
 					$db->log(MODEL_PATH::get_logs_directory()."db/");
 
 			} catch(Exception $e) {
-				$error_message = SYSTEM_MANAGER::is_system_mode_production() ? "" : ": ".$e->getMessage();
-				self::display_low_level_error_message("Unable to connect to database".$error_message,true);
+
+				if(SYSTEM_MANAGER::requires_db_connection()) {
+					$error_message = SYSTEM_MANAGER::is_system_mode_production() ? "" : ": ".$e->getMessage();
+					self::display_low_level_error_message("Unable to connect to database".$error_message,true);
+				}
 			}
 
 			if(SYSTEM_MANAGER::requires_db_connection() && !DB::get_instance())
