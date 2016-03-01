@@ -55,6 +55,7 @@
 		public function path($name)					{ return $this->_rest_server_cmodel->path($name); }
 		public function server() 					{ return $this->_rest_server_cmodel; }
 		public function code($code) 				{ return $this->_rest_server_cmodel->code($code); }
+		public function end($code=200) 				{ $this->_rest_server_cmodel->code($code); die; }
 
 		public function fail($message,$code=BASE_CMODEL_API_RESPONSE::CODE_FAIL) 	{ return $this->_rest_server_cmodel->response()->fail($message,$code); }
 
@@ -108,7 +109,7 @@
 		            
 		            } elseif(!is_null($this->get("wadl"))) {
 
-		            	$base = SYSTEM_MANAGER::get_system_url(false).SERVER_UTIL::get_redirect_url();
+		            	$base = URL_UTIL::remove_query(SERVER_UTIL::get_redirect_url());
 		            	
 		            	$xml_writer_util = XML_WRITER_UTIL::create()
 	            		->open("application",array("xmlns:postman"=>"http://postman","postman:name"=>"My WADL API","postman:guid"=>"83j344-34hs8a-9jhd09-sd98u3-asd83d"))

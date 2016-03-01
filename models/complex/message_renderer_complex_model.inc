@@ -55,8 +55,6 @@
 			preg_match("/^(?:{\\$)?([^}]+)}?/",$variable,$matches);
 			$variable = get_value($matches,1);
 
-			$value = (string)$value;
-			
             $this->_variables[$variable] 		= $value;
             $this->_variable_formats[$variable] = $format;
 
@@ -72,14 +70,11 @@
 
 			foreach($this->get_variables() as $variable=>$value) {
 
-				$variable_format = get_value($this->_variable_formats,$variable);
+				$variable_format = value($this->_variable_formats,$variable);
 
 				if($variable_format!=$format)
 					if($format==BASE_CMODEL_MESSAGE_RENDERER::FORMAT_HTML)
 						$value = str_replace("\n","<br>",$value);
-
-				if($format==BASE_CMODEL_MESSAGE_RENDERER::FORMAT_TEXT)
-					$value = html_entity_decode($value);
 
 				$this->_smarty_cmodel->assign($variable,$value);
 			}
@@ -87,22 +82,24 @@
 			return $this->_smarty_cmodel->fetch_string($content);
 		}
 
-		public function register($cmodel) {
+		public function register($message_cmodel) {
 
 			$this->set_variable(self::VAR_SITE_URL,SYSTEM_MANAGER::get_system_url());
             $this->set_variable(self::VAR_SITE_HOST,SYSTEM_MANAGER::get_system_host());
 			
-			$class = new ReflectionClass($cmodel);
+			$class = new ReflectionClass($message_cmodel);
 			$constants = $class->getConstants();
 
 			foreach($constants as $constant=>$variable) {
 				
 				if(preg_match("/^VAR_/",$constant)) {
 
-					if(preg_match("/^{\\$([^}]+)/",$variable,$matches)) 
-						$variable = strtolower(get_value($matches,1));
+					$default = value($message_cmodel->get_default_variables(),$variable,"");
 
-					$this->set_variable($variable,get_value($this->_variables,$variable,""));
+					if(preg_match("/^{\\$([^}]+)/",$variable,$matches)) 
+						$variable = strtolower(value($matches,1));					
+
+					$this->set_variable($variable,value($this->_variables,$variable,$default));
 				}
 			}
 		}

@@ -46,5 +46,30 @@
             }
 
             return true;
+        }
+
+        public function filter($value,$valid) {
+            
+            $values = is_array($value) ? $value : array();
+
+            $filtered = [];
+            foreach($values as $value) {
+                if(in_array($value, $valid))
+                    $filtered[] = $value;
+            }
+
+            return $filtered;
+        }
+
+        public function values($value,$valid) {
+            
+            $values = is_array($value) ? $value : array();
+
+            foreach($values as $value) {
+                if(!in_array($value, $valid))
+                    return false;
+            }
+
+            return true;
         }		
 	}

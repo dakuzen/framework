@@ -184,6 +184,10 @@
 			return $arry;
 		}
 
+		public function arry() {
+			return $this->urls();
+		}
+
 
 		public function size($name)					{ return IMAGE_UTIL::get_image_size($this->file($name)); }
 		public function timestamp()					{ return $this->_timestamp; }

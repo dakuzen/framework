@@ -491,6 +491,7 @@
 .dt { display: table; }
 .dtc { display: table-cell; }
 .dib { display: inline-block }
+.dit { display: inline-table; }
 
 .fss { font-size: small !important }
 .fssr { font-size: smaller !important }
