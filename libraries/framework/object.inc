@@ -28,7 +28,7 @@
 		}
 		
 	    public function __clone() {
-	    		
+	    
 	        foreach($this as $key => $val) {
 	            if(is_object($val)) {
 

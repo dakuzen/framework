@@ -16,6 +16,10 @@
 		protected $_debug 					= false;    
 		protected $_exceptions				= array();
 		
+		public function __construct($cron_setting_cmodels=[]) {
+			$this->_cron_setting_cmodels = $cron_setting_cmodels;
+		}		
+
         /**
          * Debug
          */

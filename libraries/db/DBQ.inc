@@ -859,7 +859,10 @@
 			return $this;
 		}
 
-		
+		function between($column,$value1,$value2,$relation=DB_CONSTRAINT::RELATION_AND) {
+			$this->add_where($column,"BETWEEN",$value1." AND ".$value2,$relation,false,false,false);
+			return $this;
+		}
 
 		function add_subquery($subquery,$relation=DB_CONSTRAINT::RELATION_AND) {
 			return $this->subquery($subquery,$relation);

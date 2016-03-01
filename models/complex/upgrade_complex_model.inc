@@ -699,7 +699,7 @@
 
 			foreach($queries as $query)
 				if(!$db->_query($query))
-					throw new Exception($db->get_error_message());
+					throw new Exception($db->get_error_message()." ".$query);
 
 			return true;
 		}
