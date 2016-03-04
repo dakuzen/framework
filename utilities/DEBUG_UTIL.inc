@@ -238,7 +238,7 @@
 			self::set_error_handler(array("DEBUG_UTIL","exception_error_handler"));
 		}
 
-		static function set_error_handler($function,$error_reporting=0) {
+		static function set_error_handler($function,$error_reporting=null) {
 
 			if(!is_null($error_reporting)) {
 				self::$_PREVIOUS_ERROR_REPORTING = ini_get('error_reporting');
