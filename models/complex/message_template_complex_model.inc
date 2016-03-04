@@ -18,7 +18,7 @@
 		
 		public function validate() {
 			
-			$smarty_cmodel = new BASE_CMODEL_SMARTY();
+			$smarty_cmodel = new CMODEL_MESSAGE_SMARTY();
 			$smarty_cmodel->assign("content","");
 			$smarty_cmodel->enable_throw_exception(true);
 			$smarty_cmodel->fetch_string($this->get_content());

@@ -52,7 +52,7 @@
 				}
 
 				$response_cmodel->render(true);
-			}				
+			}
 		
 			$task_url = rtrim(APPLICATION::get_instance()->get_uri()->get_uri(),"/")."/";
 						

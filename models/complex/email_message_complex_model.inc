@@ -185,7 +185,7 @@
 
 			if($message_template_cmodel=$this->get_message_template()) {
 				
-				$smarty_cmodel = new BASE_CMODEL_SMARTY();
+				$smarty_cmodel = new CMODEL_MESSAGE_SMARTY();
 				$smarty_cmodel->assign("content",$body);
 				$body = $smarty_cmodel->fetch_string($message_template_cmodel->get_content());
 			}	

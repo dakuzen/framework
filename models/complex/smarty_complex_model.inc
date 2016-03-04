@@ -92,8 +92,8 @@
             $this->register_plugin("modifier","shorten", array("STRING_UTIL","shorten"));
 	    }
 
-	    public static function create() {
-	    	return new BASE_CMODEL_SMARTY();
+	    public static function create($compile_dir="",$cache_dir="") {
+	    	return new CMODEL_SMARTY($compile_dir,$cache_dir);
 	    }
 
 
@@ -240,56 +240,56 @@
 	    /**
 	     * Debug 
 	     */
-	    public function debug()                                 { $this->debugging = true; }
+	    public function debug()                                 { $this->debugging = true; return $this; }
 	    
 	    /**
 	     * Render
 	     * @param string $file 
 	     */
-	    public function render($file)                           { echo $this->fetch($file); }   
+	    public function render($file)                           { echo $this->fetch($file); return $this; }   
 	    
 	    /**
 	     * enable caching
 	     */
-	    public function enable_caching()                        { $this->force_cache = Smarty::CACHING_ON; }
+	    public function enable_caching()                        { $this->force_cache = Smarty::CACHING_ON; return $this; }
 	    
 	    /**
 	     * disable caching 
 	     */
-	    public function disable_caching()                       { $this->force_cache = Smarty::CACHING_OFF; }
+	    public function disable_caching()                       { $this->force_cache = Smarty::CACHING_OFF; return $this; }
 	    
 	    /**
 	     * disable compile locking
 	     */
-	    public function disable_compile_locking()               { $this->compile_locking = false; }
+	    public function disable_compile_locking()               { $this->compile_locking = false; return $this; }
 	    
 	    /**
 	     * disable compile check
 	     */
-	    public function disable_compile_check()                 { $this->compile_check = false; }
+	    public function disable_compile_check()                 { $this->compile_check = false; return $this; }
 	    
 	    /**
 	     * force compile
 	     * @param boolean $value 
 	     */
-	    public function force_compile($value=true)              { $this->force_compile = $value; }
+	    public function force_compile($value=true)              { $this->force_compile = $value; return $this; }
 	    
 	    /**
 	     * add plugin directory
 	     * @param string $dir 
 	     */
-	    public function add_plugin_directory($dir)              { $this->addPluginsDir($dir); }
+	    public function add_plugin_directory($dir)              { $this->addPluginsDir($dir); return $this; }
 	    
 	    /**
 	     * set error handler
 	     * @param string $error_handler 
 	     */
-	    public function set_error_handler($error_handler)       { $this->_error_handler = $error_handler; }
+	    public function set_error_handler($error_handler)       { $this->_error_handler = $error_handler; return $this; }
 	    
 	    /**
 	     * disable throw exception
 	     */
-	    public function disable_throw_exception()               { $this->_error_handler = null; }
+	    public function disable_throw_exception()               { $this->_error_handler = null; return $this; }
 
 	    /**
 	     * allow php tag
@@ -333,8 +333,8 @@
 	    public function register_plugin($type,$name,$function) {
 	                    
             try { 
-                    $this->unregisterPlugin($type,$name); 
-                    $this->registerPlugin($type,$name,$function); 
+                $this->unregisterPlugin($type,$name); 
+                $this->registerPlugin($type,$name,$function); 
             } catch(Exception $e) {}
 	    }               
 	    

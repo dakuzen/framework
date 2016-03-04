@@ -131,7 +131,7 @@
                 $parts[] = "\TH:i:s";
 
             if($timezone=value($options,"timezone",true))
-                $parts[] = $timezone===true ? date("P") : $timezone;
+                $parts[] = $timezone===true ? "P" : $timezone;
 
             return $this->format_time(implode("",$parts),$this->value());
         }
