@@ -65,7 +65,7 @@
 		function initialize() {
 
 			//Set the HTTP code to 500. Later in the process_task() the code will be reset to 200
-			http_response_code(500);
+			//http_response_code(500); //removed for now
 
 			$this->add_timestamp("start_initialize");
 
@@ -325,7 +325,7 @@
 
 			//So far so good with the reqest so set the HTTP code back to 200 and process the task.
 			//This catches syntax errors in tasks and will throw 500 level errors from the initialize() function
-			http_response_code(200);
+			//http_response_code(200);
 
 			APPLICATION::get_web_asset_manager()->clear();
 
