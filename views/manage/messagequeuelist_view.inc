@@ -27,7 +27,7 @@
 			$message_queue_handler->add_order_by("created_date","DESC");
 			$message_queue_handler->add_join("message_queues","messages","message_id");
 			$message_queue_handler->add_filter("messages.state","=",BASE_DBQ_MESSAGE::STATE_ACTIVE);
-
+//DB::debug();
 			if($keywords) {
 				$message_queue_handler->add_join("message_queues","email_message_queues","message_queue_id","email_message_queue_id","LEFT");
 				$message_queue_handler->add_join("message_queues","sms_message_queues","message_queue_id","sms_message_queue_id","LEFT");
@@ -36,6 +36,7 @@
 				$message_queue_handler->add_filter("email_message_queues.body","LIKE","%".$keywords."%","OR","keyword");
 				$message_queue_handler->add_filter("sms_message_queues.body","LIKE","%".$keywords."%","OR","keyword");
 				$message_queue_handler->add_filter("to_recipients","LIKE","%".$keywords."%","OR","keyword");
+				$message_queue_handler->add_filter("to_number","LIKE","%".$keywords."%","OR","keyword");
 				$message_queue_handler->add_filter("cc_recipients","LIKE","%".$keywords."%","OR","keyword");
 				$message_queue_handler->add_filter("bcc_recipients","LIKE","%".$keywords."%","OR","keyword");
 			}
