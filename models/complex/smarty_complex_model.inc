@@ -312,7 +312,7 @@
 	     * @param string $function 
 	     */
 	    public function register_modifier($name,$function) {
-	            $this->register_plugin("modifier",$name,$function); 
+	        return $this->register_plugin("modifier",$name,$function); 
 	    }
 
 	    /**
@@ -321,8 +321,12 @@
 	     * @param string $function 
 	     */
 	    public function register_function($name,$function) {
-	            $this->register_plugin("function",$name,$function); 
+	        return $this->register_plugin("function",$name,$function); 
 	    }
+
+	    public function register_block($name,$function) {
+	        return $this->register_plugin("block",$name,$function); 
+	    }	    
 
 	    /**
 	     * register plugin
@@ -331,11 +335,13 @@
 	     * @param string $function 
 	     */
 	    public function register_plugin($type,$name,$function) {
-	                    
+
             try { 
                 $this->unregisterPlugin($type,$name); 
                 $this->registerPlugin($type,$name,$function); 
             } catch(Exception $e) {}
+
+            return $this;
 	    }               
 	    
 	    /**
