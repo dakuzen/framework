@@ -326,7 +326,7 @@
 
 			if($function=="create_subquery") {
 				$class = get_called_class();
-				return DB_SUBQUERY::create(new $class());
+				return DB_SUBQUERY::create(new $class(),value($args,0));
 			}
 
 			trigger_error("Call to undefined method ".get_class($this)."::".$function."()", E_USER_ERROR);
