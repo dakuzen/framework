@@ -30,7 +30,7 @@
 		}
 
 		public function cleanup() {	
-			FILE_UTIL::rmdir($this->_dir); return $this;
+			@FILE_UTIL::rmdir($this->_dir); return $this;
 		}
 
 		public function file($extension="",$guid="") {

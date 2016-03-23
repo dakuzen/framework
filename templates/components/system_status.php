@@ -15,7 +15,7 @@
 	
 	$version				= str_replace("_",".",$version);
 	
-	$table_data[] = array("System Time: ",		HTML_UTIL::span(CMODEL_TIME::create(time())->format()->long_date_time(["seconds"=>true]),array("style"=>"font-weight:bold;")));
+	$table_data[] = array("System Time: ",		HTML_UTIL::span(CMODEL_FORMAT::create(time())->iso8601(["seconds"=>true]),array("style"=>"font-weight:bold;")));
 	$table_data[] = array("System Timezone: ",		HTML_UTIL::span(SERVER_UTIL::shell_exec("date +'%Z %:z'"),array("style"=>"font-weight:bold;")));	
 	$table_data[] = array("App Timezone: ",		HTML_UTIL::span(CMODEL_TIME::create(time())->timezone_abr(),array("style"=>"font-weight:bold;")));
 	$table_data[] = array("App Mode: ",		HTML_UTIL::span($server_mode,array("style"=>"font-weight:bold;")));
@@ -23,7 +23,7 @@
 	$table_data[] = array("App Hostname: ",		HTML_UTIL::span($system_host,array("style"=>"font-weight:bold;")));
 	$table_data[] = array("Installed Directory: ",		HTML_UTIL::span($instance_directory,array("style"=>"font-weight:bold;")));
 	$table_data[] = array("Database Name: ",		HTML_UTIL::span($database_name,array("style"=>"font-weight:bold;")));	
-	$table_data[] = array("Database Time: ",		HTML_UTIL::span(CMODEL_TIME::create($database_time)->long_datetime(),array("style"=>"font-weight:bold;")));	
+	$table_data[] = array("Database Time: ",		HTML_UTIL::span(CMODEL_FORMAT::create($database_time)->iso8601(),array("style"=>"font-weight:bold;")));	
 	$table_data[] = array("Database Timezone: ",		HTML_UTIL::span($database_timezone,array("style"=>"font-weight:bold;")));	
 	$table_data[] = array("Log Level: ",		HTML_UTIL::span($log_level,array("style"=>"font-weight:bold;")));
 	$table_data[] = array("SSL: ",			HTML_UTIL::span($ssl_mode,array("style"=>"font-weight:bold;")));
