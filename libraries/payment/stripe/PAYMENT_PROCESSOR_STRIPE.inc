@@ -175,12 +175,28 @@
 
 				if(!$card) {
 					$credit_card = $payment_request->get_credit_card();
-					$card = array("number"=>$credit_card->get_number(),"exp_month"=>$credit_card->get_expiry_month(),"exp_year"=>$credit_card->get_expiry_year());
+
+					$card = array(
+						"number"=>$credit_card->get_number(),
+						"exp_month"=>$credit_card->get_expiry_month(),
+						"exp_year"=>$credit_card->get_expiry_year(),
+						"cvc"=>$credit_card->get_cvv2());
+
+					$optional_fields = ["name","address_line1","address_line2","address_city","address_state","address_country","address_zip"];
+					foreach($optional_fields as $field)
+						if($credit_card->{"get_".$field}())
+							$card[$field] = $credit_card->{"get_".$field}();
+
 				}
+
 
 				$args = array(	"amount"=>$payment_request->get_amount(),
 								"currency" => $payment_request->get_currency(),
 								"description"=>$payment_request->get_note());
+
+				if($shipping = $payment_request->get_shipping())
+					$args["shipping"] = $shipping;
+
 
 				if($payment_request->get_access_token()) {
 
@@ -204,9 +220,14 @@
 				}
 
 			} elseif(preg_match("/^PAYMENT_REQUEST_CUSTOMER_CREATE_STRIPE/",get_class($payment_request))) {
+				$args = array(	"email"=>$payment_request->get_email(),
+								"metadata"=>array("uid"=>$payment_request->get_customer_identifier())
+				);
 
-				return Stripe_Customer::create(array(	"email"=>$payment_request->get_email(),
-														"metadata"=>array("uid"=>$payment_request->get_customer_identifier())));
+				if($shipping=$payment_request->get_shipping())
+					$args["shipping"] = $shipping;
+
+				return Stripe_Customer::create($args);
 
 			} elseif(preg_match("/^PAYMENT_REQUEST_CUSTOMER_UPDATE_STRIPE/",get_class($payment_request))) {
 
@@ -223,7 +244,16 @@
 
 				$credit_card = $payment_request->get_credit_card();
 
-				$card = array("number"=>$credit_card->get_number(),"exp_month"=>$credit_card->get_expiry_month(),"exp_year"=>$credit_card->get_expiry_year(), "cvc"=>null);
+				$card = array(
+					"number"=>$credit_card->get_number(),
+					"exp_month"=>$credit_card->get_expiry_month(),
+					"exp_year"=>$credit_card->get_expiry_year(),
+					"cvc"=>$credit_card->get_cvv2());
+
+				$optional_fields = ["name","address_line1","address_line2","address_city","address_state","address_country","address_zip"];
+				foreach($optional_fields as $field)
+					if($credit_card->{"get_".$field}())
+						$card[$field] = $credit_card->{"get_".$field}();
 
 				$customer = Stripe_Customer::retrieve($payment_request->get_customer()->get_id());
 				return $customer->cards->create(array("card"=>$card));
