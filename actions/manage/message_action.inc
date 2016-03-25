@@ -31,7 +31,7 @@
 											->set_body(XSS_UTIL::decode($this->post("email","body")))		
 											->set_message_template_id($this->post("email","message_template_id"))
 											->set_from_email($this->post("email","from_email"))
-											->set_from_name($this->post("email","from_email"))
+											->set_from_name($this->post("email","from_name"))
 											->set_to_recipients($this->post("email","to_recipients"))
 											->set_cc_recipients($this->post("email","cc_recipients"))
 											->set_bcc_recipients($this->post("email","bcc_recipients"));
