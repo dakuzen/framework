@@ -105,6 +105,8 @@
 				$this->_form = null;
 			else
 				$this->_form = new HTML_FORM($action, $data_encoding, $id, $name, $attributes);
+
+			return $this;
 		}
 
 		function reroute($controller,$task) { 
