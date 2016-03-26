@@ -43,11 +43,6 @@
 											->set_message(XSS_UTIL::decode($this->post("sms","message")));
 			}
 
-			if($message_cmodel->has_internal()) {
-				$internal_message_cmodel = $message_cmodel->get_internal_message();
-				$internal_message_cmodel->set_message(XSS_UTIL::decode($this->post("internal","message")));				
-			}
-
 			foreach($this->_message_cmodel->get_message_renderer()->get_variables() as $name=>$value) {
 				$this->_message_cmodel->set_variable($name,$this->post("send",$name));
 			}			
@@ -150,12 +145,6 @@
 				$message_cmodel->get_sms_message()->get_message(true);
 			} catch(Exception $e) {
 				throw new Exception("SMS Message: ".$e->getMessage());
-			}	
-
-			try {
-				$message_cmodel->get_internal_message()->get_message(true);
-			} catch(Exception $e) {
-				throw new Exception("Internal Message: ".$e->getMessage());
 			}			
 			
 			$smarty_cmodel->disable_throw_exception();

@@ -17,10 +17,10 @@
 			
 			foreach($messages as $message) {
 				
-				$tag = get_value($message,"tag");
+				$tag = value($message,"tag");
 
 				$cmodel = "CMODEL_MESSAGE";
-				if($this->_cast && class_exists($class="CMODEL_MESSAGE_".$tag))
+				if($this->_cast && @class_exists($class="CMODEL_MESSAGE_".$tag))
 					$cmodel = $class;
 
 				$message_cmodel = new $cmodel();
@@ -43,7 +43,7 @@
 			}
 			
 			$this->set_message_id($message_id);
-			return get_value($this->get_messages(),0);
+			return value($this->get_messages(),0);
 		}
 		
 		function get_count($field=null) 		{ return $this->get_dbq()->count($field); }

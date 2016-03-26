@@ -187,7 +187,9 @@
         function subtract_month($months=1)      { return $this->add_month($months * -1); }
 
         function round_day()                    { return $this->time(0,0,0); }
-        function round_second()                 { return $this->time(null,null,0); }
+        function round_hour()                   { return $this->time(null,0,0); }
+        function round_minute()                 { return $this->time(null,null,0); }
+        function round_second()                 { return $this->time(null,null,0); } //remove this
 
         function year()                         { return $this->_format("Y"); }
         function month()                        { return $this->_format("m"); }
