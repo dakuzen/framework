@@ -195,6 +195,9 @@
 
 		public static function create($tag=null) {
 
+			if(!$tag) 
+				return parent::create();
+
 			if(preg_match("/^B?CMODEL_MESSAGE$/",get_called_class()))
 				return parent::create();
 
