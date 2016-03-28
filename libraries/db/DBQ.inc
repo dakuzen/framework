@@ -479,7 +479,7 @@
          * @param string $field
          * @return boolean 
          */
-		function exists($field=null) {
+		function exists($field=1) {
 			if(!$field) 
 				$field = is_array($this->get_primary_key()) ? "*" : $this->get_tablename_alias().".".$this->get_primary_key();
 			return $this->select_one($field)!==false;
@@ -1047,7 +1047,7 @@
 			return "NOT EXISTS(".$this->select($field).")";
 		}
 
-		public function exists($field) {
+		public function exists($field=1) {
 			$this->limit(1);
 			return "EXISTS(".$this->select($field).")";
 		}

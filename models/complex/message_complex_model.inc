@@ -188,7 +188,7 @@
 				->where("email_message_id","=",$this->get_message_id())
 				->delete();
 
-			$this->delete();
+			$this->get_dbo("message")->delete();
 		
 			return DB::complete_transaction();			
 		}

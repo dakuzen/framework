@@ -45,20 +45,22 @@
                     if($match[2]=="-")
                         $offset *= -1;
 
-                    $this->_options["timezone"] = timezone_name_from_abbr("", $offset, 0);
-				}
+                    $time = strtotime($time) - $offset;
+
+				} else {
 
 
-				$time = preg_replace("/(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})/","$1 $2",$time);
+					$time = preg_replace("/(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})/","$1 $2",$time);
 
-                if($this->option("timezone")) {
-                	$system_timezone = date_default_timezone_get();
-                    date_default_timezone_set($this->option("timezone"));
- 					$time = strtotime($time);
-                    date_default_timezone_set($system_timezone);
-                } else {
-                	$time = strtotime($time);
-                }
+	                if($this->option("timezone")) {
+	                	$system_timezone = date_default_timezone_get();
+	                    date_default_timezone_set($this->option("timezone"));
+	 					$time = strtotime($time);
+	                    date_default_timezone_set($system_timezone);
+	                } else {
+	                	$time = strtotime($time);
+	                }
+	            }
 
             }
 
@@ -185,7 +187,9 @@
         function subtract_month($months=1)      { return $this->add_month($months * -1); }
 
         function round_day()                    { return $this->time(0,0,0); }
-        function round_second()                 { return $this->time(null,null,0); }
+        function round_hour()                   { return $this->time(null,0,0); }
+        function round_minute()                 { return $this->time(null,null,0); }
+        function round_second()                 { return $this->time(null,null,0); } //remove this
 
         function year()                         { return $this->_format("Y"); }
         function month()                        { return $this->_format("m"); }

@@ -1,21 +1,22 @@
 <?
 
 	/**
-	 * Class PAYMENT_REQUEST_SALE_STRIPE  
+	 * Class PAYMENT_REQUEST_SALE_STRIPE
 	 *
 	 * @package Library
 	 * @subpackage Payment
 	 */
 	class PAYMENT_REQUEST_SALE_STRIPE extends PAYMENT_REQUEST_SALE {
-		
+
 		protected $_access_token 	= null;
 		protected $_customer_id 	= "";
 		protected $_card_id 		= "";
 		protected $_application_fee = "";
 		protected $_email 			= "";
+		protected $_shipping 		= [];
 
 		/**
-		 * Constructor 
+		 * Constructor
 		 */
 		function __construct() {
 			parent::__construct();
@@ -26,7 +27,7 @@
 
 		/**
 		 * Returns formatted ammount
-		 * @return float 
+		 * @return float
 		 */
 		function get_amount() {
 			return parent::get_amount() * 100;
@@ -42,7 +43,7 @@
 
 		function get_access_token() {
 			return $this->_access_token;
-		}	
+		}
 
 		function set_card_id($card_id) {
 			$this->_card_id = $card_id; return $this;
@@ -51,10 +52,14 @@
 		function get_customer_id() {
 			return $this->_customer_id;
 		}
+		function get_shipping() {
+			return $this->_shipping;
+		}
+
 
 		function set_application_fee($application_fee) {
 			$this->_application_fee = $application_fee; return $this;
-		}	
+		}
 
 		function set_customer_id($customer_id) {
 			$this->_customer_id = $customer_id; return $this;
@@ -62,9 +67,13 @@
 
 		function set_access_token($access_token) {
 			$this->_access_token = $access_token; return $this;
-		}	
+		}
 
 		function set_email($email) {
 			$this->_email = $email; return $this;
-		}		
+		}
+
+		function set_shipping($value) {
+				$this->_shipping = $value; return $this;
+		}
 	}
