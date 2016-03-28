@@ -70,7 +70,7 @@
 		static function guid($length=null,$mixed_case=false) {
 			
 			//generate a random id encrypt it and store it in $guid
-			$guid = md5(crypt(uniqid(rand(),true), "ff")); 
+			$guid = md5(crypt(uniqid(mt_rand(),true), crypt(mt_rand(),mt_rand()))); 
 
 			if($length)	
 				$guid = substr($guid,0,$length);
