@@ -5,6 +5,7 @@
         *
         * @package Library
         * @subpackage Common
+        * @method static $this create() return self
         */
 	 
 	class MODEL_HANDLER extends MODEL {
