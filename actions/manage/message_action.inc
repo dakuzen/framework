@@ -31,7 +31,7 @@
 											->set_body(XSS_UTIL::decode($this->post("email","body")))		
 											->set_message_template_id($this->post("email","message_template_id"))
 											->set_from_email($this->post("email","from_email"))
-											->set_from_name($this->post("email","from_email"))
+											->set_from_name($this->post("email","from_name"))
 											->set_to_recipients($this->post("email","to_recipients"))
 											->set_cc_recipients($this->post("email","cc_recipients"))
 											->set_bcc_recipients($this->post("email","bcc_recipients"));
@@ -41,11 +41,6 @@
 				$sms_message_cmodel = $message_cmodel->get_sms_message()
 											->set_from_number($this->post("sms","from_number"))
 											->set_message(XSS_UTIL::decode($this->post("sms","message")));
-			}
-
-			if($message_cmodel->has_internal()) {
-				$internal_message_cmodel = $message_cmodel->get_internal_message();
-				$internal_message_cmodel->set_message(XSS_UTIL::decode($this->post("internal","message")));				
 			}
 
 			foreach($this->_message_cmodel->get_message_renderer()->get_variables() as $name=>$value) {
@@ -150,12 +145,6 @@
 				$message_cmodel->get_sms_message()->get_message(true);
 			} catch(Exception $e) {
 				throw new Exception("SMS Message: ".$e->getMessage());
-			}	
-
-			try {
-				$message_cmodel->get_internal_message()->get_message(true);
-			} catch(Exception $e) {
-				throw new Exception("Internal Message: ".$e->getMessage());
 			}			
 			
 			$smarty_cmodel->disable_throw_exception();

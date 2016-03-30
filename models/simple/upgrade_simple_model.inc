@@ -46,7 +46,7 @@
 					APPLICATION::display_message("Invalid version `".$version."`");					
 				
 			} catch(Exception $e) {
-				APPLICATION::display_message("Ugrade failed: ".$e->getMessage());
+				APPLICATION::display_message("Upgrade failed: ".$e->getMessage());
 			}			
 		}
 		
