@@ -4,7 +4,7 @@
 		protected $_ff_form_cmodel = null;
 		
 		function __construct() {
-			parent::__construct("article","form",array(SECURITY_MANAGER::ROLE_BACKEND));
+			parent::__construct("article","form");
 			$this->type_popup();			
 			$this->_ff_form_cmodel = CMODEL_FF_FORM::create();
 		}

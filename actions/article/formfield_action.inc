@@ -1,10 +1,6 @@
 <?
 	class BASE_ACTION_ARTICLE_FORMFIELD extends BASE_ACTION_ARTICLE_BASE {
-	
-		function __construct() {
-			parent::__construct(SECURITY_MANAGER::ROLE_BACKEND);
-		}
-		
+
 		function process() {
 			
 			$form_field_id		= $this->post("ffid");
