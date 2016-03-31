@@ -89,34 +89,8 @@
 
 			if(!$this->_is_authorized) 
 				return false;
-		
-			if(!$this->get_roles())
-				APPLICATION::display_low_level_error_message("No roles set for the task: ".get_class($this));
 
 			$has_access = SYSTEM_MANAGER::has_access($this->get_roles(),$this);
-
-			/*
-			if(!$has_access) {
-				
-				$role_list = SECURITY_MANAGER::get_role_list();
-				
-				$view_roles = array();
-				foreach($this->get_roles() as $role)
-					$view_roles[] = get_value($role_list,$role);
-					
-				$message = "Task roles ".implode(", ",$view_roles)." for ".get_class($this)." rejected on ".$this->get_task_url();
-				
-				if(method_exists("SYSTEM_MANAGER","get_user_roles")) {
-					$user_roles = array();
-					foreach(SYSTEM_MANAGER::get_user_roles() as $role)
-						$user_roles[] = get_value($role_list,$role);
-								
-					$message .= " with user roles ".implode(", ",$user_roles);
-				}
-				
-				APPLICATION::add_debug_message($message,false);
-			}
-			*/
 
 			return $has_access;
 		}

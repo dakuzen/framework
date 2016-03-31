@@ -4,7 +4,7 @@
 		protected $_ff_form_cmodels = array();
 
 		function __construct() {
-			parent::__construct("article","formlist",array(SECURITY_MANAGER::ROLE_BACKEND));
+			parent::__construct("article","formlist");
 
 			$this->type_blank();
 			$this->set_view("paging",APPLICATION::get_base_view_instance("components","paging"));
