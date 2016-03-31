@@ -136,7 +136,7 @@
 	            					$xml_writer_util
 		            				->open("method",array("name"=>strtoupper(value($endopoint,"method"))))
 			            					->open("request")
-			            					->add("param","",array("name"=>"api-key","type"=>"xsd:string","style"=>"header","default"=>"{{api-key}}"));
+			            					->add("param","",array("name"=>"api-key","type"=>"xsd:string","style"=>"header","default"=>""));
 
 			            			foreach((array)value($endopoint,"parms",array()) as $name=>$parm) {
 
