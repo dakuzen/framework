@@ -24,11 +24,11 @@
 		protected $_is_debug		 	= false;
 
 
-        private $_rules = [];
-        private $_dirty = [];
-        private $_sanitized = [];
-        private $_validate_errors = [];
-        private $_skip_save = false;
+        protected $_rules = [];
+        protected $_dirty = [];
+        protected $_sanitized = [];
+        protected $_validate_errors = [];
+        protected $_skip_save = false;
 						
 		public function __construct($dbo=null) {
 				
