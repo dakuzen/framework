@@ -1,4 +1,6 @@
-<?
+<?	
+	require_once(DIR_FRAMEWORK."packages/phpseclib/vendor/autoload.php");
+
     /**
     * Class SSH_UTIL
     *
@@ -38,12 +40,7 @@
 		public function __construct($host,$port=22) {
 
 			if(!$host)
-				throw new Exception("No host address supplied");				
-			
-			SERVER_UTIL::add_include_path(DIR_FRAMEWORK."packages/phpseclib/");
-
-			require_once("Net/SSH2.php");		
-			require_once("Crypt/RSA.php");
+				throw new Exception("No host address supplied");
 			
 			$this->start_error_handler();
 
@@ -102,7 +99,7 @@
 				throw new Exception("No key supplied");
 
 
-			$crypt_rsa = new Crypt_RSA();
+			$crypt_rsa = new phpseclib\Crypt\RSA();
 			
 			if($password)
 				$crypt_rsa->setPassword($password);
