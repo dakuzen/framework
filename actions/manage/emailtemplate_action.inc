@@ -4,10 +4,6 @@
 		protected $_email_event_template_cmodel = null;
 		protected $_send_email			= null;
 		
-		function __construct() {
-			$this->set_roles(array(SECURITY_MANAGER::ROLE_BACKEND_USER));
-		}
-		
 		function process() {
 			$registry			= REGISTRY::get_instance();
 			$email_event_template_id	= $registry->get_numeric_post_parm("eetid");

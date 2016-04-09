@@ -157,7 +157,7 @@
 
 		public function url($name,$full=false,$default="",$protocol=true) {
 
-			if($default && !$this->exists($name))
+			if(!$this->exists($name))
 				return $default;
 
 			$protocol = $protocol ? (SERVER_UTIL::is_server_https() ? "https:" : "http:") : "";

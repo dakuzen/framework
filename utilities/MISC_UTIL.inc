@@ -7,16 +7,16 @@
         */
 
 	class MISC_UTIL {
-	
+
 		/**
 		 * Returns a array list from the named values
 		 *
-		 * @param array $objects array 
+		 * @param array $objects array
 		 * @param string $function_name_value string value
-		 * @param string $function_name_key string key 
+		 * @param string $function_name_key string key
 		 * @return list
 	 	 */
-	 	 
+
 		static function get_list_from_object_function($objects,$function_name_value,$function_name_key=null) {
 			$list = array();
 			foreach($objects as $object) {
@@ -30,7 +30,7 @@
 			}
 			return $list;
 		}
-		
+
 		/**
 		 * Preforms a check to see if the string is empty
 		 *
@@ -38,7 +38,7 @@
 		 * echo MISC_UTIL::is_empty($myname);
 		 * </code>
 		 *
-		 * @param string $value string checked 
+		 * @param string $value string checked
 		 * @return boolean
 	 	 */
 
@@ -58,7 +58,7 @@
 		 * b115eaf5267a3fea00a58634e6510641
 		 * </pre>
 		 *
-		 * @param int $length int length 
+		 * @param int $length int length
                  * @param boolean $mixed_case
 		 * @return string
 	 	 */
@@ -66,27 +66,27 @@
 		static function get_guid($length=null,$mixed_case=false) {
 			return self::guid($length,$mixed_case);
 		}
-	 	 
-		static function guid($length=null,$mixed_case=false) {
-			
-			//generate a random id encrypt it and store it in $guid
-			$guid = md5(crypt(uniqid(rand(),true), "ff")); 
 
-			if($length)	
+		static function guid($length=null,$mixed_case=false) {
+
+			//generate a random id encrypt it and store it in $guid
+			$guid = md5(uniqid(mt_rand(),true));
+
+			if($length)
 				$guid = substr($guid,0,$length);
-			
+
 			if($mixed_case) {
-				
+
 				$chars = str_split($guid);
 				$guid = "";
-				
-				foreach($chars as $char) 
+
+				foreach($chars as $char)
 					$guid .= rand(0,1) ? strtoupper($char) : $char;
 			}
 
 			if(is_numeric($guid))
 				$guid = self::get_guid($length,$mixed_case);
-			
+
 			return $guid;
 		}
 
@@ -102,11 +102,11 @@
 		 *
 		 * @return string
 	 	 */
-	 	 
+
 		static function get_random_uid() {
 			return self::get_guid();
-		}		
-		
+		}
+
 		/**
 		 * Merges to arrayss
 		 *
@@ -128,10 +128,10 @@
 		 * </pre>
 		 *
 		 * @param array $array1 array first list
-		 * @param array $array2 array second list 
+		 * @param array $array2 array second list
 		 * @return array
 	 	 */
-	 	 
+
 		static function array_merge($array1,$array2) {
 			foreach($array2 as $key=>$value)
 				$array1[$key] = $value;
@@ -164,11 +164,11 @@
 				$old_serialized_object = serialize($old_object);
 				$new_serialized_object = 'O:'.strlen($new_classname).':"'.$new_classname . '":';
 				$new_serialized_object .= substr($old_serialized_object,strlen($old_serialized_prefix));
-				
+
 				$object = unserialize($new_serialized_object);
 				if($constructor && method_exists($object,"__construct"))
 					$object->__construct();
-				
+
 				return $object;
 			}
 
@@ -176,7 +176,7 @@
 		}
 
 		public static function type_cast($value,$options=array()) {
-			
+
 			if($value==="true")
 				$value = true;
 			elseif($value==="false")
@@ -201,7 +201,7 @@
 		}
 
 		/**
-		 * Gives a class an alias name 
+		 * Gives a class an alias name
 		 *
 		 * <code>
 		 * MISC_UTIL::class_alias("MISC_UTIL","miscutil")
@@ -211,29 +211,29 @@
 		 * @param string $original string original class name
 		 * @param string $alias string alias name given to the class
 	 	 */
-	 	 
+
 		static function class_alias($original, $alias) {
-			if (!function_exists('class_alias')) 
+			if (!function_exists('class_alias'))
 				eval('class '.$alias.' extends '.$original.' {}');
 			else
 				class_alias($original, $alias);
 		}
-	 	
+
         /**
          * Is class
          * @param object $class
          * @param string $class_name
-         * @return boolean 
+         * @return boolean
          */
 		static function is_class($class,$class_name) {
-			
+
 			if(!is_object($class))
 				return false;
-			
+
 			//this is wrong and needs to be redone, didnt have time, but it kinda works
 			$class_name_tmp = preg_replace("/^(H|C|HANDLER_|COMPLEX_)MODEL_/","",get_class($class));
 			$class_name 	= preg_replace("/^(H|C|HANDLER_|COMPLEX_)MODEL_/","",$class_name);
-			
+
 			return $class_name==$class_name_tmp;
 		}
 
@@ -248,7 +248,7 @@
 			return $subclassses;
 		}
 
-		public static function print_r($array,$return=true,$steps=0) { 
+		public static function print_r($array,$return=true,$steps=0) {
 			$s = "";
 
 			$level = value(ob_get_status(),"level");
@@ -264,7 +264,7 @@
 					$type = "Array";
 
 				elseif(is_object($array)) {
-					
+
 					$reflect = new ReflectionClass($array);
 
 					$props = $reflect->getProperties();
@@ -279,7 +279,7 @@
 
 					$type = "Object";
 				}
-	
+
 				$s = $type."\n".str_repeat(" ",($steps) * 8)."(\n";
 
 				foreach($array as $name=>$value) {
@@ -307,9 +307,9 @@
 				echo $s;
 
 			return $s;
-		} 
+		}
 
-		
+
 	}
 
 	/**
@@ -324,7 +324,7 @@
 	 *   [1] => hello
 	 * )
 	 * </pre>
-         * 
+         *
 	 * @return boolean
 	 */
 
@@ -335,27 +335,27 @@
 		if($debug=get_value($backtrace,0)) {
 
 			$if_format_html = DEBUG_UTIL::is_format_html();
-			
+
 			if($if_format_html)
 				echo '<div style="padding:2px;border: 0px dashed red;font-weight:bold">DEBUG: '.get_value($debug,"file").' @ line number '.get_value($debug,"line");
-			else 
+			else
 				echo 'DEBUG: '.get_value($debug,"file").' @ line number '.get_value($debug,"line")."\n\n";
 
 			foreach(func_get_args() as $value) {
 
-				if($value===null) 
+				if($value===null)
 					$value = "NULL";
-				elseif($value===FALSE) 
+				elseif($value===FALSE)
 					$value = "FALSE";
-				elseif($value===TRUE) 
+				elseif($value===TRUE)
 					$value = "TRUE";
 				elseif(is_object($value) && is_a($value,"stdObject"))
 					$value = (string)$value;
-				
+
 				if(is_array($value) || is_object($value)) {
 
 					if($if_format_html)
-						print "<pre style='margin:4px;margin-left:10px;font-weight:normal'>";	
+						print "<pre style='margin:4px;margin-left:10px;font-weight:normal'>";
 
 					print_r($value);
 
@@ -364,16 +364,16 @@
 				} else {
 
 					if($if_format_html)
-						print "<pre style='margin:4px;margin-left:10px;font-weight:normal'>";					
+						print "<pre style='margin:4px;margin-left:10px;font-weight:normal'>";
 
 					if(is_string($value) && $if_format_html)
 						$value = htmlentities($value);
-					
+
 					print($value);
 
 					if($if_format_html)
 						print "</pre>";
-					else 
+					else
 						print "\n\n";
 				}
 			}
@@ -382,8 +382,8 @@
 				echo '</div>';
 		}
 	}
-	
-	function s($session_id) { 
+
+	function s($session_id) {
 
 		if($session_id==SESSION_MANAGER::get_session_id()) {
 			$args = func_get_args();
@@ -393,34 +393,34 @@
 	}
 
 	/**
-         * H 
+         * H
          */
 	function h() {
 		$backtrace = debug_backtrace();
 
-		if($debug=get_value($backtrace,0)) {		
-				
+		if($debug=get_value($backtrace,0)) {
+
 			$values = array();
-				
+
 			foreach(func_get_args() as $value) {
 
 				if($value===null) $value = "NULL";
 				elseif($value===FALSE) $value = "FALSE";
 				elseif($value===TRUE)  $value = "TRUE";
-				else 
+				else
 					$value = print_r($value,true);
-				
+
 				$values[] = $value;
 			}
-			
+
 			$value = count($values)>1 ? print_r($values,true) : get_value($values,0);
-			
+
 			$value = 'DEBUG: '.get_value($debug,"file").' @ line number '.get_value($debug,"line")." ".$value;
-		
+
 			echo HTML_UTIL::get_hidden("debug",$value);
 		}
 	}
-	
+
 	/**
 	 * Preforms a check to see if a string is empty
 	 *
@@ -431,10 +431,10 @@
 	 * false
 	 * </pre>
 	 *
-	 * @param string $str string checked 
+	 * @param string $str string checked
 	 * @return boolean
 	 */
-	 
+
 	function is_empty($str) { return MISC_UTIL::is_empty($str); }
 
 	/**
@@ -457,8 +457,8 @@
 	 * cat
 	 * </pre>
 	 *
-	 * @param array $var array 
-	 * @param mixed $index or path of indexes 
+	 * @param array $var array
+	 * @param mixed $index or path of indexes
 	 * @param mixed $default
 	 * @return mixed
          * @todo review return type
@@ -467,19 +467,19 @@
 	function get_value($var,$index,$default=null) {
 		return value($var,$index,$default);
 	}
-	 
+
 	function value($var,$index,$default=null) {
-	
+
 		if($var===null)
 			return $default;
-		
+
 		$is_array = is_array($index);
-		
+
 		if($is_array && count($index)==1) {
 			$index = array_shift($index);
 			$is_array = is_array($index);
 		}
-			
+
 		if($is_array) {
 
 			$first_index = @$index[0];
@@ -489,7 +489,7 @@
 				$vars = null;
 				if(is_array($var))
 					$vars = @$var[$first_index];
-				
+
 				elseif(is_object($var))
 					$vars = @$var->$first_index;
 
@@ -512,13 +512,13 @@
         } elseif(is_array($var)) {
             if(@array_key_exists($index,$var))
                 return $var[$index];
-        
+
         } elseif(is_object($var)) {
-        	
+
         	if(isset($var->$index))
         		return $var->$index;
-        }	
-			
+        }
+
 		return $default;
 	}
 
@@ -534,15 +534,15 @@
 	 * 56
 	 * </pre>
 	 *
-	 * @param array $var array 
-	 * @param mixed $index or path of indexes 
+	 * @param array $var array
+	 * @param mixed $index or path of indexes
 	 * @param mixed $default
 	 * @return boolean
          * @todo review return type - it seems wrong
 	 */
-	 
+
 	function get_numeric_value($var,$index,$default=null) {
-		$value = get_value($var,$index,$default);		
+		$value = get_value($var,$index,$default);
 		return is_numeric($value) ? $value : null;
 	}
 

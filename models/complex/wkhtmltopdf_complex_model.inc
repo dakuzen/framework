@@ -35,6 +35,16 @@
 
 		public static function create($pdf_file="") { return new CMODEL_WKHTMLTOPDF($pdf_file); }
 		
+        public function option() {
+            $args = func_get_args();
+
+            if(count($args)==2) {
+                $this->_options[$args[0]] = $args[1];
+                return $this;            
+            }
+
+            return value($this->_options,value($args,0),value($args,1));
+        }
 
 		public function stream($object,$format=self::FORMAT_PDF) {
 
