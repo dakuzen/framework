@@ -112,7 +112,7 @@
 		            	$base = URL_UTIL::remove_query(SERVER_UTIL::get_redirect_url());
 		            	
 		            	$xml_writer_util = XML_WRITER_UTIL::create()
-	            		->open("application",array("xmlns:postman"=>"http://postman","postman:name"=>"My WADL API","postman:guid"=>"83j344-34hs8a-9jhd09-sd98u3-asd83d"))
+	            		->open("application",array("xmlns:postman"=>"http://wadl"))
 	            			->open("resources",array("base"=>$base));
 
 	            		foreach($views as $view_name=>$view) {
@@ -135,8 +135,8 @@
 
 	            					$xml_writer_util
 		            				->open("method",array("name"=>strtoupper(value($endopoint,"method"))))
-			            					->open("request")
-			            					->add("param","",array("name"=>"api-key","type"=>"xsd:string","style"=>"header","default"=>""));
+			            					->open("request");
+			            					//->add("param","",array("name"=>"api-key","type"=>"xsd:string","style"=>"header","default"=>""));
 
 			            			foreach((array)value($endopoint,"parms",array()) as $name=>$parm) {
 
