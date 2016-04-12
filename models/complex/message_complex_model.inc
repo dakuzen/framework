@@ -26,8 +26,6 @@
 		public function get_email()						{ return $this->_email_cmodel; }
         public function get_sms()						{ return $this->_sms_cmodel; }
 
-		public function set_email_body($body) 			{ $this->get_email_message()->set_body($body); return $this; }
-		public function set_email_subject($subject)		{ $this->get_email_message()->set_subject($subject); return $this; }
 		public function set_sms_message($message)		{ $this->get_sms_message()->set_message($message); return $this; }
 		public function set_message_renderer($value)	{ $this->_message_renderer_cmodel = $value; return $this; }
         public function set_email($email_cmodel)		{ $this->_email_cmodel = $email_cmodel; return $this; }
@@ -37,6 +35,20 @@
 		public function email_format_text() 			{ $this->get_email_message()->format_text(); return $this; }
 		
 		public function add_attachment_file($file) 		{ $this->get_email_message()->add_attachment_file($file); return $this; }
+
+		public function set_email_body($body,$literal=false) {
+			if($literal) 
+				$body = "{literal}".$body."{/literal}";
+			$this->get_email_message()->set_body($body);
+			return $this;
+		}
+
+		public function set_email_subject($subject,$literal=false) {
+			if($literal) 
+				$subject = "{literal}".$subject."{/literal}";
+			$this->get_email_message()->set_subject($subject);
+			return $this;
+		}
 
 		public function get_sms_message($load=true) {
 			if($load && !$this->_sms_message_cmodel && $this->get_message_id()) 
