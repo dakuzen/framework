@@ -124,7 +124,7 @@
 					$name = get_value($this->statIndex($i),"name");
 					
 					if(preg_match($preg_name,$name)) {
-						$entry = UNZIP_ENTRY::create($this->statIndex($i),$base_directory);	
+						$entry = UNZIP_ENTRY::create($this,$base_directory);	
 						
 						if($entry->is_valid())
 							$entries[] = $entry;
@@ -135,7 +135,7 @@
 
 				for($i=0; $i<$this->numFiles; $i++) {
 					
-					$entry = UNZIP_ENTRY::create($this->statIndex($i),$base_directory);
+					$entry = UNZIP_ENTRY::create($this,$base_directory);
 
 					if($entry->is_valid())
 						$entries[] = $entry;	
@@ -224,16 +224,25 @@
 		*/
 		public $_base_directory	= "";
 
+        /**
+        * Zip file
+        * @var UNZIP_UTIL $zip
+        */
+
+        private $_zip = null;
+
 		/**
 		* Create
 		* @param array $data
 		* @param string $base_directory
 		* @return object UNZIP_ENTRY 
 		*/
-		static function create($data,$base_directory="") {
+		static function create($zip,$base_directory="") {
 			$unzip_entry = new UNZIP_ENTRY();
+            $data = $zip->statIndex($i)
 			$unzip_entry->populate($data);
 			$unzip_entry->set_base_directory($base_directory);
+            $unzip_entry->set_zip($zip);
 			return $unzip_entry;
 		}
 
@@ -291,6 +300,7 @@
 		* @return integer 
 		*/
 		function get_size() 		{ return $this->_size; }
+        function filesize()         { return get_size(); }
 
 		/**
 		* Returns the mtime
@@ -329,10 +339,17 @@
 		function has_directory() 	{ return preg_match("/[\\/\\/]/",$this->get_name()); }
 
 		/**
+        * Returns the filename
+        * @return string 
+        */
+        function filename()    { return FILE_UTIL::get_filename($this->get_name()); }
+
+        /**
 		* Returns the extension
 		* @return string 
 		*/
 		function get_extension() 	{ return FILE_UTIL::get_file_extension($this->get_name()); }
+        function extension()    { return $this->get_extension(); }
 
 		/**
 		* Checks whether an extention is extension
@@ -379,4 +396,22 @@
 			$dir = preg_replace("/[\\/\\/]$/","",$dir);
 			return file_exists($dir.$this->get_name());
 		}
+
+        /**
+        * Set zip file
+        * @param UNZIP_UTIL $zip
+        */
+
+        public function set_zip($zip) {
+            $this->_zip = $zip;
+        }
+
+        /**
+        * Get entry content
+        * @return string
+        */
+
+        public function file(){
+            return $this->_zip->getFromIndex($this->get_index());
+        }
 	}
