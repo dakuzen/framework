@@ -88,8 +88,8 @@
 		 * @param string $url string url of the server
 		 * @param string $body string body 
 		 * @param array $headers array headers
-                 * @param string $username
-                 * @param string $password
+         * @param string $username
+         * @param string $password
 		 */
 		 
 		function post($url,$body="",$headers=array(),$username="",$password="") {
@@ -102,8 +102,8 @@
 		 * @param string $url string url of the server
 		 * @param string $body string body 
 		 * @param array $headers array headers
-                 * @param string $username
-                 * @param string $password
+         * @param string $username
+         * @param string $password
 		 */
 		 
 		function get($url,$parameters=array(),$headers=array(),$username="",$password="") {
@@ -120,8 +120,8 @@
 		 * @param string $url string url of the server
 		 * @param string $body string body 
 		 * @param array $headers array headers
-                 * @param string $username
-                 * @param string $password
+         * @param string $username
+         * @param string $password
 		 */
 		 
 		function put($url,$body="",$headers=array(),$username="",$password="") {
@@ -135,8 +135,8 @@
 		 * @param string $url string url of the server
 		 * @param string $body string body 
 		 * @param array $headers array headers
-                 * @param string $username
-                 * @param string $password
+         * @param string $username
+         * @param string $password
 		 */
 		 
 		function delete($url,$body="",$headers=array(),$username="",$password="") {
