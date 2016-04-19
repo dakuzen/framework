@@ -259,7 +259,9 @@
 				set_error_handler(self::$_previous_error_handler);
 				self::$_previous_error_handler = null;
 			}
-
+            /**
+             * @var $return Exception
+             */
 			if(is_a($return,"Exception"))
 				throw $return;
 
