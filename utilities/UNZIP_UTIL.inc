@@ -124,7 +124,7 @@
 					$name = get_value($this->statIndex($i),"name");
 					
 					if(preg_match($preg_name,$name)) {
-						$entry = UNZIP_ENTRY::create($this,$base_directory);	
+						$entry = UNZIP_ENTRY::create($this,$i,$base_directory);	
 						
 						if($entry->is_valid())
 							$entries[] = $entry;
@@ -135,7 +135,7 @@
 
 				for($i=0; $i<$this->numFiles; $i++) {
 					
-					$entry = UNZIP_ENTRY::create($this,$base_directory);
+					$entry = UNZIP_ENTRY::create($this,$i,$base_directory);
 
 					if($entry->is_valid())
 						$entries[] = $entry;	
@@ -237,9 +237,9 @@
 		* @param string $base_directory
 		* @return object UNZIP_ENTRY 
 		*/
-		static function create($zip,$base_directory="") {
+		static function create($zip,$index,$base_directory="") {
 			$unzip_entry = new UNZIP_ENTRY();
-            $data = $zip->statIndex($i)
+            $data = $zip->statIndex($index)
 			$unzip_entry->populate($data);
 			$unzip_entry->set_base_directory($base_directory);
             $unzip_entry->set_zip($zip);
