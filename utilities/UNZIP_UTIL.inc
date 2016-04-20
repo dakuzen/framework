@@ -113,7 +113,7 @@
          * Returns the entries
          * @param string $base_directory
          * @param string $preg_name
-         * @return array 
+         * @return UNZIP_ENTRY[] 
          */
 		public function get_entries($base_directory="",$preg_name="") {
 			$entries = array();
@@ -233,7 +233,8 @@
 
 		/**
 		* Create
-		* @param array $data
+		* @param UNZIP_UTIL $zip
+        * @param integer $index
 		* @param string $base_directory
 		* @return object UNZIP_ENTRY 
 		*/
@@ -263,6 +264,8 @@
 			$this->_mtime		= get_value($data,"mtime");
 			$this->_comp_size	= get_value($data,"comp_size");
 			$this->_comp_method	= get_value($data,"comp_method");
+
+            return true;
 		}
                 
         /**
@@ -300,7 +303,7 @@
 		* @return integer 
 		*/
 		function get_size() 		{ return $this->_size; }
-        function filesize()         { return get_size(); }
+        function filesize()         { return $this->get_size(); }
 
 		/**
 		* Returns the mtime
@@ -310,7 +313,7 @@
 
 		/**
 		* Returns the comp size
-		* @return inetegr 
+		* @return integer 
 		*/
 		function get_comp_size() 	{ return $this->_comp_size; }
 
