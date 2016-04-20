@@ -239,7 +239,7 @@
 		*/
 		static function create($zip,$index,$base_directory="") {
 			$unzip_entry = new UNZIP_ENTRY();
-            $data = $zip->statIndex($index)
+            $data = $zip->statIndex($index);
 			$unzip_entry->populate($data);
 			$unzip_entry->set_base_directory($base_directory);
             $unzip_entry->set_zip($zip);
