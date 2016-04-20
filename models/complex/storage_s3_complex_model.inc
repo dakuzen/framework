@@ -99,26 +99,26 @@
 
 		public function copy($source,$destination,$options=array("gzip"=>false)) {
 
+			$parameters 			= value($options,"parameters",array());
+			$parameters["Bucket"]	= value($parameters,"bucket",value($this->_options,"bucket"));
+			$parameters["Key"]		= $this->path($source);
 			try {
-				$this->aws()->s3()->getObject(array(
-				    'Bucket' => value($this->_options,"bucket"),
-				    'Key'    => $this->sanitize_path($source)
-				));
+				$this->aws()->s3()->getObject($parameters);
 
 			} catch(Exception $e) {
 				throw new Exception("Cannot rename object");
 			}
 
 			$parameters 				= value($options,"parameters",array());
-		    $parameters["Bucket"] 		= value($this->_options,"bucket");
-		    $parameters["Key"] 			= $this->sanitize_path($destination);
-		    $parameters["CopySource"] 	= value($this->_options,"bucket")."/".$this->sanitize_path($source);
+			$parameters["Bucket"] 		= value($this->_options,"bucket");
+			$parameters["Key"] 			= $this->path($destination);
+			$parameters["CopySource"] 	= value($this->_options,"bucket").$this->path($source);
 
 			if($public_path=value($this->_options,"public_path")) {
 
 				$public_path = FILE_UTIL::sanitize($public_path,"/");
 
-				if(preg_match("/^".preg_quote($public_path,"/")."/",$source))
+				if(preg_match("/^".preg_quote($public_path,"/")."/",$this->path($destination)))
 					$parameters["ACL"] = value($parameters,"acl",value($this->_options,"public_acl"));
 			}
 

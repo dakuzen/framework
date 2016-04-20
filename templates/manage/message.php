@@ -179,9 +179,14 @@
 		ksort($variables);
 	?>
 	<table>
-	<? foreach($variables as $key=>$value) { ?>
-		<tr><td class="p1"><?='{$'.$key.'}'?></td><td class="p1 pl10"><?=$value?></td></tr>
-	<? } ?>
+	<? foreach($variables as $key=>$value) {?>
+	<?	if(is_array($value) && !empty($value)){?>
+		<? foreach($value as $subkey=>$subvalue) {?>
+			<tr><td class="p1"><?='{$'.$key.'.'.$subkey.'}'?></td><td class="p1 pl10"><?=$subvalue?></td></tr>
+		<? } ?>
+	<? }else{?>
+		<tr><td class="p1"><?='{$'.$key.'}'?></td><td class="p1 pl10"><?= !empty($value) ? $value:''?></td></tr>
+	<? }} ?>
 	</table>
 </div>
 

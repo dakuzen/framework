@@ -179,7 +179,7 @@
 			return $this->get_body($render_vars);
 		}
 
-		public function get_body($render_vars=false) {	
+		public function get_body($render=false) {	
 
 			$body = parent::get_body();
 
@@ -190,7 +190,7 @@
 				$body = $smarty_cmodel->fetch_string($message_template_cmodel->get_content());
 			}	
 
-			if($render_vars)
+			if($render)
 				$body = $this->get_message_renderer()->get_rendered($body,$this->get_format());
 
 			if($this->is_format_html()) {
