@@ -40,6 +40,10 @@
 					foreach($modifiers as $modifier)
 						if($modifier=="iso8601")
 							$value = CMODEL_TIME::create($value)->iso8601();
+						elseif( strpos($modifier, 'tz_')!==false){
+							$tz = explode('tz_', $modifier);
+							$value = CMODEL_TIME::create($value, array('timezone'=>$tz[1]))->iso8601();
+						}
 					
 					$value = MISC_UTIL::type_cast($value);
 
