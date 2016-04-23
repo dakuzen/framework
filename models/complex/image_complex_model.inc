@@ -192,7 +192,7 @@
 		public function size($name)					{ return IMAGE_UTIL::get_image_size($this->file($name)); }
 		public function timestamp()					{ return $this->_timestamp; }
 		public function debug()						{ $this->_debug = true; return $this; }
-		public function exists($name) 				{ return $this->_timestamp!==null; }
+		public function exists($name) 				{ return !$this->_use_filename_timestamp || $this->_timestamp!==null; }
 		public function file($name) 				{ return $this->get_size_directory($name).$this->get_filename(); }
 		public function filename() 					{ return $this->get_filename(); }
 
