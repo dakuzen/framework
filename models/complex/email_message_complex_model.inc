@@ -266,6 +266,8 @@
 
 			$body 		= $this->get_rendered_body($vars);
 			$subject 	= $this->get_rendered_subject($vars);
+			$from_email = $this->get_message_renderer()->get_rendered($from_email);
+			$from_name 	= $this->get_message_renderer()->get_rendered($from_name);
 
 			$this->_message_queue_cmodel = BASE_CMODEL_EMAIL_MESSAGE_QUEUE::create()
 															->set_body($body)
