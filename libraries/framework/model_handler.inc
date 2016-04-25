@@ -5,6 +5,7 @@
         *
         * @package Library
         * @subpackage Common
+        * @method static $this create() return self
         */
 	 
 	class MODEL_HANDLER extends MODEL {
@@ -441,8 +442,8 @@
 		 * @param string $field
 		 * @return MODEL_HANDLER 
 		 */
-		function add_select_field($field) {
-			$this->_select_fields[] = $field;
+		function add_select_field($field,$alias="") {
+			$this->_select_fields[] = $field.($alias ? " AS ".$alias : "");
 			return $this;
 		}
 		

@@ -179,7 +179,7 @@
 			return $this->get_body($render_vars);
 		}
 
-		public function get_body($render_vars=false) {	
+		public function get_body($render=false) {	
 
 			$body = parent::get_body();
 
@@ -190,7 +190,7 @@
 				$body = $smarty_cmodel->fetch_string($message_template_cmodel->get_content());
 			}	
 
-			if($render_vars)
+			if($render)
 				$body = $this->get_message_renderer()->get_rendered($body,$this->get_format());
 
 			if($this->is_format_html()) {
@@ -218,6 +218,14 @@
 			return $this->get_subject($render_vars);
 		}
 
+		public function get_from_email($render_vars=false) {
+			return $this->get_message_renderer()->get_rendered(parent::get_from_email());
+		}
+
+		public function get_from_name($render_vars=false) {
+			return $this->get_message_renderer()->get_rendered(parent::get_from_name());
+		}
+		
         /**
          * Returns rendered subject
          * @param boolean $render_vars
@@ -261,13 +269,11 @@
 
 		function create_message_queue($vars=true,$from_email="",$from_name="") {
 
-			$from_email	= $from_email ? $from_email : $this->get_from_email();
-			$from_name	= $from_name ? $from_name : $this->get_from_name();
+			$from_email	= $from_email ? $from_email : $this->get_from_email(true);
+			$from_name	= $from_name ? $from_name : $this->get_from_name(true);
 
 			$body 		= $this->get_rendered_body($vars);
 			$subject 	= $this->get_rendered_subject($vars);
-			$from_email = $this->get_message_renderer()->get_rendered($from_email);
-			$from_name 	= $this->get_message_renderer()->get_rendered($from_name);
 
 			$this->_message_queue_cmodel = BASE_CMODEL_EMAIL_MESSAGE_QUEUE::create()
 															->set_body($body)

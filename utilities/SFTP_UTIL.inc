@@ -1,5 +1,7 @@
 <?
-	/**
+	require_once(DIR_FRAMEWORK."packages/phpseclib/vendor/autoload.php");
+
+    /**
 	* Class SFTP_UTIL
 	*
 	* @package Framework
@@ -17,18 +19,13 @@
 		public function __construct($host,$port=22) {
 
 			if(!$host)
-				throw new Exception("No host address supplied");				
+				throw new Exception("No host address supplied");
 			
-			SERVER_UTIL::add_include_path(DIR_FRAMEWORK."packages/phpseclib/");
-
-			require_once("Net/SFTP.php");		
-			require_once("Crypt/RSA.php");
-
 			//define('NET_SFTP_LOGGING', NET_SFTP_LOG_COMPLEX); // or NET_SFTP_LOG_SIMPLE
 
 			$this->start_error_handler();
 
-			$this->_connection = new Net_SFTP($host);
+			$this->_connection = new \phpseclib\Net\SFTP($host);
 
 			$this->complete_error_handler();
 		}
@@ -36,7 +33,7 @@
 		public static function create($host,$port=22) {
 			return new SFTP_UTIL($host,$port);
 		}
-         
+ 
         public function listing() {
         	return $this->_connection->nlist();
         }

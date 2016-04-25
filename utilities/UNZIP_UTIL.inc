@@ -113,7 +113,7 @@
          * Returns the entries
          * @param string $base_directory
          * @param string $preg_name
-         * @return array 
+         * @return UNZIP_ENTRY[] 
          */
 		public function get_entries($base_directory="",$preg_name="") {
 			$entries = array();
@@ -124,7 +124,7 @@
 					$name = get_value($this->statIndex($i),"name");
 					
 					if(preg_match($preg_name,$name)) {
-						$entry = UNZIP_ENTRY::create($this->statIndex($i),$base_directory);	
+						$entry = UNZIP_ENTRY::create($this,$i,$base_directory);	
 						
 						if($entry->is_valid())
 							$entries[] = $entry;
@@ -135,7 +135,7 @@
 
 				for($i=0; $i<$this->numFiles; $i++) {
 					
-					$entry = UNZIP_ENTRY::create($this->statIndex($i),$base_directory);
+					$entry = UNZIP_ENTRY::create($this,$i,$base_directory);
 
 					if($entry->is_valid())
 						$entries[] = $entry;	
@@ -224,16 +224,26 @@
 		*/
 		public $_base_directory	= "";
 
+        /**
+        * Zip file
+        * @var UNZIP_UTIL $zip
+        */
+
+        private $_zip = null;
+
 		/**
 		* Create
-		* @param array $data
+		* @param UNZIP_UTIL $zip
+        * @param integer $index
 		* @param string $base_directory
 		* @return object UNZIP_ENTRY 
 		*/
-		static function create($data,$base_directory="") {
+		static function create($zip,$index,$base_directory="") {
 			$unzip_entry = new UNZIP_ENTRY();
+            $data = $zip->statIndex($index);
 			$unzip_entry->populate($data);
 			$unzip_entry->set_base_directory($base_directory);
+            $unzip_entry->set_zip($zip);
 			return $unzip_entry;
 		}
 
@@ -254,6 +264,8 @@
 			$this->_mtime		= get_value($data,"mtime");
 			$this->_comp_size	= get_value($data,"comp_size");
 			$this->_comp_method	= get_value($data,"comp_method");
+
+            return true;
 		}
                 
         /**
@@ -291,6 +303,7 @@
 		* @return integer 
 		*/
 		function get_size() 		{ return $this->_size; }
+        function filesize()         { return $this->get_size(); }
 
 		/**
 		* Returns the mtime
@@ -300,7 +313,7 @@
 
 		/**
 		* Returns the comp size
-		* @return inetegr 
+		* @return integer 
 		*/
 		function get_comp_size() 	{ return $this->_comp_size; }
 
@@ -329,10 +342,17 @@
 		function has_directory() 	{ return preg_match("/[\\/\\/]/",$this->get_name()); }
 
 		/**
+        * Returns the filename
+        * @return string 
+        */
+        function filename()    { return FILE_UTIL::get_filename($this->get_name()); }
+
+        /**
 		* Returns the extension
 		* @return string 
 		*/
 		function get_extension() 	{ return FILE_UTIL::get_file_extension($this->get_name()); }
+        function extension()    { return $this->get_extension(); }
 
 		/**
 		* Checks whether an extention is extension
@@ -379,4 +399,22 @@
 			$dir = preg_replace("/[\\/\\/]$/","",$dir);
 			return file_exists($dir.$this->get_name());
 		}
+
+        /**
+        * Set zip file
+        * @param UNZIP_UTIL $zip
+        */
+
+        public function set_zip($zip) {
+            $this->_zip = $zip;
+        }
+
+        /**
+        * Get entry content
+        * @return string
+        */
+
+        public function file(){
+            return $this->_zip->getFromIndex($this->get_index());
+        }
 	}

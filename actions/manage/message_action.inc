@@ -142,6 +142,18 @@
 			}
 
 			try {
+				$message_cmodel->get_email_message()->get_from_name(true);
+			} catch(Exception $e) {
+				throw new Exception("Email From Name: ".$e->getMessage());
+			}
+
+			try {
+				$message_cmodel->get_email_message()->get_from_email(true);
+			} catch(Exception $e) {
+				throw new Exception("Email From Email: ".$e->getMessage());
+			}
+
+			try {
 				$message_cmodel->get_sms_message()->get_message(true);
 			} catch(Exception $e) {
 				throw new Exception("SMS Message: ".$e->getMessage());

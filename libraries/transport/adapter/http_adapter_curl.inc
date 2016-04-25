@@ -76,10 +76,13 @@
 					foreach($body as $key=>&$value) {
 						
 						// Backwards compatability for PHP <5.4
-						if(is_a($value,"CurlFile") && version_compare(phpversion(), '5.5.0')<0)
+						if(is_a($value,"CURLFile") && version_compare(phpversion(), '5.5.0')<0)
 							$value = "@".$value->name;
 
-						if(is_a($value,"CurlFile") || (is_string($value) && preg_match("/^@/",$value)))
+						elseif(is_string($value) && preg_match("/^@(.*)/",$value,$matches)) 
+							$value = new CURLFile(value($matches,1));
+
+						if(is_a($value,"CURLFile") || preg_match("/^@/",$value)) 
 							$http_request->get_header()->set("content-type","multipart/form-data");
 					}
 				}

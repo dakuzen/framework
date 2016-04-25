@@ -5,7 +5,6 @@
 
 		function __construct() {
 			$this->set_route("article","formfieldlist");
-			$this->set_roles(array(SECURITY_MANAGER::ROLE_BACKEND));
 			$this->type_blank();
 		}
 		
