@@ -43,9 +43,9 @@
 		<div class="element">
 			<span class="lbl">From</span>
 			<? if($email_message_queue->get_from_email() && $email_message_queue->get_from_name()) { ?>
-				<?=$email_message_queue->get_from_name()?> <<?=$email_message_queue->get_from_email()?>>
+				<?=$email_message_queue->get_from_name()?> &lt;<?=$email_message_queue->get_from_email()?>&gt;
 			<? } else { ?>
-				<?=$email_message_queue->get_from_email()?>
+				<?=$email_message_queue->get_from_name()?>
 			<? } ?>
 		</div>	
 	<? } ?>
