@@ -621,7 +621,10 @@
 					$this->_error_messages[] = $php_mail->ErrorInfo;
 				
 			} catch(Exception $e) {
-				$this->_error_messages[] = $e->getMessage();
+				if($php_mail->ErrorInfo)
+					$this->_error_messages[] = $php_mail->ErrorInfo;
+				else
+					$this->_error_messages[] = $e->getMessage();
 			}
 			
 			if($this->_debug) {

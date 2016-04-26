@@ -17,19 +17,19 @@
 
 <div class="cb mt20"></div>
 
-<div class="fl pr30">
-	<span class="label label-default">State</span>
+<div class="element">
+	<span class="lbl">State</span>
 	<?=$message_queue->get_state_name()?>
 </div>
 
-<div class="fl pr30">
-	<span class="label label-default">Created</span>
+<div class="element">
+	<span class="lbl">Created</span>
 	<?=FORMAT_UTIL::get_long_date_long_time($message_queue->get_created_date())?>
 </div>
 
 
-<div class="fl pr30">
-	<span class="label label-default">Send Attempts</span>
+<div class="element">
+	<span class="lbl">Send Attempts</span>
 	<?=$message_queue->get_attempts()?> <?=LANG_UTIL::get_plural("Attempt",$message_queue->get_attempts())?>
 </div>
 
@@ -38,50 +38,53 @@
 <? if($message_queue->is_type_email()) { ?>
 	
 	<? $email_message_queue = $message_queue->get_email_message_queue() ?>
-	
 
-	<div class="fl pr30">
-		<span class="label label-default">Format</span>
-		<?=$email_message_queue->get_format_name()?>
-	</div>	
+	<? if($email_message_queue->get_from_email() || $email_message_queue->get_from_name()) { ?>
+		<div class="element">
+			<span class="lbl">From</span>
+			<? if($email_message_queue->get_from_email() && $email_message_queue->get_from_name()) { ?>
+				<?=$email_message_queue->get_from_name()?> <<?=$email_message_queue->get_from_email()?>>
+			<? } else { ?>
+				<?=$email_message_queue->get_from_email()?>
+			<? } ?>
+		</div>	
+	<? } ?>
 
-
-	<div class="fl pr30">
-		<span class="label label-default">Recipients</span>
+	<div class="element">
+		<span class="lbl">Recipients</span>
 		<?=implode(", ",$email_message_queue->get_to_recipients())?>
 	</div>	
 
+
 	<? if($email_message_queue->get_cc_recipients()) { ?>
-	<div class="fl pr30">
-		<span class="label label-default">CC</span>
+	<div class="element">
+		<span class="lbl">CC</span>
 		<?=implode(", ",$email_message_queue->get_cc_recipients())?>
 	</div>	
 	<? } ?>	
 
 	<? if($email_message_queue->get_bcc_recipients()) { ?>
-		<div class="fl pr30">
-			<span class="label label-default">BCC</span>
+		<div class="element">
+			<span class="lbl">BCC</span>
 			<?=implode(", ",$email_message_queue->get_bcc_recipients())?>
 		</div>	
 	<? } ?>
-
-	<div class="cb pt20"></div>
-
-
-	<div class="fl pr30">
-		<span class="label label-default">Subject</span>
-		<?=$email_message_queue->get_subject()?>
-	</div>		
-
-	<div class="fl pr30">
-		<span class="label label-default">Event Message</span>
+	
+	<div class="element">
+		<span class="lbl">Event Message</span>
 		<a href="/manage/message/<?=$email_message_queue->get_message_id()?>"><?=$email_message_queue->get_message()->get_name()?></a>
 	</div>		
 
 	<div class="cb pt20"></div>
 
+
+	<div class="mb15">
+		<span class="lbl">Subject</span>
+		<?=$email_message_queue->get_subject()?>
+	</div>	
+
 	<div >
-		<span class="label label-default">Body</span>
+		<span class="lbl">Body <?=$email_message_queue->get_format_name()?></span>
 		
 		<div class="pt5">
 
@@ -102,7 +105,7 @@
 		<? if($message_queue_attachment_cmodels=$email_message_queue->get_message_queue_attachments(true)) { ?>
 
 			<div class="pt20">
-				<span class="label label-default">Attachments</span>
+				<span class="lbl">Attachments</span>
 				<? foreach($message_queue_attachment_cmodels as $message_queue_attachment) { ?>
 					<?=BASE_MODEL_IMAGE_ICON::get_file($message_queue_attachment->get_extension())?> <?=$message_queue_attachment->get_filename()?> <?=FORMAT_UTIL::get_formatted_filesize($message_queue_attachment->get_filesize())?>
 				<? } ?>
@@ -117,21 +120,21 @@
 	
 	<? $sms_message_queue = $message_queue->get_sms_message_queue() ?>
 	
-	<div class="fl pr30">
-		<span class="label label-default">Recipients</span>
+	<div class="element">
+		<span class="lbl">Recipients</span>
 		<div><?=$sms_message_queue->get_to_number()?></div>
 	</div>	
 
 	<div class="cb pt20"></div>
-	<div class="fl pr30">
-		<span class="label label-default">SMS Message</span>
+	<div class="element">
+		<span class="lbl">SMS Message</span>
 		<div><a href="/manage/message/<?=$sms_message_queue->get_message_id()?>"><?=$sms_message_queue->get_message()->get_name()?></a></div>
 	</div>		
 
 	<div class="cb pt20"></div>
 
 	<div >
-		<span class="label label-default">Body</span>
+		<span class="lbl">Body</span>
 
 		<div>	
 
@@ -231,3 +234,17 @@ $(function() {
 
 </script>
 	
+<style>
+.lbl {
+	display: block;
+	color: #111;
+	font-size: smaller;
+	font-weight: bold;
+}
+
+.element {
+	float: left;
+	padding-right: 35px;
+	margin-bottom: 15px;
+}
+</style>
