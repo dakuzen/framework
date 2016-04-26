@@ -201,7 +201,7 @@
 		 * 
 		 */
 		
-		function set_cc($cc) {
+		function set_cc($emails) {
 			$this->_cc = array();
 
 			$emails = is_array($emails) ? $emails : array($emails);
@@ -217,7 +217,7 @@
 		 * 
 		 */
 		 
-		function set_bcc($bcc) { 
+		function set_bcc($emails) { 
 			$this->_bcc = array();
 
 			$emails = is_array($emails) ? $emails : array($emails);
