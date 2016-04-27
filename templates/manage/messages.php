@@ -1,7 +1,7 @@
 
 
 <div>Search</div>
-<a href="javascript:;" class="btn btn-default btn-small fr" id="preview-toggle">Toogle Full Message</a>
+<a href="javascript:;" class="btn btn-default btn-small fr" id="preview-toggle">Toggle Full Message</a>
 <?=HTML_UTIL::input("message-search","",["class"=>"w500"])?>
 
 <div id="message-list" class="mt10"></div>
