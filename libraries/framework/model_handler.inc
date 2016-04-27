@@ -148,7 +148,8 @@
 			} elseif($name=="create")
 			 	return new $class();
 
-			trigger_error("Call to undefined method ".$class."->".$name."()", E_USER_ERROR);
+			else 
+				return parent::__call($name,$arguments);
 		}
 
 		function create_dbq($dbq) {
@@ -636,6 +637,7 @@
 
 			if($cmodels && $handler) {
 
+				$handler 				= $handler->clone();
 				$source_function 		= "get_".$source_object."_id";
 				$object_set_function 	= "set_".LANG_UTIL::plural($object);
 
@@ -668,6 +670,7 @@
 
 			if($cmodels && $handler) {
 
+				$handler 				= $handler->clone();
 				$object 				= $object ? $object : $relation;
 				$source_function 		= "get_".$source."_id";
 				$relation_function 		= "get_".$relation."_id";
@@ -700,6 +703,7 @@
 
 			if($cmodels && $handler) {
 
+				$handler 				= $handler->clone();
 				$object 				= $object ? $object : $relation;
 				$source_function 		= "get_".$source."_id";
 				$relation_function 		= "get_".$relation."_id";
