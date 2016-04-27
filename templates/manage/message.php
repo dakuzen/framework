@@ -179,14 +179,29 @@
 		ksort($variables);
 	?>
 	<table>
-	<? foreach($variables as $key=>$value) {?>
-	<?	if(is_array($value) && !empty($value)){?>
-		<? foreach($value as $subkey=>$subvalue) {?>
-			<tr><td class="p1"><?='{$'.$key.'.'.$subkey.'}'?></td><td class="p1 pl10"><?=$subvalue?></td></tr>
+
+	<? foreach($variables as $key=>$value) { ?>
+
+		<? if(is_array($value)) { ?>
+
+			<? foreach($value as $item=>$item_value) { ?>
+				<tr>
+					<td class="p4"><?='{$'.$key.'.'.$item.'}'?></td>
+					<td class="p4 pl10">
+						<?=$item_value?>
+					</td>
+				</tr>
+			<? } ?>
+
+		<? } else { ?>
+			<tr>
+				<td class="p4"><?='{$'.$key.'}'?></td>
+				<td class="p4 pl10">
+					<?=$value?>
+				</td>
+			</tr>
 		<? } ?>
-	<? }else{?>
-		<tr><td class="p1"><?='{$'.$key.'}'?></td><td class="p1 pl10"><?= !empty($value) ? $value:''?></td></tr>
-	<? }} ?>
+	<? } ?>
 	</table>
 </div>
 
@@ -215,15 +230,28 @@
 	?>
 	<table>
 		<? foreach($variables as $key=>$value) { ?>
-			<tr>	
-				<td><?='{$'.$key.'}'?></td>
-				<td class="pl10"><?=HTML_UTIL::input("send[".$key."]",$value ? $value : '{$'.$key.'}',["class"=>"w300"])?></td>
-			</tr>
+
+			<? if(is_array($value)) { ?>
+
+				<? foreach($value as $item=>$item_value) { ?>
+					<tr>
+						<td class="p4"><?='{$'.$key.'.'.$item.'}'?></td>
+						<td class="p4 pl10">
+							<?=HTML_UTIL::input("send[".$key."][".$item."]",$item_value ? $item_value : '{$'.$item.'.'.$item.'}',["class"=>"w300"])?>
+						</td>
+					</tr>
+				<? } ?>
+			<? } else { ?>
+				<tr>	
+					<td><?='{$'.$key.'}'?></td>
+					<td class="p4 pl10"><?=HTML_UTIL::input("send[".$key."]",$value ? $value : '{$'.$key.'}',["class"=>"w300"])?></td>
+				</tr>
+			<? } ?>
 		<? } ?>
 
 		<tr>	
 			<td>Recipient</td>
-			<td class="pl10"><?=HTML_UTIL::input("send-recipient",$value,["class"=>"w300"])?></td>
+			<td class="pl10"><?=HTML_UTIL::input("send-recipient","",["class"=>"w300"])?></td>
 		</tr>
 
 		<tr>	
