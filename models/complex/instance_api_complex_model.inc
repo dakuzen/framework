@@ -181,6 +181,13 @@
             }
         }
 
+        public function task_roles() {
+
+            $this->get_api_response()
+                    ->data("roles",SYSTEM_MANAGER::get_task_roles())
+                    ->success(true);
+        }        
+
         function api_instance_upgrade_handler($message,$has_success) {
             if(!$has_success)
                 throw new Exception($message);
