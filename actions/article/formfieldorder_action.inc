@@ -1,9 +1,5 @@
 <?
 	class BASE_ACTION_ARTICLE_FORMFIELDORDER extends BASE_ACTION_ARTICLE_BASE {
-	
-		function __construct() {
-			parent::__construct(array(SECURITY_MANAGER::ROLE_BACKEND));
-		}
 		
 		function process() {
 		

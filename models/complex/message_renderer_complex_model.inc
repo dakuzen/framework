@@ -8,7 +8,7 @@
 		const FORMAT_TEXT				= "T";
 
 		public function __construct() {
-			$this->_smarty_cmodel = new BASE_CMODEL_SMARTY();
+			$this->_smarty_cmodel = CMODEL_MESSAGE_SMARTY::create();
 		}
 
 		public static function create() { return new BASE_CMODEL_MESSAGE_RENDERER(); }

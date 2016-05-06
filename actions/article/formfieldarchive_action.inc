@@ -1,10 +1,6 @@
 <?
 	class BASE_ACTION_ARTICLE_FORMFIELDARCHIVE extends BASE_ACTION_ARTICLE_FORM_BASE {
-	
-		function __construct() {
-			parent::__construct(array(SECURITY_MANAGER::ROLE_MASTER));
-		}
-		
+
 		function process() {
 				
 			if($form_field_id=$this->post("sfid")) {

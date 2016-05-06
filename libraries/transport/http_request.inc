@@ -29,13 +29,7 @@
          * @var string $httpVersion
          */
 		public $httpVersion 	= "HTTP/1.1";
-             
-        /**
-         * The verb
-         * @var string $verb 
-         */
-		public $verb 		= "GET";
-                
+                             
 		/**
 		 * The headers
 		 * @var array $headers 
@@ -71,6 +65,12 @@
 		 * @var string $username
 		 */
 		public $username 	= "";
+
+		/**
+		 * The verb
+		 * @var string $verb
+		 */
+		public $verb 	= "";		
 
 		/**
 		 * The password
@@ -217,8 +217,8 @@
 			$this->body = $value;
 			
 			if (is_array($value)) {				
-				if ($this->_verb == 'GET') 
-					$this->_verb = 'POST';
+				if ($this->verb == 'GET') 
+					$this->verb = 'POST';
 			}
 
 			return $this;
@@ -265,7 +265,7 @@
          * set password
          * @param string $password 
          */
-		public function set_password($password) 	{ $this->_password = $password; return $this; }
+		public function set_password($password) 	{ $this->password = $password; return $this; }
 
         /**
          * attach
@@ -310,7 +310,7 @@
          * Set verb
          * @param string $verb 
          */
-		public function set_verb($verb) 	{ $this->verb = $verb; return $this; }
+		public function set_verb($verb) 	{ $this->verb = strtoupper($verb); return $this; }
 		
         /**
          * Return Adapter Name

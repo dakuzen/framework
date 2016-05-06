@@ -83,7 +83,9 @@
 				$this->_ini = @parse_ini_file($ini_file,$this->_has_sections,INI_SCANNER_RAW);
 			
 			} catch(Exception $e) {
-				DEBUG_UTIL::restore_error_handler();
+				if($this->_exception) {
+					DEBUG_UTIL::restore_error_handler();
+				}
 			}
 			
 			if($this->_exception)  

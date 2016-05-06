@@ -10,9 +10,7 @@
 
 		function init() {
 
-			$registry 	= REGISTRY::get_instance();
-			
-			if($action=$registry->get_get_parm("action")) {
+			if($action=$this->post("action")) {
 
 				$response_cmodel = new CMODEL_RESPONSE();
 			
@@ -20,13 +18,17 @@
 					
 					$message_action = APPLICATION::get_base_action_instance("manage","message");
 						
-					if($action=="sendemail")
-						$message_action->send_email($registry->get_get_parm("email"));
+					if($action=="send") {
 
-					elseif($action=="sendsms") 					
-						$message_action->send_sms($registry->get_get_parm("number"));
+						if($this->post("send-type")=="email")
+							$message_action->send_email($this->post("send-recipient"));
+						
+						elseif($this->post("send-type")=="sms")
+							$message_action->send_sms($this->post("send-recipient"));
+						else
+							throw new Exception("Invalid send type");							
 
-					elseif($action=="save")
+					} elseif($action=="save")
 						$message_action->save();
 
 					elseif($action=="preview")

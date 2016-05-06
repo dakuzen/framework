@@ -178,6 +178,10 @@
 		public function init_upgrade_framework() {
 
 			$db = $this->_db ? $this->_db : DB::get_instance();
+
+			if(!$db)
+				throw new Exception("There is no DB connection available");				
+			
 			$db_utility = $db->get_db_utility();
 
 			//This has to be left becauase the first time the upgrade is ran the upgrade table
@@ -699,7 +703,7 @@
 
 			foreach($queries as $query)
 				if(!$db->_query($query))
-					throw new Exception($db->get_error_message());
+					throw new Exception($db->get_error_message()." ".$query);
 
 			return true;
 		}

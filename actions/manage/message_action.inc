@@ -10,47 +10,42 @@
 		}
 
 		function populate() {
-
-			$message_id = $this->post("mid");
 			
-			$message_handler = new BASE_HMODEL_MESSAGE();
-			$message_handler->set_message_id($message_id);
+			$message_cmodel = BASE_HMODEL_MESSAGE::create()
+										->set_message_id($this->post("mid"))
+										->get();
+			if(!$message_cmodel) 
+				throw new Exception("Failed to load message");
 			
-			$message_cmodel = get_value($message_handler->get_messages(),0);
+			$this->_message_cmodel = $message_cmodel;
+			
+			$this->_message_cmodel
+					->set_state($this->post("form","state"))
+					->set_name($this->post("form","name"))
+					->set_description($this->post("form","description"));
 
-			if($message_cmodel) {
-				
-				$this->_message_cmodel = $message_cmodel;
-				
-				$this->_message_cmodel
-						->set_state($this->post("form","state"))
-						->set_name($this->post("form","name"))
-						->set_description($this->post("form","description"));			
-
-				if($message_cmodel->has_email()) {
-					$email_message_cmodel = $message_cmodel->get_email_message()
-												->set_format($this->post("email","format"))
-												->set_subject(XSS_UTIL::decode($this->post("email","subject")))
-												->set_body(XSS_UTIL::decode($this->post("email","body")))		
-												->set_message_template_id($this->post("email","message_template_id"))
-												->set_from_email($this->post("email","from_email"))
-												->set_from_name($this->post("email","from_email"))
-												->set_to_recipients($this->post("email","to_recipients"))
-												->set_cc_recipients($this->post("email","cc_recipients"))
-												->set_bcc_recipients($this->post("email","bcc_recipients"));
-				}
-
-				if($message_cmodel->has_sms()) {
-					$sms_message_cmodel = $message_cmodel->get_sms_message()
-												->set_from_number($this->post("sms","from_number"))
-												->set_message(XSS_UTIL::decode($this->post("sms","message")));
-				}
-
-				if($message_cmodel->has_internal()) {
-					$internal_message_cmodel = $message_cmodel->get_internal_message();
-					$internal_message_cmodel->set_message(XSS_UTIL::decode($this->post("internal","message")));				
-				}
+			if($message_cmodel->has_email()) {
+				$email_message_cmodel = $message_cmodel->get_email_message()
+											->set_format($this->post("email","format"))
+											->set_subject(XSS_UTIL::decode($this->post("email","subject")))
+											->set_body(XSS_UTIL::decode($this->post("email","body")))		
+											->set_message_template_id($this->post("email","message_template_id"))
+											->set_from_email($this->post("email","from_email"))
+											->set_from_name($this->post("email","from_name"))
+											->set_to_recipients($this->post("email","to_recipients"))
+											->set_cc_recipients($this->post("email","cc_recipients"))
+											->set_bcc_recipients($this->post("email","bcc_recipients"));
 			}
+
+			if($message_cmodel->has_sms()) {
+				$sms_message_cmodel = $message_cmodel->get_sms_message()
+											->set_from_number($this->post("sms","from_number"))
+											->set_message(XSS_UTIL::decode($this->post("sms","message")));
+			}
+
+			foreach($this->_message_cmodel->get_message_renderer()->get_variables() as $name=>$value) {
+				$this->_message_cmodel->set_variable($name,$this->post("send",$name));
+			}			
 		}
 		function preview($response_cmodel) {
 			
@@ -68,9 +63,9 @@
 			$this->populate();
 
 			if(!$this->_message_cmodel)
-				throw new Exception("Failed to load the message");				
+				throw new Exception("Failed to load the message");
 		
-			$message_queue_cmodel = $this->_message_cmodel->get_email_message()->create_message_queue(false);
+			$message_queue_cmodel = $this->_message_cmodel->get_email_message()->create_message_queue();
 			$message_queue_cmodel->add_to_recipient($email);
 			$has_success = $message_queue_cmodel->send();
 
@@ -85,7 +80,7 @@
 			if(!$this->_message_cmodel)
 				throw new Exception("Failed to load the message");				
 		
-			$message_queue_cmodel = $this->_message_cmodel->get_sms_message()->create_message_queue(false);
+			$message_queue_cmodel = $this->_message_cmodel->get_sms_message()->create_message_queue();
 			$message_queue_cmodel->set_to_number($number);
 			$has_success = $message_queue_cmodel->send();
 
@@ -126,8 +121,9 @@
 
 			$message_cmodel = $this->_message_cmodel;
 
-			$smarty_cmodel = $message_cmodel->get_message_renderer()->get_smarty();
-			$smarty_cmodel->enable_throw_exception(true);
+			$smarty_cmodel = $message_cmodel->get_message_renderer()->get_smarty()
+									->enable_throw_exception(true)
+									->plugin_enabled(false);
 
 			foreach($message_cmodel->get_default_variables() as $var=>$value)
 				$message_cmodel->set_variable($var,$value);
@@ -146,15 +142,21 @@
 			}
 
 			try {
+				$message_cmodel->get_email_message()->get_from_name(true);
+			} catch(Exception $e) {
+				throw new Exception("Email From Name: ".$e->getMessage());
+			}
+
+			try {
+				$message_cmodel->get_email_message()->get_from_email(true);
+			} catch(Exception $e) {
+				throw new Exception("Email From Email: ".$e->getMessage());
+			}
+
+			try {
 				$message_cmodel->get_sms_message()->get_message(true);
 			} catch(Exception $e) {
 				throw new Exception("SMS Message: ".$e->getMessage());
-			}	
-
-			try {
-				$message_cmodel->get_internal_message()->get_message(true);
-			} catch(Exception $e) {
-				throw new Exception("Internal Message: ".$e->getMessage());
 			}			
 			
 			$smarty_cmodel->disable_throw_exception();

@@ -6,7 +6,6 @@
 		function __construct() {
 			$this->set_route("article","formfield");
 			$this->set_form("javascript:;",false,"field-form");
-			$this->set_roles(array(SECURITY_MANAGER::ROLE_BACKEND));
 			$this->type_popup();
 			
 			$this->_form_field_cmodel = CMODEL_FF_FORM_FIELD::create();

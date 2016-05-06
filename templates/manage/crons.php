@@ -5,7 +5,7 @@
 		$status = "Idle";
 		$last_ran = "Never";
 		
-		$cron = value($crons,$process,CMODEL_FF_CRON::create());
+		$cron = value($crons,$process,CMODEL_FF_CRON::create()->set_state(BASE_CMODEL_FF_CRON::STATE_IDLE));
 
 		$names = array();
 		foreach(explode("_",$process) as $name)
@@ -15,16 +15,16 @@
 		$actions = [];
 		
 		if(!$cron->is_state_active())
-			$actions[] = HTML_UTIL::link("javascript:;",BASE_MODEL_IMAGE_ICON::get_play("Queue process to run"),array("class"=>"action mr5","data-action"=>"queue","data-process"=>$process));
+			$actions[] = HTML_UTIL::link("javascript:;",BASE_MODEL_IMAGE_ICON::get_play("Queue process to run"),array("class"=>"action","data-action"=>"queue","data-process"=>$process));
 
 		if(!$cron->is_state_idle())
-			$actions[] = HTML_UTIL::link("javascript:;",BASE_MODEL_IMAGE_ICON::get_reset("Reset the cron"),array("class"=>"tip mr5 action","data-action"=>"reset","data-process"=>$process));
+			$actions[] = HTML_UTIL::link("javascript:;",BASE_MODEL_IMAGE_ICON::get_reset("Reset the cron"),array("class"=>"tip action","data-action"=>"reset","data-process"=>$process));
 
 		$name = HTML_UTIL::link($task_url."action:process/process:".$process."/",implode(" ",$names),array("class"=>"fwb","target"=>"_blank","onclick"=>"return confirm('Are you sure you would like to run this cron?')"));
 
 
 		$last_ran_ago 		= HTML_UTIL::span($cron->get_create_time()->age(),array("class"=>"fss"));
-		$last_ran 			= DATE_UTIL::get_short_date_time($cron->get_create_date())." ".$last_ran_ago;
+		$last_ran 			= CMODEL_FORMAT::create($cron->get_create_date())->iso8601(["seconds"=>true])." ".HTML_UTIL::div($last_ran_ago);
 		$status 			= $cron->get_state_name();
 
 		if($cron->is_state_active())
@@ -53,7 +53,7 @@
 	HTML_TABLE_UTIL::create()
 		->set_headings(array("","Process","Status","Last Ran"))
 		->set_data($table_data)
-		->set_column_attributes(0,array("class"=>"tac w1"))
+		->set_column_attributes(0,array("class"=>"tac w1 wsnw"))
 		->set_column_attributes(1,array("class"=>"w50p"))
 		->set_column_attribute(3,"align","center")
 		->set_width("100%")

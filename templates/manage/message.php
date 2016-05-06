@@ -1,6 +1,6 @@
 <? if($message) { ?>
 
-<div class="cb"></div>
+	<div class="cb"></div>
 
 	<div>
 		
@@ -167,18 +167,40 @@
 
 	<div class="mt30">
 		<a herf="javascript:;" id="save" class="btn btn-primary">Save</a> 
-		<?=HTML_UTIL::get_checkbox("validate",1,true,array("class"=>"m0 m5"),"Validate")?>
+		<?=HTML_UTIL::checkbox("validate",1,true,array("class"=>"m0 m5"),"Validate")?>
 	</div>		
 
-	<?=HTML_UTIL::get_hidden("mid",$message->get_message_id())?>
+	<?=HTML_UTIL::hidden("mid",$message->get_message_id())?>
+	<?=HTML_UTIL::hidden("action","")?>
+
 
 <div id="variables-dialog" class="dn">
 	<? 	$variables = $message->get_message_renderer()->get_variables();
 		ksort($variables);
 	?>
 	<table>
+
 	<? foreach($variables as $key=>$value) { ?>
-		<tr><td class="p1"><?='{$'.$key.'}'?></td><td class="p1 pl10"><?=$value?></td></tr>
+
+		<? if(is_array($value)) { ?>
+
+			<? foreach($value as $item=>$item_value) { ?>
+				<tr>
+					<td class="p4"><?='{$'.$key.'.'.$item.'}'?></td>
+					<td class="p4 pl10">
+						<?=$item_value?>
+					</td>
+				</tr>
+			<? } ?>
+
+		<? } else { ?>
+			<tr>
+				<td class="p4"><?='{$'.$key.'}'?></td>
+				<td class="p4 pl10">
+					<?=$value?>
+				</td>
+			</tr>
+		<? } ?>
 	<? } ?>
 	</table>
 </div>
@@ -202,24 +224,46 @@
 	<? } ?>
 </div>
 
-<div id="email-send-dialog" class="dn">
-	
-	Email<br>
-	<?=HTML_UTIL::get_input("email_to","",array("class"=>"w200"))?>
+<div id="send-dialog" class="dn">
+	<? 	$variables = $message->get_message_renderer()->get_variables();
+		ksort($variables);
+	?>
+	<table>
+		<? foreach($variables as $key=>$value) { ?>
 
-	<a href="javascript:;" class="btn btn-success" id="send-email">Send</a> 
+			<? if(is_array($value)) { ?>
+
+				<? foreach($value as $item=>$item_value) { ?>
+					<tr>
+						<td class="p4"><?='{$'.$key.'.'.$item.'}'?></td>
+						<td class="p4 pl10">
+							<?=HTML_UTIL::input("send[".$key."][".$item."]",$item_value ? $item_value : '{$'.$item.'.'.$item.'}',["class"=>"w300"])?>
+						</td>
+					</tr>
+				<? } ?>
+			<? } else { ?>
+				<tr>	
+					<td><?='{$'.$key.'}'?></td>
+					<td class="p4 pl10"><?=HTML_UTIL::input("send[".$key."]",$value ? $value : '{$'.$key.'}',["class"=>"w300"])?></td>
+				</tr>
+			<? } ?>
+		<? } ?>
+
+		<tr>	
+			<td>Recipient</td>
+			<td class="pl10"><?=HTML_UTIL::input("send-recipient","",["class"=>"w300"])?></td>
+		</tr>
+
+		<tr>	
+			<td></td>
+			<td class="pl10"><a href="javascript:;" class="btn btn-success" id="send">Send</a></td>
+		</tr>
+	</table>
+	<?=HTML_UTIL::hidden("send-type","","send-type")?>
 </div>
 
 <div id="email-preview-dialog" class="dn">
 	<iframe width="800" height="600"></iframe>
-</div>
-
-<div id="sms-send-dialog" class="dn">
-	
-	Number<br>
-	<?=HTML_UTIL::get_input("number_to","",array("class"=>"w200"))?>
-
-	<a href="javascript:;" class="btn btn-success" id="send-sms">Send</a> 
 </div>
 
 <script>
@@ -252,7 +296,13 @@
 		});
 		
 		$("#email-send-toggle").click(function() {
-			$("#email-send-dialog").dialog({ title: "Send Email Sample", width: "auto" });
+			$("#send-type").val("email");
+			$("#send-dialog").dialog({ title: "Send Sample Email", width: "auto", "appendTo": "#form" });
+		});	
+
+		$("#sms-send-toggle").click(function() {
+			$("#send-type").val("sms");
+			$("#send-dialog").dialog({ title: "Send Sample SMS", width: "auto", "appendTo": "#form" });
 		});	
 
 		$("#email-preview").click(function() {
@@ -267,44 +317,20 @@
 			
 		});	
 
-		$("#sms-send-toggle").click(function() {
-			$("#sms-send-dialog").dialog({ title: "Send SMS Sample", width: "auto" });
-		});	
-
-	    $("#send-email").click(function() {
-	
-			email = $("input[name='email_to']").val();
-
-	      	$.post("<?=$current?>action:sendemail/email:" + email,$("form").serialize(),function(response) {
-	        	if(response.has_success) {
-	          		FF.msg.success("The message has been successfully sent");
-	          		$("#email-send-dialog").dialog("close");
-	        	} else
-	        		FF.msg.error(response.errors);
-	    	});
-		});
-
-	    $("#send-sms").click(function() {
-				
-			number = $("input[name='number_to']").val();
-
-	      	$.post("<?=$current?>action:sendsms/number:" + number,$("form").serialize(),function(response) {
-	        	if(response.has_success) {
-	          		FF.msg.success("The message has been successfully sent");
-	          		$("#sms-send-dialog").dialog("close");
-	        	} else
-	        		FF.msg.error(response.errors);
-	    	});
+	    $("#send").click(function() {
+	    	$("#action").val("send");
+	      	$.go("<?=$current?>",{ data: "form", success: function(response) {
+	        	FF.msg.success("The message has been successfully sent");
+	          	$("#send-dialog").dialog("close");
+	    	}});
 		});
 
 	    $("#save").click(function() {
-				
-	      	$.post("<?=$current?>action:save",$("form").serialize(),function(response) {
-	        	if(response.has_success) 
-	          		FF.msg.success("The message has been successfully saved");	          		
-	        	else
-	        		FF.msg.error(response.errors);
-	    	});
+			$("#action").val("save");	
+	      	$.go("<?=$current?>",{ data: "form", success: function(response) {
+	        	FF.msg.success("The message has been successfully saved");
+	          	$("#send-dialog").dialog("close");
+	    	}});
 		});		
 
 	    $("input[name='email_to']").keypress(function(event) {

@@ -113,7 +113,8 @@
             if(!$this->_object)
                 throw new Exception("There is no service object registered");
 
-            $this->code(500);
+            //Removed for now. 
+            //$this->code(500);
 
             $e = null;
             $exists = false;

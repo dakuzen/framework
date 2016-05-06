@@ -142,8 +142,8 @@
 				throw new Exception("The mbstring extension is not loaded");
 		}
 
-		public static function create() {
-			return new CMODEL_CSV_WRITER();
+		public static function create($file="") {
+			return new CMODEL_CSV_WRITER($file);
 		}
 
 		public function create_stream($filename) {

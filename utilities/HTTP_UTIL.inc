@@ -165,6 +165,8 @@
 		 
 		function output_headers($content_length,$filename,$force_download=false) {
 			
+			http_response_code(200);
+
 			$filename_extension = FILE_UTIL::get_file_extension($filename);
 
 			header("Content-Description: File Transfer");

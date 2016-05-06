@@ -69,19 +69,20 @@
 				$http_request->get_header()->set("Content-Type","application/x-www-form-urlencoded");
 		
 			// post data
-			if($http_request->get_body()) {
-
-				$body = $this->get_body();
+			if($body=$http_request->get_body()) {
 
 				if(is_array($body)) {
 
 					foreach($body as $key=>&$value) {
 						
 						// Backwards compatability for PHP <5.4
-						if(is_a($value,"CurlFile") && version_compare(phpversion(), '5.5.0')<0)
+						if(is_a($value,"CURLFile") && version_compare(phpversion(), '5.5.0')<0)
 							$value = "@".$value->name;
 
-						if(is_a($value,"CurlFile") || (is_string($value) && preg_match("/^@/",$value)))
+						elseif(is_string($value) && preg_match("/^@(.*)/",$value,$matches)) 
+							$value = new CURLFile(value($matches,1));
+
+						if(is_a($value,"CURLFile") || preg_match("/^@/",$value)) 
 							$http_request->get_header()->set("content-type","multipart/form-data");
 					}
 				}
@@ -94,8 +95,12 @@
 				curl_setopt($this->_curl,CURLOPT_POSTFIELDS,$body);
 			}
 
+			$headers = [];
+			foreach($http_request->get_header()->get_formatted() as $name=>$value)
+				$headers[] = $name.":".$value;
+
 			curl_setopt($this->_curl,CURLOPT_VERBOSE, 1);	
-			curl_setopt($this->_curl,CURLOPT_HTTPHEADER,$http_request->get_header()->get_formatted());
+			curl_setopt($this->_curl,CURLOPT_HTTPHEADER, $headers);
 
 			$response = curl_exec($this->_curl);
 

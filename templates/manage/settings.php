@@ -15,7 +15,7 @@
 		}		
 	?>
 
-	<div id="setting-<?=MISC_UTIL::get_guid()?>" class="setting"><a href="#"><?=get_value($group_list,$group,"General Settings")?></a></div>
+	<div id="setting-<?=MISC_UTIL::get_guid()?>" class="setting"><a href="#"><?=value($group_list,$group,$group ? $group : "General")?></a></div>
 
 	<div>
 	

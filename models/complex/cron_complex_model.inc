@@ -96,8 +96,7 @@
 
 					$this->$process();
 
-					if(!$force)
-						$cron_cmodel->reset();
+					$cron_cmodel->reset();
 				
 				} catch(Exception $exception) {
 

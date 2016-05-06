@@ -101,7 +101,12 @@
 		}	
 		
 		function set_form($action, $data_encoding=false,$id="form",$name="form",$attributes=array()) {
-			$this->_form = new HTML_FORM($action, $data_encoding, $id, $name, $attributes);
+			if($action===null)
+				$this->_form = null;
+			else
+				$this->_form = new HTML_FORM($action, $data_encoding, $id, $name, $attributes);
+
+			return $this;
 		}
 
 		function reroute($controller,$task) { 

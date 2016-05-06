@@ -5,6 +5,7 @@
 	*
 	* @package Library
 	* @subpackage Common
+	* @method static $this create() return self
 	*/
 	 	
 	class MODEL_COMPLEX extends MODEL {
@@ -21,6 +22,13 @@
 		* @var boolean is_debug 
 		*/
 		protected $_is_debug		 	= false;
+
+
+        protected $_rules = [];
+        protected $_dirty = [];
+        protected $_sanitized = [];
+        protected $_validate_errors = [];
+        protected $_skip_save = false;
 						
 		public function __construct($dbo=null) {
 				
@@ -467,6 +475,96 @@
 					$object->set_dbo($val);
 			}
 		}
+
+
+        public function exist(){
+            return $this;
+        }
+
+        public function setup_rules($options = []){
+            $rules = $this->_rules;
+
+            if (array_key_exists('rules', $options))
+                $rules = array_merge_recursive($rules, $options['rules']);
+
+            if (array_key_exists('skip_required', $options) && $options['skip_required']===true)
+                foreach ($rules as $key=>$rule)
+                    unset($rules[$key]['required']);
+
+            $this->_rules = $rules;
+            return $this;
+        }
+
+        public function setup($data, $options=[]){
+            $this->_dirty = $data;
+            $this->setup_rules($options);
+            $this->_sanitized = filter_var_array($this->_dirty, $this->_rules, true);
+
+            if ($this->_sanitized)
+                foreach ($this->_sanitized as $key=>$value){
+                    if (is_null($value) && !empty($this->_rules[$key]['default'])){
+                        if (is_callable($this->_rules[$key]['default']))
+                            $this->_sanitized[$key] = $value = call_user_func($this->_rules[$key]['default']);
+                        else
+                            $this->_sanitized[$key] = $value = $this->_rules[$key]['default'];
+                    }
+
+                    if ($value === false){
+                        $message = 'Wrong '.ucfirst($key) . " value";
+                        if (!empty($this->_rules[$key]['message']))
+                            $message = $this->_rules[$key]['message'];
+
+                        if (array_key_exists('collect', $options) && $options['collect']==true)
+                            $this->_validate_errors[$key] = $message;
+                        else
+                            throw new Exception($message);
+                    }
+
+
+                    if (!empty($this->_rules[$key]['required']) && $this->_rules[$key]['required'] == true && is_null($this->{'get_'.$key}()) && is_null($value)){
+                        $message = ucfirst($key) . " is required";
+
+                        if (array_key_exists('collect', $options) && $options['collect']==true)
+                            $this->_validate_errors[$key] = $message;
+                        else
+                            throw new Exception($message);
+                    }
+
+                    if (!is_null($value) && $value !== false)
+                        $this->{'set_'.$key}($value);
+
+                }
+            return $this;
+        }
+
+        /**
+         * @return array
+         */
+        public function get_validate_errors()
+        {
+            return $this->_validate_errors;
+        }
+
+        /**
+         * return bool
+         */
+        public function skip_save(){
+            return $this->_skip_save;
+        }
+
+        /**
+         * @return array
+         */
+        public function get_sanitized(){
+            return $this->_sanitized;
+        }
+
+        /**
+         * @return array
+         */
+        public function get_dirty(){
+            return $this->_dirty;
+        }
 	}
 
 	class CMODEL extends MODEL_COMPLEX {}
