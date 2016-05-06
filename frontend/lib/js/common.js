@@ -699,6 +699,7 @@ FF.GG = { plugins: function(options) {
     }
 }
 
+$.default.msg = { options: { autoclose: 10} };
 
 FF.msg = {
 
@@ -742,8 +743,10 @@ FF.msg = {
     message: function(msgs,cls,options) {
 
     	options	 	= options ? options : {};
+    	options 	= $.extend($.default.msg.options,options);
     	container	= options.container ? options.container : null;
     	append		= options.append!=undefined;
+    	autoclose	= options.autoclose==undefined ? 15 : 0;
 
     	container 	= options.container ? $(options.container) : $("#messages");
 
@@ -775,13 +778,15 @@ FF.msg = {
         if(ex)
       		container.find("div").effect("highlight", {}, 600);
 
-      	clearTimeout($(container).data("timer"));
+      	if(autoclose) {
+	      	clearTimeout($(container).data("timer"));
 
-      	timer = FF.util.delay(function(container) {
-	      		container.fadeOut(500);
-	    },15000,container);
+	      	timer = FF.util.delay(function(container) {
+		      		container.fadeOut(500);
+		    },autoclose * 1000,container);
 
-	    container.data("timer",timer);
+		    container.data("timer",timer);
+		}
     },
 
 	decodeHTML: function() {
