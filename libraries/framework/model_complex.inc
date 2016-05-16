@@ -510,7 +510,7 @@
                     }
 
                     if ($value === false){
-                        $message = 'Wrong '.ucfirst($key) . " value";
+                        $message = 'Wrong '.ucfirst(str_replace('_', ' ', $key)) . " value";
                         if (!empty($this->_rules[$key]['message']))
                             $message = $this->_rules[$key]['message'];
 
@@ -522,7 +522,7 @@
 
 
                     if (!empty($this->_rules[$key]['required']) && $this->_rules[$key]['required'] == true && is_null($this->{'get_'.$key}()) && is_null($value)){
-                        $message = ucfirst($key) . " is required";
+                        $message = ucfirst(str_replace('_', ' ', $key)) . " is required";
 
                         if (array_key_exists('collect', $options) && $options['collect']==true)
                             $this->_validate_errors[$key] = $message;
