@@ -481,11 +481,30 @@
             return $this;
         }
 
+		public function array_merge_recursive_distinct ( array &$array1, array &$array2 )
+		{
+			$merged = $array1;
+
+			foreach ( $array2 as $key => &$value )
+			{
+				if ( is_array ( $value ) && isset ( $merged [$key] ) && is_array ( $merged [$key] ) )
+				{
+					$merged [$key] = $this->array_merge_recursive_distinct ( $merged [$key], $value );
+				}
+				else
+				{
+					$merged [$key] = $value;
+				}
+			}
+
+			return $merged;
+		}
+
         public function setup_rules($options = []){
             $rules = $this->_rules;
 
             if (array_key_exists('rules', $options))
-                $rules = array_merge_recursive($rules, $options['rules']);
+                $rules = $this->array_merge_recursive_distinct($rules, $options['rules']);
 
             if (array_key_exists('skip_required', $options) && $options['skip_required']===true)
                 foreach ($rules as $key=>$rule)
