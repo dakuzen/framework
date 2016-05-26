@@ -4,7 +4,7 @@
 
 	<div>
 		
-		<?=HTML_UTIL::get_input("form[name]",$message->get_name(),array("class"=>"w400","placeholder"=>"Name"))?>					
+		<?=HTML_UTIL::input("form[name]",$message->get_name(),array("class"=>"w400","placeholder"=>"Name"))?>					
 			
 		<?=HTML_UTIL::get_dropdown("form[state]",BASE_DBQ_MESSAGE::get_state_list(),$message->get_state(),array("class"=>"wa"))?>
 			
@@ -18,7 +18,7 @@
 
 		<div>
 			
-			<?=HTML_UTIL::get_input("form[description]",$message->get_description(),array("class"=>"w100p","placeholder"=>"Description"))?>
+			<?=HTML_UTIL::input("form[description]",$message->get_description(),array("class"=>"w100p","placeholder"=>"Description"))?>
 			
 		</div>
 			<div class="cb"></div>
@@ -30,7 +30,7 @@
 
 		<div>
 			
-			<?=HTML_UTIL::get_input("email[subject]",$email_message->get_subject(),array("class"=>"w100p","placeholder"=>"Subject"))?>
+			<?=HTML_UTIL::input("email[subject]",$email_message->get_subject(),array("class"=>"w100p","placeholder"=>"Subject"))?>
 		
 		</div>		
 
@@ -67,31 +67,31 @@
 
 			<div class="cb"></div>			
 
-			<div class="mt10">
-				
-				<div class="fl w50p">
-					<?=HTML_UTIL::get_input("email[from_email]",$email_message->get_from_email(),array("class"=>"w95p","placeholder"=>$from_email))?>
+			<div class="mt10 dt w100p">
+
+				<div class="dtr">
+					
+					<div class="dtc pr5"><?=HTML_UTIL::input("email[from_email]",$email_message->get_from_email(),array("class"=>"w100p","placeholder"=>"From Email".($from_email ? " (".$from_email.")" : "")))?></div>
+
+					<div class="dtc pr5 pl5"><?=HTML_UTIL::input("email[from_name]",$email_message->get_from_name(),array("class"=>"w100p","placeholder"=>"From Name".($from_name ? " (".$from_name.")" : "")))?></div>	
+
+					<div class="dtc pl5"><?=HTML_UTIL::input("email[reply_email]",$email_message->get_reply_email(),array("class"=>"w100p","placeholder"=>"Reply To"))?></div>	
+					
 				</div>
-
-				<div class="fr w50p">
-					<?=HTML_UTIL::get_input("email[from_name]",$email_message->get_from_name(),array("class"=>"w100p","placeholder"=>$from_name))?>
-				</div>				
-				
-				<div class="cb"></div>
 			</div>
 
 			<div class="mt10">
-				<?=HTML_UTIL::get_input("email[to_recipients]",$email_message->get_to_recipients(),array("class"=>"w100p","placeholder"=>"To"))?>
+				<?=HTML_UTIL::input("email[to_recipients]",$email_message->get_to_recipients(),array("class"=>"w100p","placeholder"=>"To"))?>
 
 			</div>
 
 			<div class="mt10">
-				<?=HTML_UTIL::get_input("email[cc_recipients]",$email_message->get_cc_recipients(),array("class"=>"w100p","placeholder"=>"CC"))?>
+				<?=HTML_UTIL::input("email[cc_recipients]",$email_message->get_cc_recipients(),array("class"=>"w100p","placeholder"=>"CC"))?>
 
 			</div>
 			
 			<div class="mt10">
-				<?=HTML_UTIL::get_input("email[bcc_recipients]",$email_message->get_bcc_recipients(),array("class"=>"w100p","placeholder"=>"BCC"))?>
+				<?=HTML_UTIL::input("email[bcc_recipients]",$email_message->get_bcc_recipients(),array("class"=>"w100p","placeholder"=>"BCC"))?>
 				
 			</div>
 		</div>
@@ -126,7 +126,7 @@
 
 			<div class="mt10">
 				
-				<?=HTML_UTIL::get_input("sms[from_number]",$sms_message->get_from_number(),array("class"=>"w100p","placeholder"=>"From Number"))?>
+				<?=HTML_UTIL::input("sms[from_number]",$sms_message->get_from_number(),array("class"=>"w100p","placeholder"=>"From Number"))?>
 
 			</div>
 
@@ -179,14 +179,29 @@
 		ksort($variables);
 	?>
 	<table>
-	<? foreach($variables as $key=>$value) {?>
-	<?	if(is_array($value) && !empty($value)){?>
-		<? foreach($value as $subkey=>$subvalue) {?>
-			<tr><td class="p1"><?='{$'.$key.'.'.$subkey.'}'?></td><td class="p1 pl10"><?=$subvalue?></td></tr>
+
+	<? foreach($variables as $key=>$value) { ?>
+
+		<? if(is_array($value)) { ?>
+
+			<? foreach($value as $item=>$item_value) { ?>
+				<tr>
+					<td class="p4"><?='{$'.$key.'.'.$item.'}'?></td>
+					<td class="p4 pl10">
+						<?=$item_value?>
+					</td>
+				</tr>
+			<? } ?>
+
+		<? } else { ?>
+			<tr>
+				<td class="p4"><?='{$'.$key.'}'?></td>
+				<td class="p4 pl10">
+					<?=$value?>
+				</td>
+			</tr>
 		<? } ?>
-	<? }else{?>
-		<tr><td class="p1"><?='{$'.$key.'}'?></td><td class="p1 pl10"><?= !empty($value) ? $value:''?></td></tr>
-	<? }} ?>
+	<? } ?>
 	</table>
 </div>
 
@@ -215,15 +230,28 @@
 	?>
 	<table>
 		<? foreach($variables as $key=>$value) { ?>
-			<tr>	
-				<td><?='{$'.$key.'}'?></td>
-				<td class="pl10"><?=HTML_UTIL::input("send[".$key."]",$value ? $value : '{$'.$key.'}',["class"=>"w300"])?></td>
-			</tr>
+
+			<? if(is_array($value)) { ?>
+
+				<? foreach($value as $item=>$item_value) { ?>
+					<tr>
+						<td class="p4"><?='{$'.$key.'.'.$item.'}'?></td>
+						<td class="p4 pl10">
+							<?=HTML_UTIL::input("send[".$key."][".$item."]",$item_value ? $item_value : '{$'.$item.'.'.$item.'}',["class"=>"w300"])?>
+						</td>
+					</tr>
+				<? } ?>
+			<? } else { ?>
+				<tr>	
+					<td><?='{$'.$key.'}'?></td>
+					<td class="p4 pl10"><?=HTML_UTIL::input("send[".$key."]",$value ? $value : '{$'.$key.'}',["class"=>"w300"])?></td>
+				</tr>
+			<? } ?>
 		<? } ?>
 
 		<tr>	
 			<td>Recipient</td>
-			<td class="pl10"><?=HTML_UTIL::input("send-recipient",$value,["class"=>"w300"])?></td>
+			<td class="pl10"><?=HTML_UTIL::input("send-recipient","",["class"=>"w300"])?></td>
 		</tr>
 
 		<tr>	

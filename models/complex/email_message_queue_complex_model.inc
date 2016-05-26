@@ -188,7 +188,9 @@
 
 			if(!$email_cmodel)
 				throw new Exception("Failed to load the email client");
-	
+		
+			$email_cmodel->set_reply_email($this->get_reply_email());
+
 			if($this->is_format_html())
 				$email_cmodel->enable_html();
 

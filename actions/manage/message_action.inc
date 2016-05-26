@@ -34,7 +34,8 @@
 											->set_from_name($this->post("email","from_name"))
 											->set_to_recipients($this->post("email","to_recipients"))
 											->set_cc_recipients($this->post("email","cc_recipients"))
-											->set_bcc_recipients($this->post("email","bcc_recipients"));
+											->set_bcc_recipients($this->post("email","bcc_recipients"))
+											->set_reply_email($this->post("email","reply_email"));
 			}
 
 			if($message_cmodel->has_sms()) {
@@ -139,6 +140,18 @@
 				$message_cmodel->get_email_message()->get_subject(true);
 			} catch(Exception $e) {
 				throw new Exception("Email Subject: ".$e->getMessage());
+			}
+
+			try {
+				$message_cmodel->get_email_message()->get_from_name(true);
+			} catch(Exception $e) {
+				throw new Exception("Email From Name: ".$e->getMessage());
+			}
+
+			try {
+				$message_cmodel->get_email_message()->get_from_email(true);
+			} catch(Exception $e) {
+				throw new Exception("Email From Email: ".$e->getMessage());
 			}
 
 			try {

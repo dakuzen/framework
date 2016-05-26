@@ -26,7 +26,13 @@
 		* @var string $from_name 
 		*/
 		private $_from_name 			= "";
-
+		
+		/**
+		* The reply email.
+		* @var string $reply_email 
+		*/
+		private $_reply_email 			= "";
+		
 		/**
 		* The subject.
 		* @var string $subject 
@@ -162,7 +168,7 @@
 		 * @param string $from_email the return email address
 		 * @param string $from_name name which its being sent from
 	 	 */
-		function __construct($subject="",$body="",$from_email="",$from_name="") {
+		function __construct($subject="",$body="",$from_email="",$from_name="",$reply_email="") {
 			
 			$this->initialize();
 			
@@ -170,10 +176,11 @@
 			$this->_body 		= $body;
 			$this->_from_email	= $from_email;
 			$this->_from_name	= $from_name;
+			$this->_reply_email = $reply_email;
 		}
 
-		public static function create($subject="",$body="",$from_email="",$from_name="") {
-			return new CMODEL_EMAIL($subject,$body,$from_email,$from_name);		
+		public static function create($subject="",$body="",$from_email="",$from_name="",$reply_email="") {
+			return new CMODEL_EMAIL($subject,$body,$from_email,$from_name,$reply_email);
 		}		
 		
        /**
@@ -201,7 +208,7 @@
 		 * 
 		 */
 		
-		function set_cc($cc) {
+		function set_cc($emails) {
 			$this->_cc = array();
 
 			$emails = is_array($emails) ? $emails : array($emails);
@@ -217,7 +224,7 @@
 		 * 
 		 */
 		 
-		function set_bcc($bcc) { 
+		function set_bcc($emails) { 
 			$this->_bcc = array();
 
 			$emails = is_array($emails) ? $emails : array($emails);
@@ -255,6 +262,7 @@
 		function initialize() {
 			$this->_from_email 		= "";
 			$this->_from_name 		= "";
+			$this->_reply_email		= "";
 			$this->_subject 		= "";
 			$this->_body 			= "";
 			$this->_body_alt 		= "";
@@ -316,7 +324,15 @@
 		 */
 		 
 		function set_body_alt($value) 				{ $this->_body_alt = $value; return $this; }
-		
+
+		/**
+		 * Sets the reply email 
+		 *
+		 * @param string $value string value set
+		 */
+		 
+		function set_reply_email($value) 				{ $this->_reply_email = $value; return $this; }
+				
 		/**
 		 * Sets the smtp user variable 
 		 *
@@ -613,6 +629,9 @@
 			foreach($this->_to as $email_recipient_cmodel)
 				$php_mail->AddAddress($email_recipient_cmodel->get_email());
 			
+			if($this->_reply_email)
+				$php_mail->AddReplyTo($this->_reply_email);
+
 			try {
 				
 				$has_success = @$php_mail->Send();
@@ -621,7 +640,10 @@
 					$this->_error_messages[] = $php_mail->ErrorInfo;
 				
 			} catch(Exception $e) {
-				$this->_error_messages[] = $e->getMessage();
+				if($php_mail->ErrorInfo)
+					$this->_error_messages[] = $php_mail->ErrorInfo;
+				else
+					$this->_error_messages[] = $e->getMessage();
 			}
 			
 			if($this->_debug) {

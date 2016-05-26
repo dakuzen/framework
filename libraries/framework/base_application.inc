@@ -669,7 +669,7 @@
 			require_once(DIR_FRAMEWORK."libraries/db/DBQ.inc");
 
 			require_once(self::get_application_directory()."system/managers/system_manager.inc");
-			require_once(self::get_application_directory()."system/managers/security_manager.inc");
+			@include_once(self::get_application_directory()."system/managers/security_manager.inc");
 
 			require_once(DIR_FRAMEWORK."libraries/framework/base_session_manager.inc");
 			require_once(DIR_FRAMEWORK."libraries/framework/session.inc");

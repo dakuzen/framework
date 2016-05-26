@@ -681,4 +681,18 @@
          * @return boolean 
          */
 		static function parse_notify_recipients($notify_recipient_string) { return EMAIL_UTIL::parse_email($notify_recipient_string); }
+
+		static function get_task_roles() {
+			
+			$file = FILE_UTIL::get_file_contents(MODEL_PATH::get_application_dir()."system/managers/security_manager.inc");
+						
+			preg_match_all('/const (ROLE_[A-Z_]*)/', $file, $matches);
+
+			$roles = [];
+			foreach(value($matches,1,[]) as $role) {
+				$roles["SECURITY_MANAGER::".$role] = "SECURITY_MANAGER::".$role;
+			}
+
+			return $roles;
+		}
 	}
