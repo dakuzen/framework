@@ -55,7 +55,11 @@
 			if ($stream=fopen($url, 'r')) {
 
 				http_response_code(200);
-				HTTP_UTIL::output_headers(0,basename($path),true);
+				if (!empty($options['download_name'])) {
+					HTTP_UTIL::output_headers(0,$options['download_name'],true);
+				} else {
+					HTTP_UTIL::output_headers(0,basename($path),true);
+				}
 
 			    // While the stream is still open
 			    while (!@feof($stream)) {
