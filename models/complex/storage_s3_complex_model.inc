@@ -42,7 +42,7 @@
 			return $this->aws()->s3()->doesObjectExist(value($this->_options,"bucket"),$file);
 		}
 
-		public function stream($path) {
+		public function stream($path, $options=[]) {
 
 			$path = $this->path($path);
 
