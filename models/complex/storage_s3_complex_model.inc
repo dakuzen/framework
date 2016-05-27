@@ -138,7 +138,7 @@
 
 			$parameters = value($options,"parameters",array());
 
-			if(is_file($data)) {
+			if(@is_file($data)) {
 				$fhandle = @fopen($data,"r");
 
 				if(!$fhandle)
