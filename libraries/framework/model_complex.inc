@@ -481,11 +481,30 @@
             return $this;
         }
 
+		public function array_merge_recursive_distinct ( array &$array1, array &$array2 )
+		{
+			$merged = $array1;
+
+			foreach ( $array2 as $key => &$value )
+			{
+				if ( is_array ( $value ) && isset ( $merged [$key] ) && is_array ( $merged [$key] ) )
+				{
+					$merged [$key] = $this->array_merge_recursive_distinct ( $merged [$key], $value );
+				}
+				else
+				{
+					$merged [$key] = $value;
+				}
+			}
+
+			return $merged;
+		}
+
         public function setup_rules($options = []){
             $rules = $this->_rules;
 
             if (array_key_exists('rules', $options))
-                $rules = array_merge_recursive($rules, $options['rules']);
+                $rules = $this->array_merge_recursive_distinct($rules, $options['rules']);
 
             if (array_key_exists('skip_required', $options) && $options['skip_required']===true)
                 foreach ($rules as $key=>$rule)
@@ -510,7 +529,7 @@
                     }
 
                     if ($value === false){
-                        $message = 'Wrong '.ucfirst($key) . " value";
+                        $message = 'Wrong '.ucfirst(str_replace('_', ' ', $key)) . " value";
                         if (!empty($this->_rules[$key]['message']))
                             $message = $this->_rules[$key]['message'];
 
@@ -522,7 +541,7 @@
 
 
                     if (!empty($this->_rules[$key]['required']) && $this->_rules[$key]['required'] == true && is_null($this->{'get_'.$key}()) && is_null($value)){
-                        $message = ucfirst($key) . " is required";
+                        $message = ucfirst(str_replace('_', ' ', $key)) . " is required";
 
                         if (array_key_exists('collect', $options) && $options['collect']==true)
                             $this->_validate_errors[$key] = $message;

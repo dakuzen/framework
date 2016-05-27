@@ -92,7 +92,9 @@ $.widget("custom.calendar",{
 								dateFormat: "yy-mm-dd" },
                 clearImage: "/lib/images/icons/calendar-clear.png",
                 clear: false,
-                dateFormat: "shortdate",
+                dateFormat: null,
+                outputFormat: null,
+                utcOffset: null,
                 text: "",
                 select: null,
                 date: null },
@@ -114,9 +116,7 @@ $.widget("custom.calendar",{
 			if(FF.util.is_numeric(date) && date.toString().length<13)
 				this._moment = moment.unix(date);
 
-			var utcOffset = $.default.calendar.utcOffset;
-
-			if(utcOffset!==null) {
+			if(this.options.utcOffset!==null) {
 				this._moment.utcOffset(utcOffset);
 			}
 
@@ -128,9 +128,13 @@ $.widget("custom.calendar",{
     	return this._moment ? this._moment.format("X") : "";
     },
 
+    utc: function() {
+    	return this._moment ? this._moment.clone().add(this._moment.utcOffset(), 'minutes').utc().toISOString() : "";
+    },
+
     localOffsetDiff: function() {
 
-		var utcOffset 	= $.default.calendar.utcOffset;
+		var utcOffset 	= this.options.utcOffset;
 		var diff 		= 0;
 
 		if(utcOffset!==null) {
@@ -150,9 +154,18 @@ $.widget("custom.calendar",{
 
 		this.moment(date);
 
-        $(this.element).find(".calendar_display_date").html(this.format(this.options.dateFormat));
-        $(this.element).find(".calendar_timestamp").val(this.time()).trigger("change");
+        $(this.element).find(".calendar_display_date").html(this.format(this.options.dateFormat));        
         $(this.element).find(".calendar_clear").show();
+
+        var output = '';
+        if(this.options.outputFormat=="timestamp") {
+        	output = this.time();
+        
+        } else if(this.options.outputFormat=="utc") {
+        	output = this.utc();
+        }
+
+        $(this.element).find(".calendar_timestamp").val(output).trigger("change");
 
        	if(!date)
 			this.clear();
@@ -165,6 +178,14 @@ $.widget("custom.calendar",{
 	},
 
 	_create: function() {
+		
+		var options = $.default.calendar || {};
+        this.options.dateFormat = this.options.dateFormat || options.dateFormat || "shortdate";
+        this.options.outputFormat = this.options.outputFormat || options.outputFormat || "timestamp";
+        
+        if(this.options.utcOffset!==null && $.isNumeric(options.outputFormat)) {
+        	this.options.utcOffset = options.outputFormat;
+        }
 
 		this.moment(moment());
 
@@ -198,7 +219,7 @@ $.widget("custom.calendar",{
 
 				var mm = moment(date).startOf("day");
 
-				var utcOffset = $.default.calendar.utcOffset;
+				var utcOffset = this.options.utcOffset;
 				if(utcOffset!==null)
 					mm.utcOffset(utcOffset);
 
@@ -232,8 +253,6 @@ $.widget("custom.calendar",{
 		},this));
 	}
 });
-
-$.default.calendar = { utcOffset: null };
 
 
 $.go = function(url,opt1,opt2,opt3) {
@@ -714,6 +733,7 @@ FF.GG = { plugins: function(options) {
     }
 }
 
+$.default.msg = { options: { autoclose: 10} };
 
 FF.msg = {
 
@@ -757,8 +777,10 @@ FF.msg = {
     message: function(msgs,cls,options) {
 
     	options	 	= options ? options : {};
+    	options 	= $.extend($.default.msg.options,options);
     	container	= options.container ? options.container : null;
     	append		= options.append!=undefined;
+    	autoclose	= options.autoclose==undefined ? 15 : 0;
 
     	container 	= options.container ? $(options.container) : $("#messages");
 
@@ -790,13 +812,15 @@ FF.msg = {
         if(ex)
       		container.find("div").effect("highlight", {}, 600);
 
-      	clearTimeout($(container).data("timer"));
+      	if(autoclose) {
+	      	clearTimeout($(container).data("timer"));
 
-      	timer = FF.util.delay(function(container) {
-	      		container.fadeOut(500);
-	    },15000,container);
+	      	timer = FF.util.delay(function(container) {
+		      		container.fadeOut(500);
+		    },autoclose * 1000,container);
 
-	    container.data("timer",timer);
+		    container.data("timer",timer);
+		}
     },
 
 	decodeHTML: function() {

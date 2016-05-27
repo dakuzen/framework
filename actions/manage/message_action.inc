@@ -34,7 +34,8 @@
 											->set_from_name($this->post("email","from_name"))
 											->set_to_recipients($this->post("email","to_recipients"))
 											->set_cc_recipients($this->post("email","cc_recipients"))
-											->set_bcc_recipients($this->post("email","bcc_recipients"));
+											->set_bcc_recipients($this->post("email","bcc_recipients"))
+											->set_reply_email($this->post("email","reply_email"));
 			}
 
 			if($message_cmodel->has_sms()) {

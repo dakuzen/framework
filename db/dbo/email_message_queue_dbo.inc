@@ -12,5 +12,6 @@
 			$this->_columns["bcc_recipients"] = new DBO_COLUMN("varchar",255,true,false);
 			$this->_columns["from_email"] = new DBO_COLUMN("varchar",40,true,false);
 			$this->_columns["from_name"] = new DBO_COLUMN("varchar",40,true,false);
+			$this->_columns["reply_email"] = new DBO_COLUMN("varchar",100,true,false);
 		}
 	}

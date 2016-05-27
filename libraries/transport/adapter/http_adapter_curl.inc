@@ -1,6 +1,6 @@
 <?
 	/**
-        * Class HTTP_ADAPTER_CURL  
+        * Class HTTP_ADAPTER_CURL
         *
         * @package Library
         * @subpackage Transport
@@ -9,19 +9,19 @@
 
 		/**
 		 * The curl
-		 * @var boolean $curl 
+		 * @var boolean $curl
 		 */
 		protected $_curl 	= false;
 
 		/**
 		 * The fp
-		 * @var boolean $fp 
+		 * @var boolean $fp
 		 */
 		protected $_fp 		= false;
 
 		/**
 		 * sendRequest
-		 * @return string 
+		 * @return string
 		 */
 
 
@@ -46,16 +46,16 @@
 
 			curl_setopt($this->_curl,CURLOPT_SSL_VERIFYPEER,false);
 			curl_setopt($this->_curl,CURLOPT_CAINFO,MODEL_PATH::get_framework_assets_dir()."curl/cacert.pem");
-			
+
 			curl_setopt($this->_curl,CURLOPT_CUSTOMREQUEST,$http_request->get_verb());
-			
-			
+
+
 			// general stuff
 			curl_setopt($this->_curl,CURLOPT_BINARYTRANSFER,true);
 			curl_setopt($this->_curl,CURLOPT_RETURNTRANSFER,true);
 
 			//curl_setopt($this->_curl,CURLOPT_ENCODING,"gzip,deflate");
-			
+
 			if($http_request->get_username()) {
 				curl_setopt($this->_curl, CURLOPT_USERPWD, $http_request->get_username().":".$http_request->get_password());
 				curl_setopt($this->_curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
@@ -65,16 +65,16 @@
 			curl_setopt($this->_curl, CURLINFO_HEADER_OUT, true);
 
 			//default the content type on a post/put application/x-www-form-urlencoded
-			if(in_array($http_request->get_verb(),array("POST","PUT")) && $http_request->get_header()->exists("content-type"))
+			if(in_array($http_request->get_verb(),array("POST","PUT")) && !$http_request->get_header()->exists("content-type"))
 				$http_request->get_header()->set("Content-Type","application/x-www-form-urlencoded");
-		
+
 			// post data
 			if($body=$http_request->get_body()) {
 
 				if(is_array($body)) {
 
 					foreach($body as $key=>&$value) {
-						
+
 						// Backwards compatability for PHP <5.4
 						if(is_a($value,"CURLFile") && version_compare(phpversion(), '5.5.0')<0)
 							$value = "@".$value->name;
@@ -97,9 +97,9 @@
 
 			$headers = [];
 			foreach($http_request->get_header()->get_formatted() as $name=>$value)
-				$headers[] = $name.":".$value;
+				$headers[] = $name.": ".$value;
 
-			curl_setopt($this->_curl,CURLOPT_VERBOSE, 1);	
+			curl_setopt($this->_curl,CURLOPT_VERBOSE, 1);
 			curl_setopt($this->_curl,CURLOPT_HTTPHEADER, $headers);
 
 			$response = curl_exec($this->_curl);
@@ -108,10 +108,10 @@
 				$error_message = curl_error($this->_curl);
 				throw new Exception($error_message,$error_number);
 			}
-			
+
 			if($this->_fp !== false)
 				fclose($this->_fp);
-			
+
 			$code = curl_getinfo($this->_curl,CURLINFO_HTTP_CODE);
 			$info = curl_getinfo($this->_curl);
 
@@ -125,7 +125,7 @@
 
 			$http_response = new HTTP_RESPONSE($code, $body, $response_header, array(), "");
 			$http_response->set_request_header($http_request->get_header());
-			
+
 			return $http_response;
 		}
 

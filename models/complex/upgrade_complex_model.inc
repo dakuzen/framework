@@ -256,6 +256,12 @@
 			if(!$db_utility->is_table_column_exist("ff_crons","long_running"))
 				$db->script("ALTER TABLE `ff_crons` ADD COLUMN long_running CHAR(1) default 0;");
 
+			if(!$db_utility->is_table_column_exist("email_messages","reply_email"))
+				$db->script("ALTER TABLE `email_messages` ADD COLUMN reply_email VARCHAR(100)");
+			
+			if(!$db_utility->is_table_column_exist("email_message_queues","reply_email"))
+				$db->script("ALTER TABLE `email_message_queues` ADD COLUMN reply_email VARCHAR(100)");
+			
 			//Run any upgrades from the site content system.
 			//CMODEL_SITE_CONTENT::create()->upgrade(); 
 			CMODEL_SITE_CONTENT_WIDGET::create()->upgrade();
