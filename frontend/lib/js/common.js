@@ -83,6 +83,8 @@ $.default = {};
 
 ;(function($) {
 
+$.default.calendar = {};
+
 $.widget("custom.calendar",{
 
 	options: { 	datepicker: { 	showOn: "button",
