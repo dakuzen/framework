@@ -112,11 +112,16 @@
 					
 					$values[] = $key." = ".DB::PARM_CHARACTER;
 				
-				} elseif($parm=value($field,"parm"))
-					$values[] = "`".$key."` = ".$parm;
+				} elseif($parm=value($field,"parm") || is_a($parm,"DBQ_PARM")) {
 
-				elseif(is_a($parm,"DBQ_PARM")) {
-					$values[] = "`".$key."` = ".$parm->get_parm();
+					if(is_a($parm,"DBQ_PARM"))
+						$parm = $parm->get_parm();
+
+					if(strpos($key, '.')===false) {
+						$values[] = "`".$key."` = ".$parm;
+					} else {
+						$values[] = $key." = ".$parm;
+					}
 				}
 			}
 

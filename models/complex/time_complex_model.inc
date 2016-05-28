@@ -27,11 +27,11 @@
          * Constructor
          * @param integer $time
          */
-		public function __construct($time,$options=array("locale"=>null,"timezone"=>null,"format_timezone"=>null)) {
+		public function __construct($time,$options=array("offset"=>true,"locale"=>null,"timezone"=>null,"format_timezone"=>null)) {
 
             $this->_options                     = $options;
             $this->_options["format_timezone"]  = ($format_timezone=$this->option("format_timezone")) ? $format_timezone : date_default_timezone_get();
-            $this->_options["timezone"]         = ($timezone=$this->option("timezone")) ? $timezone : date_default_timezone_get();
+            $this->_options["timezone"]         = ($timezone=$this->option("timezone")) ? $timezone : date_default_timezone_get();            
 
             $this->_date_time = new DateTime();
 
@@ -40,10 +40,16 @@
                 if(preg_match("/(.*)([\+\-])(\d{2}):?(\d{2})$/",$time,$match)) {
 
                     $time = $match[1];
-                    $offset = (((int)$match[3]) * 60 * 60) + (((int)$match[4]) * 60);
 
-                    if($match[2]=="-")
-                        $offset *= -1;
+                    $offset = value($options,"offset",true);
+
+                    if($offset) {
+
+                        $offset = (((int)$match[3]) * 60 * 60) + (((int)$match[4]) * 60);
+
+                        if(value($options,"offset")===null && $match[2]=="-")
+                            $offset *= -1;
+                    }
 
                     $time = strtotime($time) - $offset;
 
