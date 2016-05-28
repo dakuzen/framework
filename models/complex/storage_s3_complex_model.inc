@@ -33,8 +33,16 @@
 			return $this;
 		}
 
-		public function url($path) {
-			return $this->aws()->s3()->getObjectUrl(value($this->_options,"bucket"),$this->path($path),"+5 minutes");
+		public function url($path,$filename=null,$options=[]) {
+			
+			$minutes = value($options,"minutes",1);
+
+			if($filename) {
+				$options['ResponseContentDisposition'] = 'attachment; filename='.$filename;
+				$options['Content-Type'] = 'application/octet-stream';
+			}
+
+			return $this->aws()->s3()->getObjectUrl(value($this->_options,"bucket"),$this->path($path),"+{$minutes} minutes",$options);
 		}
 
 
