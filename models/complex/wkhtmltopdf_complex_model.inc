@@ -4,7 +4,6 @@
 		const FORMAT_PDF 		= "pdf";
 		const FORMAT_JPG 		= "jpg";
 
-		protected $_debug 		= false;
 		protected $_squarify	= array();
 		protected $_pdf_file 	= "";
 		protected $_output 		= array();
@@ -17,7 +16,7 @@
 									"--margin-left"=>0,
 									"--margin-right"=>0,
 									"--margin-top"=>0,
-									"--disable-javascript"=>"");
+									"--page-size"=>"Letter");
 
 			//SERVER_UTIL::exec("wkhtmltopdf --version",$output);
 
@@ -107,15 +106,18 @@
 
 			$cmd = "wkhtmltopdf ".$options." \"".$object."\" ".$this->_pdf_file;
 
-			if($this->_debug)
+			if($this->is_debug())
 				p($cmd);
 
 			SERVER_UTIL::exec($cmd,$this->_output,true);
 
 			$has_success = is_file($this->_pdf_file);
 
-			if($this->_debug)
+			if($this->is_debug()) {
 				p($this->_output);
+
+				die;
+			}
 
 			$temp_cmodel->cleanup();
 
@@ -137,8 +139,6 @@
 
 			return true;
 		}
-
-		public function debug($debug=true) { $this->_debug = $debug; return $this; }
 	}
 
 	class WkhtmltopdfException extends Exception {
