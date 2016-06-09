@@ -168,7 +168,15 @@
 
 					if($matches[1]=="set_") {
 
-						$this->data($name,$args[0]);
+						if(count($args)==2) {
+
+							$data = (array)$this->data($name);
+							$data[$args[0]] = $args[1];
+							$this->data($name,$data);
+
+						} else {
+							$this->data($name,$args[0]);
+						}
 
 						if($object=value($this->_registered_objects,$name)) {
 
@@ -178,50 +186,57 @@
 
 									$objects = $this->data($name);
 
-									$set = "set_".$name;
 									if($object["type"]=="json")
 										$objects = JSON_UTIL::encode($objects);
 
 									elseif($object["type"]=="delimit" && is_array($objects))
 										$objects = implode($object["delimiter"],$objects);
 
-									$dbo->$set($objects);
+									$dbo->{"set_".$name}($objects);
 								}
 							}
 						}
 					
 						return $this;
+					
+					} elseif($this->has_data($name)) {
+
+						$data = (array)$this->data($name);
+
+						if(count($args)==1)
+							return value($data,$args[0]);
+
+						return $data;
 					}
 					
-					elseif($this->has_data($name))
-						return (array)$this->data($name);
-					
 					return value($this->_registered_objects,array($name,"default"));
-				}
-				
-				foreach($this->_dbos as &$dbo) {
 
-					if($dbo->has_column($name)) {
+				} else {
 					
-						if($matches[1]=="set_") {
-							
-							if(count($args)>0) {
+					foreach($this->_dbos as &$dbo) {
 
-								$arg1 	= $args[0];
-								$arg2 	= isset($args[1]) ? $args[1] : null;
-								$arg3 	= isset($args[2]) ? $args[2] : null;
-														
-								$dbo->$function($arg1,$arg2);
+						if($dbo->has_column($name)) {
+						
+							if($matches[1]=="set_") {
+								
+								if(count($args)>0) {
 
-								if($arg3)
-									$this->untag_column($name);
+									$arg1 	= $args[0];
+									$arg2 	= isset($args[1]) ? $args[1] : null;
+									$arg3 	= isset($args[2]) ? $args[2] : null;
+															
+									$dbo->$function($arg1,$arg2);
 
-								$has_success = true;
-							} else								
-								throw new Exception('Missing argument 1 for '.get_class($this).'->'.$function.'() ');
-							
-						} else 
-							return $dbo->$function();
+									if($arg3)
+										$this->untag_column($name);
+
+									$has_success = true;
+								} else								
+									throw new Exception('Missing argument 1 for '.get_class($this).'->'.$function.'() ');
+								
+							} else 
+								return $dbo->$function();
+						}
 					}
 				}
 			}
