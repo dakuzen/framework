@@ -529,49 +529,53 @@
             return $this;
         }
 
-        public function setup($data, $options=[]){
-            $this->_dirty = $data;
-            $this->setup_rules($options);
-            $this->_sanitized = filter_var_array($this->_dirty, $this->_rules, true);
+		public function setup($data, $options=[]){
+			$this->_dirty = $data;
+			$this->setup_rules($options);
+			$this->_sanitized = filter_var_array($this->_dirty, $this->_rules, true);
 
-            if ($this->_sanitized)
-                foreach ($this->_sanitized as $key=>$value){
-                    if (is_null($value) && !empty($this->_rules[$key]['default'])){
-                        if (is_callable($this->_rules[$key]['default']))
-                            $this->_sanitized[$key] = $value = call_user_func($this->_rules[$key]['default']);
-                        else
-                            $this->_sanitized[$key] = $value = $this->_rules[$key]['default'];
-                    }
+			if ($this->_sanitized)
+				foreach ($this->_sanitized as $key=>$value){
+					$default = false;
+					if (is_null($value) && array_key_exists('default', $this->_rules[$key])){
+						if (is_callable($this->_rules[$key]['default']))
+							$default = call_user_func($this->_rules[$key]['default']);
+						else
+							$default = $this->_rules[$key]['default'];
 
-                    if ($value === false){
-                        $message = 'Wrong '.ucfirst(str_replace('_', ' ', $key)) . " value";
-                        if (!empty($this->_rules[$key]['message']))
-                            $message = $this->_rules[$key]['message'];
+						$this->_sanitized[$key] = $value = $default;
+					}
 
-                        if (array_key_exists('collect', $options) && $options['collect']==true)
-                            $this->_validate_errors[$key] = $message;
-                        else
-                            throw new Exception($message);
-                    }
+					if ($value === false){
+						$message = 'Wrong '.ucfirst(str_replace('_', ' ', $key)) . " value";
+						if (!empty($this->_rules[$key]['message']))
+							$message = $this->_rules[$key]['message'];
+
+						if (array_key_exists('collect', $options) && $options['collect']==true)
+							$this->_validate_errors[$key] = $message;
+						else
+							throw new Exception($message);
+					}
 
 
-                    if (!empty($this->_rules[$key]['required']) && $this->_rules[$key]['required'] == true && is_null($this->{'get_'.$key}()) && is_null($value)){
-                        $message = ucfirst(str_replace('_', ' ', $key)) . " is required";
+					if (!empty($this->_rules[$key]['required']) && $this->_rules[$key]['required'] == true && is_null($this->{'get_'.$key}()) && is_null($value)){
+						$message = ucfirst(str_replace('_', ' ', $key)) . " is required";
 
-                        if (array_key_exists('collect', $options) && $options['collect']==true)
-                            $this->_validate_errors[$key] = $message;
-                        else
-                            throw new Exception($message);
-                    }
+						if (array_key_exists('collect', $options) && $options['collect']==true)
+							$this->_validate_errors[$key] = $message;
+						else
+							throw new Exception($message);
+					}
 
-                    if (!is_null($value) && $value !== false)
-                        $this->{'set_'.$key}($value);
+					if ((!is_null($value) && $value !== false) || $default !== false)
+						$this->{'set_'.$key}($value);
 
-                }
-            return $this;
-        }
+				}
+			return $this;
+		}
 
-        /**
+
+		/**
          * @return array
          */
         public function get_validate_errors()
