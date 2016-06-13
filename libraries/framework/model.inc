@@ -22,7 +22,10 @@
         public function data() {
             $args = func_get_args();
 
-            if(count($args)==2) {
+            if(!count($args)) {
+                return $this->_data;
+                
+            } elseif(count($args)==2) {
 
                 $this->_data[$args[0]] = $args[1];
                 return $this;
@@ -49,6 +52,15 @@
 
         public function has_cache($name)             { return array_key_exists($name,self::$cache); }
 
+        public function __call($function,$args) {
+            
+            if($function=="set_data") {
+                $this->_data = value($args,0);
+                return $this;
+            }
+
+            return parent::__call($function,$args);            
+        }
 
         public function cache() {
             $args = func_get_args();
