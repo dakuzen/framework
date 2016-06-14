@@ -530,7 +530,7 @@
         }
 
 		public function setup($data, $options=[]){
-			$this->_dirty = $data;
+			$this->_dirty = is_array($data)?$data:(array)$data;
 			$this->setup_rules($options);
 			$this->_sanitized = filter_var_array($this->_dirty, $this->_rules, true);
 
@@ -558,7 +558,7 @@
 					}
 
 
-					if (!empty($this->_rules[$key]['required']) && $this->_rules[$key]['required'] == true && is_null($this->{'get_'.$key}()) && is_null($value)){
+					if (!empty($this->_rules[$key]['required']) && $this->_rules[$key]['required'] == true && is_null($this->{'get_'.$key}()) && empty($value)){
 						$message = ucfirst(str_replace('_', ' ', $key)) . " is required";
 
 						if (array_key_exists('collect', $options) && $options['collect']==true)
