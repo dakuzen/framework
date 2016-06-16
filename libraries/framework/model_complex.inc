@@ -557,16 +557,6 @@
 							throw new Exception($message);
 					}
 
-
-					if (!empty($this->_rules[$key]['required']) && $this->_rules[$key]['required'] == true && is_null($this->{'get_' . $key}()) && empty($value)) {
-						$message = ucfirst(str_replace('_', ' ', $key)) . " is required";
-
-						if (array_key_exists('collect', $options) && $options['collect'] == true)
-							$this->_validate_errors[$key] = $message;
-						else
-							throw new Exception($message);
-					}
-
 					if ((!is_null($value) && $value !== false) || $default !== false)
 						$this->{'set_' . $key}($value);
 
@@ -587,6 +577,15 @@
 									$this->_validate_errors[$key] = $message;
 								else
 									throw new Exception($message);
+						}
+
+						if (!empty($this->_rules[$key]['required']) && $this->_rules[$key]['required'] == true && empty($this->{'get_' . $key}())) {
+							$message = ucfirst(str_replace('_', ' ', $key)) . " is required";
+
+							if (array_key_exists('collect', $options) && $options['collect'] == true)
+								$this->_validate_errors[$key] = $message;
+							else
+								throw new Exception($message);
 						}
 					}
 			}
