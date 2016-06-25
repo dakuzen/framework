@@ -45,7 +45,7 @@
             return value($this->_options,value($args,0),value($args,1));
         }
 
-		public function stream($object,$format=self::FORMAT_PDF) {
+		public function stream($object,$filename=null,$format=self::FORMAT_PDF) {
 
 			$file = $pdf_file = $this->_pdf_file;
 
@@ -56,9 +56,11 @@
 
 			$this->save($object);
 
-			$temp_jpg_cmodel = BASE_CMODEL_TEMP::create("jpg");
+			$temp_jpg_cmodel = null;
 
 			if($format==self::FORMAT_JPG) {
+
+				$temp_jpg_cmodel = BASE_CMODEL_TEMP::create("jpg");
 
 				$file = $temp_jpg_cmodel->file();
 
@@ -66,12 +68,13 @@
 				$convert_image_util->convert($this->_pdf_file,$file);
 			}
 
-			HTTP_UTIL::stream_file($file);
+			HTTP_UTIL::stream_file($file,$filename);
 
 			$temp_pdf_cmodel->cleanup();
-			$temp_jpg_cmodel->cleanup();
+			
+			if($temp_jpg_cmodel)
+				$temp_jpg_cmodel->cleanup();
 		}
-
 
 
 		/*
