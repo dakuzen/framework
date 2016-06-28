@@ -76,11 +76,16 @@
 		}
 
         public static function create($time,$options=array("locale"=>null)) {
+
+            if(is_a($time,"CMODEL_TIME"))
+                return $time;
+
             return new CMODEL_TIME($time,$options);
         }
 
         function option($name)      { return value($this->_options,$name); }
         function get_time()         { return $this->_date_time ? $this->_date_time->getTimestamp() : 0; }
+        function get_date_time()    { return $this->_date_time; }
         function set_time($time)    { $this->_date_time->setTimestamp($time); return $this; }
 
         /**
@@ -332,21 +337,34 @@
         function daytime()                      { return $this->second() + ($this->minute() * 60) + ($this->hour() * CONSTANT::SECONDS_HOUR); }
         function daytime_minutes()              { return $this->minute() + $this->hour() * 60; }
 
-        function years()                        { return (float)$this->diff(time(),"%a")/365.25; }
-        function hours()                        { return (time()-$this->time())/3600; }
-        function minutes()                      { return (time()-$this->time())/60; }
+        function years()                        { return (float)$this->diff_days(time())/365.25; }
+        function hours()                        { return $this->diff_hours(time()); }
+        function minutes()                      { return $this->diff_minutes(time()); }
 
-        function diff_days($time)               { return $this->diff($time,"%a"); }
+        function diff_year($time)              { return $this->diff($time,"%y"); }
+        function diff_month($time)             { return $this->diff($time,"%m"); }
+        function diff_day($time)               { return $this->diff($time,"%d"); }
+        function diff_hour($time)              { return $this->diff($time,"%h"); }
+
+        function diff_days($time)              { return @$this->diff_minutes($time)/1440; }
+        function diff_hours($time)             { return @$this->diff_minutes($time)/60; }
+        function diff_seconds($time)           { return $this->diff_minutes($time) * 60; }        
+        
+        function diff_minutes($time,$total=false) { 
+            $interval = $this->diff($time);
+            return ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->m + @($interval->s/60);
+        }        
 
         //Reference http://en.wikipedia.org/wiki/ISO_8601
         function ios8601($options=array()) { return $this->iso8601($options); }
 
-        function diff($time,$format) {
+        function diff($time_cmodel,$format=null) {
 
-            $date_time = new DateTime();
-            $date_time->setTimestamp($time);
+            $interval = $this->_date_time->diff(CMODEL_TIME::create($time_cmodel)->get_date_time());
+            if(!$format)
+                return $interval;
 
-            return $this->_date_time->diff($date_time)->format($format);
+            return $interval->format($format);
         }
 
         function greater($time) {
