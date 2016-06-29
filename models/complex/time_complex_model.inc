@@ -352,7 +352,7 @@
         
         function diff_minutes($time,$total=false) { 
             $interval = $this->diff($time);
-            return ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->m + @($interval->s/60);
+            return ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i + @($interval->s/60);
         }        
 
         //Reference http://en.wikipedia.org/wiki/ISO_8601
