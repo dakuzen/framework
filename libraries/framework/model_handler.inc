@@ -648,8 +648,8 @@
 					$tmp_cmodels =
 						$handler
 							->join($reference_table,$joiner_table,$reference_joiner_col,$referance_col)
-							->data($source_object."_id")
-							->where($source_col,"IN",$ids)
+							->data($joiner_table.".".$source_object."_id")
+							->where($joiner_table.".".$source_col,"IN",$ids)
 							->gets();
 
 					foreach($cmodels as $cmodel) {
