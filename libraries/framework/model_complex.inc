@@ -589,14 +589,15 @@
 					}
 
 					if (!array_key_exists('filter', $rule)){
-						$this->_sanitized[$key] = null;
+						$this->_sanitized[$key] = $value;
 						continue;
 					}
 
 
 					$this->_sanitized[$key] = filter_var($value, $rule['filter'], array_key_exists('options', $rule)?['options'=>$rule['options']]:null);
-				}else
-					$this->_sanitized[$key] = null;
+				}
+				/*else
+					$this->_sanitized[$key] = null;*/
 			}
 
 
@@ -626,7 +627,8 @@
 							throw new Exception($message);
 					}
 
-					if ((!is_null($value) && $value !== false) || $default !== false)
+					//if ((!is_null($value) && $value !== false) || $default !== false)
+					if (($value !== false) || $default !== false)
 						$this->{'set_' . $key}($value);
 
 
