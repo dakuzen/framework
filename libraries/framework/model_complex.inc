@@ -529,10 +529,79 @@
             return $this;
         }
 
+		private $_error_invalid = '%1$s is invalid';
+		private $_error_required = '%1$s is required';
+		private $_error_not_found = '%1$s not found';
+
+		public function sanitize_trim($value){
+			return trim($value);
+		}
+
 		public function setup($data, $options=[]){
 			$this->_dirty = is_array($data)?$data:(array)$data;
 			$this->setup_rules($options);
-			$this->_sanitized = filter_var_array($this->_dirty, $this->_rules, true);
+			//$this->_sanitized = filter_var_array($this->_dirty, $this->_rules, true);
+			$this->_sanitized = false;
+
+
+
+			foreach ($this->_rules as $key=>$rule){
+				if (array_key_exists($key, $this->_dirty)){
+
+					$value = $this->_dirty[$key];
+
+					//call_user_func
+					if (array_key_exists('sanitize', $rule)) {
+						foreach ($rule['sanitize'] as $sanitizer) {
+							if (is_callable(array($this, 'sanitize_' . $sanitizer))) {
+								$value = call_user_func(array($this, 'sanitize_' . $sanitizer), $value);
+								continue;
+							}
+
+							if (is_callable(array($this, $sanitizer))) {
+								$value = call_user_func(array($this, $sanitizer), $value);
+								continue;
+							}
+						}
+					}
+
+					if (
+						!empty($rule['required']) &&
+						$rule['required'] == true &&
+						empty($value)
+					) {
+						$message = sprintf($this->_error_required, ucfirst(str_replace('_', ' ', $key)) );
+						if (!empty($this->_rules[$key]['message_required']))
+							$message = $this->_rules[$key]['message_required'];
+
+						if (array_key_exists('collect', $options) && $options['collect'] == true)
+							$this->_validate_errors[$key] = $message;
+						else
+							throw new Exception($message);
+
+						$this->_sanitized[$key] = null;
+						continue;
+					}
+
+					if (empty($value)){
+						$this->_sanitized[$key] = null;
+						continue;
+					}
+
+					if (!array_key_exists('filter', $rule)){
+						$this->_sanitized[$key] = $value;
+						continue;
+					}
+
+
+					$this->_sanitized[$key] = filter_var($value, $rule['filter'], array_key_exists('options', $rule)?['options'=>$rule['options']]:null);
+				}
+				/*else
+					$this->_sanitized[$key] = null;*/
+			}
+
+
+
 
 			if ($this->_sanitized) {
 				foreach ($this->_sanitized as $key => $value) {
@@ -547,7 +616,8 @@
 					}
 
 					if ($value === false) {
-						$message = 'Wrong ' . ucfirst(str_replace('_', ' ', $key)) . " value";
+						//$message = ucfirst(str_replace('_', ' ', $key)) . "  is invalid";
+						$message = sprintf($this->_error_invalid, ucfirst(str_replace('_', ' ', $key)) );
 						if (!empty($this->_rules[$key]['message']))
 							$message = $this->_rules[$key]['message'];
 
@@ -557,7 +627,8 @@
 							throw new Exception($message);
 					}
 
-					if ((!is_null($value) && $value !== false) || $default !== false)
+					//if ((!is_null($value) && $value !== false) || $default !== false)
+					if (($value !== false) || $default !== false)
 						$this->{'set_' . $key}($value);
 
 
@@ -568,7 +639,7 @@
 					foreach ($this->_rules as $key=>$rule){
 						if (array_key_exists('after', $rule) && is_callable($rule['after'])) {
 							$result = call_user_func($rule['after'], $this->{'get_' . $key}());
-							$message = 'Wrong ' . ucfirst(str_replace('_', ' ', $key)) . " value";
+							$message = sprintf($this->_error_invalid, ucfirst(str_replace('_', ' ', $key)) );
 							if (!empty($this->_rules[$key]['message']))
 								$message = $this->_rules[$key]['message'];
 
@@ -578,15 +649,23 @@
 								else
 									throw new Exception($message);
 						}
+					}
 
-						if (!empty($this->_rules[$key]['required']) && $this->_rules[$key]['required'] == true && empty($this->{'get_' . $key}())) {
-							$message = ucfirst(str_replace('_', ' ', $key)) . " is required";
+				foreach ($this->_rules as $key=>$rule)
+					if (
+						!array_key_exists($key, $this->_validate_errors) &&
+						!empty($this->_rules[$key]['required']) &&
+						$this->_rules[$key]['required'] == true &&
+						empty($this->{'get_' . $key}())
+					) {
+						$message = sprintf($this->_error_required, ucfirst(str_replace('_', ' ', $key)) );
+						if (!empty($this->_rules[$key]['message_required']))
+							$message = $this->_rules[$key]['message_required'];
 
-							if (array_key_exists('collect', $options) && $options['collect'] == true)
-								$this->_validate_errors[$key] = $message;
-							else
-								throw new Exception($message);
-						}
+						if (array_key_exists('collect', $options) && $options['collect'] == true)
+							$this->_validate_errors[$key] = $message;
+						else
+							throw new Exception($message);
 					}
 			}
 
