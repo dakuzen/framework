@@ -64,9 +64,6 @@
 		 */
 		function initialize() {
 
-			//Set the HTTP code to 500. Later in the process_task() the code will be reset to 200
-			http_response_code(500);
-
 			$this->add_timestamp("start_initialize");
 
 			parent::initialize();			
@@ -292,8 +289,6 @@
 
 			} catch(Exception $exception) {
 				
-				http_response_code(500);
-
 				if(!SYSTEM_MANAGER::is_system_mode_production()) {
 
 					$message = "Uncaught Exception: ".$exception->getMessage()."\n".$exception->getFile()." @ ".$exception->getLine()."\n\n".print_r($exception->getTrace(),true);
@@ -410,8 +405,6 @@
 					$this->process_action($task);
 
 				} catch(Exception $e) {
-
-					http_response_code(500);
 					
 					if(!SYSTEM_MANAGER::is_system_mode_production())
 						$task->data("trace",$e->getTrace());
