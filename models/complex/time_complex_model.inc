@@ -217,10 +217,10 @@
         function month_abr()                    { return $this->_format("M"); }
         function long_date()                    { return $this->format()->long_date(); }
         function long_datetime()                { return $this->format()->long_date_time(); }
-        function short_datetime()               { return $this->format()->short_date_time(); }
-        function iso8601($options=array())      { return $this->format()->iso8601($options); }
+        function short_datetime()               { return $this->format()->short_date_time(); }        
         function time_age()                     { return BCMODEL_TIME_AGE::create($this->get_time()); }
         function cloner()                       { return clone $this; }
+        function iso8601($options=["timezone"=>"UTC"]) { return $this->format()->iso8601($options); }
 
         function format() {
             $options["format_timezone"] = value($this->_options,"format_timezone");
