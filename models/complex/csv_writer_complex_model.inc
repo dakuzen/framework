@@ -168,14 +168,16 @@
 	
 		public function debug($debug=true,$format="html") { 
 			
-			header_remove("Content-Description");
-			header_remove("Content-Type");
-			header_remove("Content-Disposition");
-			header_remove("Content-Transfer-Encoding");
-			header("Content-type: text/html");
+			if($debug) {
+				header_remove("Content-Description");
+				header_remove("Content-Type");
+				header_remove("Content-Disposition");
+				header_remove("Content-Transfer-Encoding");
+				header("Content-type: text/html");
+				
+				$this->_debug = array("format"=>$format);
+			}
 			
-			$this->_debug = array("format"=>$format);
-
 			return $this;
 		}		
 		
