@@ -1,14 +1,14 @@
 <?
 	class BASE_MODEL_COUNTRY extends MODEL {
-	
+
 		const COUNTRY_UNITED_STATES 	= "US";
 		const COUNTRY_CANADA			= "CA";
-		
+
 		const COUNTRY_US 				= "US";
-		const COUNTRY_CA				= "CA";		
-		
-		function get_canada_us_list() { return array(self::COUNTRY_UNITED_STATES=>"United States",self::COUNTRY_CANADA=>"Canada"); } 
-			
+		const COUNTRY_CA				= "CA";
+
+		function get_canada_us_list() { return array(self::COUNTRY_UNITED_STATES=>"United States",self::COUNTRY_CANADA=>"Canada"); }
+
 		function get_regions() { return self::get_canadian_provinces() + self::get_us_states(); }
 
 		function get_canadian_provinces() {
@@ -29,7 +29,7 @@
 		}
 
 		function get_us_states() {
-			
+
 			$list["AL"] = "Alabama";
 			$list["AK"] = "Alaska";
 			$list["AS"] = "American Samoa";
@@ -192,7 +192,7 @@
 
 				if(value($options,"lat"))
 					$value_keys ? $item["lat"] = value($value,2) : $item[] = value($value,2);
-				
+
 				if(value($options,"lng"))
 					$value_keys ? $item["lng"] = value($value,3) : $item[] = value($value,3);
 
@@ -209,16 +209,16 @@
 		}
 
 		public static function json_countries($country_options=array(),$region_options=array()) {
-		
+
 			$countries = array();
-			
+
 			if(value($country_options,"only_name"))
 				$countries = self::get_countries();
-			else		
+			else
 				foreach(self::get_countries() as $code=>$name) {
-					
+
 					$country = array();
-					
+
 					if(value($country_options,"code"))
 						$country["code"] = $code;
 
@@ -233,7 +233,7 @@
 					else
 						$countries[] = $country;
 				}
-			
+
 			return JSON_UTIL::encode($countries);
 		}
 
@@ -472,7 +472,7 @@
 							"VE" => "Venezuela",
 							"VN" => "Viet Nam",
 							"VG" => "Virgin Islands, British",
-							"VI" => "Virgin Islands, U.s.",
+							"VI" => "Virgin Islands, U.S.",
 							"WF" => "Wallis and Futuna",
 							"EH" => "Western Sahara",
 							"YE" => "Yemen",

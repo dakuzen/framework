@@ -173,12 +173,14 @@
 			return ($full || !$this->_storage_cmodel->is_local() ? $protocol."//".SYSTEM_MANAGER::get_public_domain() : "").$path.$name."/".$this->get_filename();
 		}
 
-		public function urls() {
+		public function urls($defaults=[]) {
 
 			$arry = [];
-
 			foreach($this->_sizes as $name=>$size) {
-				$arry[$name] = $this->exists($name) ? $this->url($name) : "";
+
+				$default = is_array($defaults) ? value($defaults,$name) : $defaults;
+
+				$arry[$name] = $this->url($name,false,$default);
 			}
 
 			return $arry;

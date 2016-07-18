@@ -33,8 +33,16 @@
 			return $this;
 		}
 
-		public function url($path) {
-			return $this->aws()->s3()->getObjectUrl(value($this->_options,"bucket"),$this->path($path),"+5 minutes");
+		public function url($path,$filename=null,$options=[]) {
+			
+			$minutes = value($options,"minutes",1);
+
+			if($filename) {
+				$options['ResponseContentDisposition'] = 'attachment; filename='.$filename;
+				$options['Content-Type'] = 'application/octet-stream';
+			}
+
+			return $this->aws()->s3()->getObjectUrl(value($this->_options,"bucket"),$this->path($path),"+{$minutes} minutes",$options);
 		}
 
 
@@ -42,7 +50,7 @@
 			return $this->aws()->s3()->doesObjectExist(value($this->_options,"bucket"),$file);
 		}
 
-		public function stream($path) {
+		public function stream($path, $options=[]) {
 
 			$path = $this->path($path);
 
@@ -55,7 +63,11 @@
 			if ($stream=fopen($url, 'r')) {
 
 				http_response_code(200);
-				HTTP_UTIL::output_headers(0,basename($path),true);
+				if (!empty($options['download_name'])) {
+					HTTP_UTIL::output_headers(0,$options['download_name'],true);
+				} else {
+					HTTP_UTIL::output_headers(0,basename($path),true);
+				}
 
 			    // While the stream is still open
 			    while (!@feof($stream)) {
@@ -134,7 +146,7 @@
 
 			$parameters = value($options,"parameters",array());
 
-			if(is_file($data)) {
+			if(@is_file($data)) {
 				$fhandle = @fopen($data,"r");
 
 				if(!$fhandle)

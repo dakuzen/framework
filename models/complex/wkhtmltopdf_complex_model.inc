@@ -4,7 +4,6 @@
 		const FORMAT_PDF 		= "pdf";
 		const FORMAT_JPG 		= "jpg";
 
-		protected $_debug 		= false;
 		protected $_squarify	= array();
 		protected $_pdf_file 	= "";
 		protected $_output 		= array();
@@ -17,7 +16,7 @@
 									"--margin-left"=>0,
 									"--margin-right"=>0,
 									"--margin-top"=>0,
-									"--disable-javascript"=>"");
+									"--page-size"=>"Letter");
 
 			//SERVER_UTIL::exec("wkhtmltopdf --version",$output);
 
@@ -46,7 +45,7 @@
             return value($this->_options,value($args,0),value($args,1));
         }
 
-		public function stream($object,$format=self::FORMAT_PDF) {
+		public function stream($object,$filename=null,$format=self::FORMAT_PDF) {
 
 			$file = $pdf_file = $this->_pdf_file;
 
@@ -57,9 +56,11 @@
 
 			$this->save($object);
 
-			$temp_jpg_cmodel = BASE_CMODEL_TEMP::create("jpg");
+			$temp_jpg_cmodel = null;
 
 			if($format==self::FORMAT_JPG) {
+
+				$temp_jpg_cmodel = BASE_CMODEL_TEMP::create("jpg");
 
 				$file = $temp_jpg_cmodel->file();
 
@@ -67,12 +68,13 @@
 				$convert_image_util->convert($this->_pdf_file,$file);
 			}
 
-			HTTP_UTIL::stream_file($file);
+			HTTP_UTIL::stream_file($file,$filename);
 
 			$temp_pdf_cmodel->cleanup();
-			$temp_jpg_cmodel->cleanup();
+			
+			if($temp_jpg_cmodel)
+				$temp_jpg_cmodel->cleanup();
 		}
-
 
 
 		/*
@@ -107,15 +109,18 @@
 
 			$cmd = "wkhtmltopdf ".$options." \"".$object."\" ".$this->_pdf_file;
 
-			if($this->_debug)
+			if($this->is_debug())
 				p($cmd);
 
 			SERVER_UTIL::exec($cmd,$this->_output,true);
 
 			$has_success = is_file($this->_pdf_file);
 
-			if($this->_debug)
+			if($this->is_debug()) {
 				p($this->_output);
+
+				die;
+			}
 
 			$temp_cmodel->cleanup();
 
@@ -137,8 +142,6 @@
 
 			return true;
 		}
-
-		public function debug($debug=true) { $this->_debug = $debug; return $this; }
 	}
 
 	class WkhtmltopdfException extends Exception {

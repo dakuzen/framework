@@ -236,8 +236,8 @@
 			return get_value($match,1);
 		}	
 
-		public function send_email($to_recipients=array(),$cc_recipients=array(),$bcc_recipients=array(),$from_email="",$from_name="") {
-			$has_success = self::queue_email($to_recipients,$cc_recipients,$bcc_recipients,$from_email,$from_name);
+		public function send_email($to_recipients=array(),$cc_recipients=array(),$bcc_recipients=array(),$from_email="",$from_name="",$reply_email="") {
+			$has_success = self::queue_email($to_recipients,$cc_recipients,$bcc_recipients,$from_email,$from_name,$reply_email="");
 
 			if($has_success) 
 				$has_success = $this->get_email_message()->get_message_queue()->process_send();
@@ -245,8 +245,8 @@
 			return $has_success;
 		}
 
-		public function queue_email($to_recipients=array(),$cc_recipients=array(),$bcc_recipients=array(),$from_email="",$from_name="") {
-			return $this->get_email_message()->queue($to_recipients,$cc_recipients,$bcc_recipients,$from_email,$from_name);
+		public function queue_email($to_recipients=array(),$cc_recipients=array(),$bcc_recipients=array(),$from_email="",$from_name="",$reply_email="") {
+			return $this->get_email_message()->queue($to_recipients,$cc_recipients,$bcc_recipients,$from_email,$from_name,$reply_email="");
 		}
 
 		public function queue_sms($number) {

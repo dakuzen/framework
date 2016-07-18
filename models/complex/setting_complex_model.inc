@@ -522,12 +522,7 @@
     	}
 
         public static function __callStatic($function,$args) {
-
-            $class = "CMODEL_SETTING";
-
-            $value = $class::get_instance()->$function();
-
-            return $value;
+            return call_user_func_array([CMODEL_SETTING::get_instance(),$function],$args);
         }
         
         public static function get_instance_db_backup()        { return self::instance()->get("instance_db_backup"); }

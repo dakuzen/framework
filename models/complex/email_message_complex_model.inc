@@ -226,6 +226,10 @@
 			return $render_vars ? $this->get_message_renderer()->get_rendered(parent::get_from_name()) : parent::get_from_name();
 		}
 
+		public function get_reply_email($render_vars=false) {
+			return $render_vars ? $this->get_message_renderer()->get_rendered(parent::get_reply_email()) : parent::get_reply_email();
+		}		
+
         /**
          * Returns rendered subject
          * @param boolean $render_vars
@@ -244,7 +248,7 @@
          * @param string $from_name
          * @return boolean
          */
-		function queue($to_recipients=array(),$cc_recipients=array(),$bcc_recipients=array(),$from_email="",$from_name="") {
+		function queue($to_recipients=array(),$cc_recipients=array(),$bcc_recipients=array(),$from_email="",$from_name="",$reply_email="") {
 
 			if(!$this->is_state_active())
 				throw new Exception("Failed to queue email event `".$this->get_name()."`: Email event state is not active");
@@ -253,7 +257,7 @@
 			$cc_recipients 	= array_merge((array)$cc_recipients,$this->_cc_recipients);
 			$bcc_recipients = array_merge((array)$bcc_recipients,$this->_bcc_recipients);
 
-			$this->_message_queue_cmodel = $this->create_message_queue(true,$from_email,$from_name);
+			$this->_message_queue_cmodel = $this->create_message_queue(true,$from_email,$from_name,$reply_email);
 
 			$has_success = $this->_message_queue_cmodel->queue($to_recipients,$cc_recipients,$bcc_recipients,$from_email,$from_name);
 
@@ -267,10 +271,11 @@
 			return $has_success;
 		}
 
-		function create_message_queue($vars=true,$from_email="",$from_name="") {
+		function create_message_queue($vars=true,$from_email="",$from_name="",$reply_email="") {
 
-			$from_email	= $from_email ? $from_email : $this->get_from_email(true);
-			$from_name	= $from_name ? $from_name : $this->get_from_name(true);
+			$from_email		= $from_email ? $from_email : $this->get_from_email(true);
+			$from_name		= $from_name ? $from_name : $this->get_from_name(true);
+			$reply_email	= $reply_email ? $reply_email : $this->get_reply_email(true);
 
 			$body 		= $this->get_rendered_body($vars);
 			$subject 	= $this->get_rendered_subject($vars);
@@ -281,6 +286,7 @@
 															->set_format($this->get_format())
 															->set_from_email($from_email)
 															->set_from_name($from_name)
+															->set_reply_email($reply_email)
 															->set_message_id($this->get_message_id());
 
 			return $this->_message_queue_cmodel;

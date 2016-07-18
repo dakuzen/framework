@@ -168,7 +168,15 @@
 
 					if($matches[1]=="set_") {
 
-						$this->data($name,$args[0]);
+						if(count($args)==2) {
+
+							$data = (array)$this->data($name);
+							$data[$args[0]] = $args[1];
+							$this->data($name,$data);
+
+						} else {
+							$this->data($name,$args[0]);
+						}
 
 						if($object=value($this->_registered_objects,$name)) {
 
@@ -178,50 +186,57 @@
 
 									$objects = $this->data($name);
 
-									$set = "set_".$name;
 									if($object["type"]=="json")
 										$objects = JSON_UTIL::encode($objects);
 
 									elseif($object["type"]=="delimit" && is_array($objects))
 										$objects = implode($object["delimiter"],$objects);
 
-									$dbo->$set($objects);
+									$dbo->{"set_".$name}($objects);
 								}
 							}
 						}
 					
 						return $this;
+					
+					} elseif($this->has_data($name)) {
+
+						$data = (array)$this->data($name);
+
+						if(count($args)==1)
+							return value($data,$args[0]);
+
+						return $data;
 					}
 					
-					elseif($this->has_data($name))
-						return (array)$this->data($name);
-					
 					return value($this->_registered_objects,array($name,"default"));
-				}
-				
-				foreach($this->_dbos as &$dbo) {
 
-					if($dbo->has_column($name)) {
+				} else {
 					
-						if($matches[1]=="set_") {
-							
-							if(count($args)>0) {
+					foreach($this->_dbos as &$dbo) {
 
-								$arg1 	= $args[0];
-								$arg2 	= isset($args[1]) ? $args[1] : null;
-								$arg3 	= isset($args[2]) ? $args[2] : null;
-														
-								$dbo->$function($arg1,$arg2);
+						if($dbo->has_column($name)) {
+						
+							if($matches[1]=="set_") {
+								
+								if(count($args)>0) {
 
-								if($arg3)
-									$this->untag_column($name);
+									$arg1 	= $args[0];
+									$arg2 	= isset($args[1]) ? $args[1] : null;
+									$arg3 	= isset($args[2]) ? $args[2] : null;
+															
+									$dbo->$function($arg1,$arg2);
 
-								$has_success = true;
-							} else								
-								throw new Exception('Missing argument 1 for '.get_class($this).'->'.$function.'() ');
-							
-						} else 
-							return $dbo->$function();
+									if($arg3)
+										$this->untag_column($name);
+
+									$has_success = true;
+								} else								
+									throw new Exception('Missing argument 1 for '.get_class($this).'->'.$function.'() ');
+								
+							} else 
+								return $dbo->$function();
+						}
 					}
 				}
 			}
@@ -583,49 +598,151 @@
             return $this;
         }
 
-        public function setup($data, $options=[]){
-            $this->_dirty = $data;
-            $this->setup_rules($options);
-            $this->_sanitized = filter_var_array($this->_dirty, $this->_rules, true);
+		private $_error_invalid = '%1$s is invalid';
+		private $_error_required = '%1$s is required';
+		private $_error_not_found = '%1$s not found';
 
-            if ($this->_sanitized)
-                foreach ($this->_sanitized as $key=>$value){
-                    if (is_null($value) && !empty($this->_rules[$key]['default'])){
-                        if (is_callable($this->_rules[$key]['default']))
-                            $this->_sanitized[$key] = $value = call_user_func($this->_rules[$key]['default']);
-                        else
-                            $this->_sanitized[$key] = $value = $this->_rules[$key]['default'];
-                    }
+		public function sanitize_trim($value){
+			return trim($value);
+		}
 
-                    if ($value === false){
-                        $message = 'Wrong '.ucfirst(str_replace('_', ' ', $key)) . " value";
-                        if (!empty($this->_rules[$key]['message']))
-                            $message = $this->_rules[$key]['message'];
-
-                        if (array_key_exists('collect', $options) && $options['collect']==true)
-                            $this->_validate_errors[$key] = $message;
-                        else
-                            throw new Exception($message);
-                    }
+		public function setup($data, $options=[]){
+			$this->_dirty = is_array($data)?$data:(array)$data;
+			$this->setup_rules($options);
+			//$this->_sanitized = filter_var_array($this->_dirty, $this->_rules, true);
+			$this->_sanitized = false;
 
 
-                    if (!empty($this->_rules[$key]['required']) && $this->_rules[$key]['required'] == true && is_null($this->{'get_'.$key}()) && is_null($value)){
-                        $message = ucfirst(str_replace('_', ' ', $key)) . " is required";
 
-                        if (array_key_exists('collect', $options) && $options['collect']==true)
-                            $this->_validate_errors[$key] = $message;
-                        else
-                            throw new Exception($message);
-                    }
+			foreach ($this->_rules as $key=>$rule){
+				if (array_key_exists($key, $this->_dirty)){
 
-                    if (!is_null($value) && $value !== false)
-                        $this->{'set_'.$key}($value);
+					$value = $this->_dirty[$key];
 
-                }
-            return $this;
-        }
+					//call_user_func
+					if (array_key_exists('sanitize', $rule)) {
+						foreach ($rule['sanitize'] as $sanitizer) {
+							if (is_callable(array($this, 'sanitize_' . $sanitizer))) {
+								$value = call_user_func(array($this, 'sanitize_' . $sanitizer), $value);
+								continue;
+							}
 
-        /**
+							if (is_callable(array($this, $sanitizer))) {
+								$value = call_user_func(array($this, $sanitizer), $value);
+								continue;
+							}
+						}
+					}
+
+					if (
+						!empty($rule['required']) &&
+						$rule['required'] == true &&
+						empty($value)
+					) {
+						$message = sprintf($this->_error_required, ucfirst(str_replace('_', ' ', $key)) );
+						if (!empty($this->_rules[$key]['message_required']))
+							$message = $this->_rules[$key]['message_required'];
+
+						if (array_key_exists('collect', $options) && $options['collect'] == true)
+							$this->_validate_errors[$key] = $message;
+						else
+							throw new Exception($message);
+
+						$this->_sanitized[$key] = null;
+						continue;
+					}
+
+					if (empty($value)){
+						$this->_sanitized[$key] = null;
+						continue;
+					}
+
+					if (!array_key_exists('filter', $rule)){
+						$this->_sanitized[$key] = $value;
+						continue;
+					}
+
+
+					$this->_sanitized[$key] = filter_var($value, $rule['filter'], array_key_exists('options', $rule)?['options'=>$rule['options']]:null);
+				}
+				/*else
+					$this->_sanitized[$key] = null;*/
+			}
+
+
+
+
+			if ($this->_sanitized) {
+				foreach ($this->_sanitized as $key => $value) {
+					$default = false;
+					if (is_null($value) && array_key_exists('default', $this->_rules[$key])) {
+						if (is_callable($this->_rules[$key]['default']))
+							$default = call_user_func($this->_rules[$key]['default']);
+						else
+							$default = $this->_rules[$key]['default'];
+
+						$this->_sanitized[$key] = $value = $default;
+					}
+
+					if ($value === false) {
+						//$message = ucfirst(str_replace('_', ' ', $key)) . "  is invalid";
+						$message = sprintf($this->_error_invalid, ucfirst(str_replace('_', ' ', $key)) );
+						if (!empty($this->_rules[$key]['message']))
+							$message = $this->_rules[$key]['message'];
+
+						if (array_key_exists('collect', $options) && $options['collect'] == true)
+							$this->_validate_errors[$key] = $message;
+						else
+							throw new Exception($message);
+					}
+
+					//if ((!is_null($value) && $value !== false) || $default !== false)
+					if (($value !== false) || $default !== false)
+						$this->{'set_' . $key}($value);
+
+
+
+				}
+
+				if (!count($this->_validate_errors))
+					foreach ($this->_rules as $key=>$rule){
+						if (array_key_exists('after', $rule) && is_callable($rule['after'])) {
+							$result = call_user_func($rule['after'], $this->{'get_' . $key}());
+							$message = sprintf($this->_error_invalid, ucfirst(str_replace('_', ' ', $key)) );
+							if (!empty($this->_rules[$key]['message']))
+								$message = $this->_rules[$key]['message'];
+
+							if ($result === false)
+								if (array_key_exists('collect', $options) && $options['collect'] == true)
+									$this->_validate_errors[$key] = $message;
+								else
+									throw new Exception($message);
+						}
+					}
+
+				foreach ($this->_rules as $key=>$rule)
+					if (
+						!array_key_exists($key, $this->_validate_errors) &&
+						!empty($this->_rules[$key]['required']) &&
+						$this->_rules[$key]['required'] == true &&
+						empty($this->{'get_' . $key}())
+					) {
+						$message = sprintf($this->_error_required, ucfirst(str_replace('_', ' ', $key)) );
+						if (!empty($this->_rules[$key]['message_required']))
+							$message = $this->_rules[$key]['message_required'];
+
+						if (array_key_exists('collect', $options) && $options['collect'] == true)
+							$this->_validate_errors[$key] = $message;
+						else
+							throw new Exception($message);
+					}
+			}
+
+			return $this;
+		}
+
+
+		/**
          * @return array
          */
         public function get_validate_errors()

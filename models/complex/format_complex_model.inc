@@ -122,18 +122,21 @@
             return FORMAT_UTIL::get_currency($this->value(),$round);
         }
 
-        public function iso8601($options=array("time"=>true,"timezone"=>true)) {
+        public function iso8601($options=array("time"=>true,"timezone"=>null)) {
 
             $parts = array();
             $parts[] = "Y-m-d";
 
-            if(value($options,"time",true))
+            if(value($options,"time",true)) {
                 $parts[] = "\TH:i:s";
+               
+                if(value($options,"timezone")!==false)
+                    $parts[] = "P";
+            }
 
-            if($timezone=value($options,"timezone",true))
-                $parts[] = $timezone===true ? "P" : $timezone;
+            $format_options = isset($options["timezone"]) ? ["timezone"=>value($options,"timezone")] : [];
 
-            return $this->format_time(implode("",$parts),$this->value());
+            return $this->format_time(implode("",$parts),$format_options);
         }
 
         public function ordinal() {

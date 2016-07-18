@@ -51,7 +51,7 @@
 		 * @param string $value 
 		 */
 		public function set_variable($variable,$value,$format=BASE_CMODEL_MESSAGE_RENDERER::FORMAT_TEXT) { 
-			
+
 			preg_match("/^(?:{\\$)?([^}]+)}?/",$variable,$matches);
 			$variable = get_value($matches,1);
 
@@ -72,9 +72,12 @@
 
 				$variable_format = value($this->_variable_formats,$variable);
 
+				/*
+				Not sure why we are doing this. Doesnt seem practical to do this at this level
 				if($variable_format!=$format)
 					if($format==BASE_CMODEL_MESSAGE_RENDERER::FORMAT_HTML)
 						$value = str_replace("\n","<br>",$value);
+				*/
 
 				$this->_smarty_cmodel->assign($variable,$value);
 			}
