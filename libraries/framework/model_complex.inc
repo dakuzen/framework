@@ -481,6 +481,75 @@
             return $this;
         }
 
+
+        protected $_validations = [];
+        public function validations() { return []; }
+
+        public function validate_message($validation,$string,$vars=[]) {
+        	
+        	$subject = value($validation,"humanize");
+
+        	if(!$subject) {
+        		$subject = preg_replace("/^get_/i","",$validation["name"]);
+        		$subject = str_replace('_', ' ', $subject);
+        	}
+
+        	$replace = ["{name}"=>$subject];
+
+        	foreach ($vars as $key=>$value) {
+        		$replace["{".$key."}"] = $value;
+        	}
+
+        	return str_replace(array_keys($replace),array_values($replace),$string);
+        }
+
+        public function validate() {
+
+        	$exception = BCMODEL_VALIDATION_EXCEPTION::create();
+        	foreach($this->validations() as $validation) {
+
+        		$name = $validation["name"];
+
+              	$value = call_user_func([$this,$name]);
+
+        		foreach(value($validation,"validations",[]) as $type=>$config) {
+
+        			if($type=="required" && !strlen($value)) {
+						$exception->add($this->validate_message($validation,value($validation,["messages","required"],"The {name} is required")));
+        			}
+
+        			if($type=="minlength" && strlen($value)<$config) {
+						$exception->add($this->validate_message($validation,value($validation,["messages","minlength"],"The {name} has to be a minimum of {min} characters"),["min"=>$config]));
+        			}        			
+
+        			if($type=="maxlength" && strlen($value)>$config) {
+						$exception->add($this->validate_message($validation,value($validation,["messages","maxlength"],"The {name} cannot exceed {max} characters"),["max"=>$config]));
+        			}
+
+        			if($type=="email") {
+						try {
+							CMODEL_VALIDATE::create($value)->email();
+						} catch(Exception $e) {
+							$exception->add(value($validation,["messages","email"],"The email address is invalid"));
+						}
+        			}
+
+        			if($type=="custom") {
+        				try {
+        					call_user_func($config,$value);
+        				} catch(Exception $e) {
+        					$exception->add($e);
+        				}
+        			}
+        		}
+        	}
+
+        	if($exception->has_messages())
+        		throw $exception;        		
+
+        	return $this;
+        }
+
 		public function array_merge_recursive_distinct ( array &$array1, array &$array2 )
 		{
 			$merged = $array1;
