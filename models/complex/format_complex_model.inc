@@ -19,9 +19,13 @@
          * Constructor
          * @param integer $time
          */
-        public function __construct($value,$options=array("timezone"=>null,"format_timezone"=>null)) {
+        public function __construct($value,$options=array("timezone"=>null)) {
             $this->_value = $value;
             $this->_options = $options;
+
+            // Legacy
+            if($format_timezone=value($this->_options,"format_timezone"))
+                $this->_options["timezone"] = $format_timezone;
         }
 
         public static function create($value,$options=array()) {
@@ -184,7 +188,7 @@
             if(!$date_time->getTimestamp())
                 return "";
 
-            $timezone = value($options,"timezone",value($this->_options,"format_timezone"));
+            $timezone = value($options,"timezone",value($this->_options,"timezone"));
 
             if($timezone)
                 $date_time->setTimezone(new DateTimeZone($timezone));
