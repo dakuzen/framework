@@ -26,5 +26,9 @@
 
 		public function messages() {
 			return $this->_messages;
-		}		
+		}
+
+		public function has_messages() {
+			return !!$this->_messages;
+		}
 	}

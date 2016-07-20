@@ -27,11 +27,10 @@
          * Constructor
          * @param integer $time
          */
-		public function __construct($time,$options=array("offset"=>true,"locale"=>null,"timezone"=>null,"format_timezone"=>null)) {
+		public function __construct($time,$options=array("offset"=>true,"locale"=>null,"timezone"=>self::TIMEZONE_UTC)) {
 
-            $this->_options                     = $options;
-            $this->_options["format_timezone"]  = ($format_timezone=$this->option("format_timezone")) ? $format_timezone : date_default_timezone_get();
-            $this->_options["timezone"]         = ($timezone=$this->option("timezone")) ? $timezone : date_default_timezone_get();            
+            $this->_options             = $options;
+            $this->_options["timezone"] = ($timezone=$this->option("timezone")) ? $timezone : date_default_timezone_get();            
 
             $this->_date_time = new DateTime();
 
@@ -218,12 +217,12 @@
         function long_date()                    { return $this->format()->long_date(); }
         function long_datetime()                { return $this->format()->long_date_time(); }
         function short_datetime()               { return $this->format()->short_date_time(); }        
+        function iso8601()                      { return $this->format()->iso8601(); }
+
         function time_age()                     { return BCMODEL_TIME_AGE::create($this->get_time()); }
         function cloner()                       { return clone $this; }
-        function iso8601($options=["timezone"=>"UTC"]) { return $this->format()->iso8601($options); }
-
-        function format() {
-            $options["format_timezone"] = value($this->_options,"format_timezone");
+        
+        function format($options=["timezone"=>self::TIMEZONE_UTC]) {
             return CMODEL_FORMAT::create($this,$options);
         }
 
@@ -232,10 +231,8 @@
         }
 
         function hour($value=null) {
-            if(func_num_args()) {
-                $this->time($value,$this->minute(),$this->second());
-                return $this;
-            }
+            if(func_num_args())
+                return $this->time($value,$this->minute(),$this->second());
             return (int)$this->_format("H");
         }
 
@@ -313,7 +310,7 @@
 
         function _format($format,$time=null,$options=array()) {
 
-            $timezone = value($options,"timezone",value($this->_options,"format_timezone"));
+            $timezone = value($options,"timezone");
 
             $date_time = $this->_date_time;
 
