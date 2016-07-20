@@ -217,7 +217,7 @@
         function long_date()                    { return $this->format()->long_date(); }
         function long_datetime()                { return $this->format()->long_date_time(); }
         function short_datetime()               { return $this->format()->short_date_time(); }        
-        function iso8601()                      { return $this->format()->iso8601($options); }
+        function iso8601()                      { return $this->format()->iso8601(); }
 
         function time_age()                     { return BCMODEL_TIME_AGE::create($this->get_time()); }
         function cloner()                       { return clone $this; }
