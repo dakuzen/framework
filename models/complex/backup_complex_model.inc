@@ -96,16 +96,4 @@
 			return $has_success;
 
 		}
-
-                /**
-                 * Populates
-                 * @param array $data
-                 * @param boolean $untag
-                 * @return mix
-                 * @todo review return type 
-                 */
-		public function populate($data,$untag=false) {
-			return $this->populate_dbo($data,$untag);
-		}
-
 	}

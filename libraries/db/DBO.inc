@@ -16,8 +16,7 @@
 		
 		const CONFIG_PRIMARY 	= CONSTANT::BIT_01;
 		const CONFIG_TAGGED 	= CONSTANT::BIT_02;
-		//const CONFIG_CHANGED	= CONSTANT::BIT_03;
-
+		
 		const ENCRYPT_AES	= "AES";
 
 		/**
@@ -39,16 +38,10 @@
 		protected $_value	= null;
 
 		/**
-		 * The encrypt
-		 * @var string $encrypt 
-		 */
-		protected $_encrypt	= null;
-
-		/**
 		 * encrypt key
 		 * @var string $encrypt_key 
 		 */
-		protected $_encrypt_key	= null;
+		protected $_events	= [];
 
 		/**
 		 * Constructor
@@ -77,12 +70,6 @@
 		function get_value() 		{ return $this->_value; }
 
 		/**
-		 * Returns the encrypt key
-		 * @return string 
-		 */
-		function get_encrypt_key() 	{ return $this->_encrypt_key; }
-
-		/**
 		 * Checks whether is primary
 		 * @return boolean 
 		 */
@@ -93,14 +80,7 @@
          * @return boolean 
          */
         function is_tagged() 		{ return ($this->_config & self::CONFIG_TAGGED) == self::CONFIG_TAGGED; }
-		//function is_changed() 		{ return ($this->_config & self::CONFIG_CHANGED) == self::CONFIG_CHANGED; }
 		
-        /**
-         * Check whether is encrypt aes
-         * @return boolean 
-         */
-        function is_encrypt_aes() 	{ return $this->_encrypt==self::ENCRYPT_AES; }
-
         /**
          * Enable tag
          */
@@ -135,10 +115,9 @@
          * @param string $value
          * @param boolean $untag 
          */
-		function set_value($value,$untag=true) {
+		function set_value($value) {
 			
-			if(!$untag)
-				$this->enable_tag();
+			$this->enable_tag();
 
 			if($value!==null) {
 
@@ -164,15 +143,8 @@
 			}			
 				
 			$this->_value = $value;
-		}
-		
-        /**
-         * encrypt aes
-         * @param string $key 
-         */
-		function encrypt_aes($key) {
-			$this->_encrypt 	= self::ENCRYPT_AES;
-			$this->_encrypt_key 	= $key;
+
+			return $this;
 		}
 
         /**
@@ -219,12 +191,6 @@
 		 * @var array $columns 
 		 */
 		protected $_columns 			= array();
-
-		/**
-		 * The previous values
-		 * @var array $previous_values
-		 */
-		protected $_previous_values		= array();
 
 		/**
 		 * The tablename
@@ -345,16 +311,7 @@
 						if(count($args)>0) {
 
 							$value 	= @$args[0];
-							$untag 	= isset($args[1]) ? $args[1] : null;
-
-							//if($valid_value) {
-								//if($this->_previous_values && @strcmp($value,$this->get_previous_value($name))!==0)
-									//$column->enable_changed();
-
-							//} else
-							//	$value = null;
-
-							$column->set_value($value,$untag);
+							$column->set_value($value);
 							
 							return $this;
 
@@ -373,9 +330,8 @@
          * populate
          * @param array $data
          * @param boolean $untag
-         * @param boolean $previous 
          */
-		public function populate($data,$untag,$previous=false) {
+		public function populate($data,$untag) {
 		
 			foreach($this->get_columns() as $name=>$column) {
 				
@@ -383,21 +339,11 @@
 					
 					$value = $data[$name];
 
-					if($untag) {
+					$column->set_value($value);				
 
-						if($column->is_encrypt_aes() && $column->get_encrypt_key())								
-							$value = ENCRYPT_UTIL::aes_decrypt($value,$column->get_encrypt_key());
-					}	
-
-					$column->set_value($value,$untag);				
-
-					if($previous)
-						$this->set_previous_value($name,$value);
-				}
-				
-				if($untag)
-					$column->disable_tag();
-
+					if($untag)
+						$column->disable_tag();
+				}				
 			}
 		}
 
@@ -496,9 +442,6 @@
 						$value = @date("Y-m-d h:i:s",$value);
 				}
 				
-				if($column->is_encrypt_aes() && $column->get_encrypt_key() && strlen($value))
-					$value = ENCRYPT_UTIL::aes_encrypt($value,$column->get_encrypt_key());
-
 				$data[$name] = $value;
 			}
 
@@ -527,15 +470,6 @@
 		}
 		*/
 		
-        /**
-         * set previous value
-         * @param string $column
-         * @param string $value 
-         */
-		public function set_previous_value($column,$value) {
-			$this->_previous_values[$column] = $value;
-		}
-
         /**
          * untag
          * @param string $column_name 
@@ -616,14 +550,26 @@
 			return null;
 		}
 
+		private function events($type, &$data) {
+			foreach($this->_events as $event) {
+				if($type==$event["type"])
+					$event["func"]($this, $data);
+			}
+		}
+
+		public function on($type, $func) {
+			$this->_events[] = ["type"=>$type,"func"=>$func];
+			return $this;
+		}
+
         /**
          * Updates keys
          * @param array $keys
          * @return boolean 
          */
 		public function update($keys=array()) {
-			$this->initialize_dbo();
 
+			$this->initialize_dbo();
 			
 			$has_success = true;
 			
@@ -643,6 +589,9 @@
 			}
 			
 			if(count($data=$this->get_column_data(true,false)) && $this->_db_object->get_constraint_count()) {
+
+				$this->events("update",$data);
+
 				$has_success = $this->_db_object->update($data);
 				
 				if($has_success)
@@ -685,17 +634,20 @@
          * Insert
          * @return boolean 
          */
-		public function insert() {
+		public function insert() {			
+
 			$this->initialize_dbo();
 
 			$data = $this->get_column_data(true);
+
+			$this->events("insert",$data);
 
 			$result = $this->_db_object->insert($data);
 
 			if($result) {
 				if($primary_columns=$this->get_primary_keys()) {
 
-					$primary_column = get_value(array_keys($primary_columns),0);
+					$primary_column = value(array_keys($primary_columns),0);
 					
 					if($primary_column && $this->_db_object->get_last_inserted_id()) {
 						$column = $this->get_column($primary_column);
@@ -749,10 +701,7 @@
 				if($row=$this->_db_object->select_row($fields)) {
 				
 					foreach($this->_columns as $name=>$column) {
-
-						if($column->is_encrypt_aes() && $column->get_encrypt_key())
-							$value = ENCRYPT_UTIL::aes_decrypt($value,$column->get_encrypt_key());
-							
+	
 						if(isset($row[$name])) {
 							$function = "set_".$name;
 							$value = $row[$name];
@@ -781,30 +730,4 @@
 
 			return false;
 		}
-		
-        /**
-         * encrypt column
-         * @param string $column_name
-         * @param string $key
-         * @param string $type 
-         */
-		public function encrypt_column($column_name,$key,$type=DBO_COLUMN::ENCRYPT_AES) {
-			foreach($this->_columns as $name=>$column) {
-				if($column_name==$name)
-					$column->encrypt_aes($key);
-			}
-		}
-		
-        /**
-         * Returns the previous values
-         * @return array 
-         */
-		function get_previous_values()			{ return $this->_previous_values; }
-                
-        /**
-         * Returns the previous value
-         * @param string $column_name
-         * @return string 
-         */
-		function get_previous_value($column_name) 	{ return get_value($this->_previous_values,$column_name); }
 	}

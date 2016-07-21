@@ -16,6 +16,8 @@
 			$this->message = $message;
 			$this->code = $code;
 
+			$this->message = $this->get_message();
+
 			return $this;
 		}
 
@@ -31,4 +33,12 @@
 		public function has_messages() {
 			return !!$this->_messages;
 		}
+
+		public function get_message() {
+			$messages = [];
+			foreach($this->_messages as $message)
+				$messages[] = $message["message"];
+
+			return implode(", ",$messages);
+		}		
 	}
