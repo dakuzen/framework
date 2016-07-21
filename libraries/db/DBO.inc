@@ -38,12 +38,6 @@
 		protected $_value	= null;
 
 		/**
-		 * encrypt key
-		 * @var string $encrypt_key 
-		 */
-		protected $_events	= [];
-
-		/**
 		 * Constructor
 		 * @param string $data_type
 		 * @param string $size
@@ -221,6 +215,8 @@
 		 * @var array $transactions
 		 */
 		protected $_transactions		= true;
+
+		protected $_events	= [];
 
 		/**
 		 * set the db connection
