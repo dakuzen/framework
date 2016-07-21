@@ -179,8 +179,10 @@
 					$card = array(
 						"number"=>$credit_card->get_number(),
 						"exp_month"=>$credit_card->get_expiry_month(),
-						"exp_year"=>$credit_card->get_expiry_year(),
-						"cvc"=>$credit_card->get_cvv2());
+						"exp_year"=>$credit_card->get_expiry_year()
+					);
+					if($credit_card->get_cvv2())
+						$card["cvc"] = $credit_card->get_cvv2();
 
 					$optional_fields = ["name","address_line1","address_line2","address_city","address_state","address_country","address_zip"];
 					foreach($optional_fields as $field)
@@ -247,8 +249,10 @@
 				$card = array(
 					"number"=>$credit_card->get_number(),
 					"exp_month"=>$credit_card->get_expiry_month(),
-					"exp_year"=>$credit_card->get_expiry_year(),
-					"cvc"=>$credit_card->get_cvv2());
+					"exp_year"=>$credit_card->get_expiry_year()
+					);
+				if($credit_card->get_cvv2())
+					$card["cvc"] = $credit_card->get_cvv2();
 
 				$optional_fields = ["name","address_line1","address_line2","address_city","address_state","address_country","address_zip"];
 				foreach($optional_fields as $field)
