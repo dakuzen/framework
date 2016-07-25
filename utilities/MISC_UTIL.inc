@@ -187,7 +187,7 @@
 
 				if(preg_match("/^[0-9]+$/",$value)) {
 					if(!preg_match("/^0\d+/",$value) && (int)$value!=PHP_INT_MAX)
-						$value = (int)$value;
+						$value = (int)round($value,0);
 				} else {
 					$value = (float)$value;
 				}
