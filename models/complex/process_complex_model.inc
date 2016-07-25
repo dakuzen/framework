@@ -233,14 +233,14 @@
 							->exists();
 		}
 		
-		public function populate($data,$untag=false,$previous=false) {
+		public function populate($data,$untag=false) {
 
 			if(@array_key_exists("object",$data)) {
 				$this->set_object(unserialize($data["object"]));
 				unset($data["object"]);
 			}
 
-			return $this->populate_dbo($data,$untag,$previous);
+			return parent::populate($data,$untag);
 		}
 	}
 

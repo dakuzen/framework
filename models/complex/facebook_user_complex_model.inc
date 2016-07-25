@@ -144,22 +144,4 @@
 			
 			return false;
 		}
-
-        /**
-         * Populates
-         * @param array $data
-         * @param boolean $untag
-         * @return boolean
-         * @todo review types 
-         */
-		public function populate($data,$untag=false) {								
-			
-			if($facebook_user_id=get_value($data,"uid"))
-				$this->set_facebook_user_id($facebook_user_id);
-				
-			elseif($facebook_user_id=get_value($data,"id"))
-				$this->set_facebook_user_id($facebook_user_id);
-			
-			return $this->populate_dbo($data,$untag);
-		}
 	}

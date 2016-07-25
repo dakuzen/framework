@@ -188,16 +188,5 @@
 
 			return $has_success;
 
-		}
-
-                /**
-                 * populates
-                 * @param array $data
-                 * @param boolean $untag
-                 * @return boolean 
-                 */
-		public function populate($data,$untag=false) {
-			return $this->populate_dbo($data,$untag);
-		}
-			
+		}			
 	}

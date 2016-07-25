@@ -241,15 +241,6 @@
 			$this->set_state(BASE_DBQ_SITE_CONTENT::STATE_DELETE);
 			return $this->_site_content_dbo->update();
 		}
-		/**
-         * Populates
-         * @param array $data
-         * @param boolean $untag
-         * @return boolean 
-         */
-		public function populate($data,$untag=false) {
-			return parent::populate_dbo($data,$untag);
-		}
 		
         /**
          * Returns the defaults

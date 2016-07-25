@@ -327,7 +327,7 @@
 			$this->_cc_recipients 	= EMAIL_UTIL::parse_email(get_value($data,"cc_recipients"));
 			$this->_bcc_recipients 	= EMAIL_UTIL::parse_email(get_value($data,"bcc_recipients"));
 
-			return $this->populate_dbo($data,$untag);
+			return parent::populate($data,$untag);
 		}
 
 	}

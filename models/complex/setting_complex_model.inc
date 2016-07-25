@@ -421,7 +421,7 @@
          */
     	public function populate($data,$untag=false) {
     		
-    		$this->populate_dbo($data,$untag);
+    		parent::populate($data,$untag);
 
     		if(@array_key_exists("values",$data)) {
     			$values = get_value($data,"values");

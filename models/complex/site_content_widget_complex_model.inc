@@ -282,7 +282,7 @@
          */
 		public function populate($data,$untag=false) {
 		
-			$this->populate_dbo($data,$untag);
+			parent::populate($data,$untag);
 			
 			$var_data = get_value($data,"var_data",array());
 			

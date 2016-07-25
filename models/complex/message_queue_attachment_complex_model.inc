@@ -89,15 +89,4 @@
 		public function commit_file($file) {
 			return FILE_UTIL::copy($file,$this->get_local_file());					
 		}
-
-        /**
-         * Populates
-         * @param array $data
-         * @param boolean $untag
-         * @return mixed
-         * @todo review return type 
-         */
-		public function populate($data,$untag=false) {								
-			return $this->populate_dbo($data,$untag);
-		}
 	}

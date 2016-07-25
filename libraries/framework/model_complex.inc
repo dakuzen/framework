@@ -38,6 +38,25 @@
 				if($dbo)
 					$this->register_dbo($dbo);
 
+			foreach($this->describe() as $name=>$config) {
+				if($default=value($config,"default")) {
+
+					$column = $this->get_column($name);
+
+					if($default=="guid")
+						$column->set_value(MISC_UTIL::get_guid());
+					
+					elseif($default=="datetime")
+						$column->set_value(DB::get_date_time());
+
+					elseif(is_callable($default))
+						$column->set_value(call_user_func($default));
+
+					else
+						$column->set_value($default);
+				}
+			}
+
 			return $this;
 		}
 
@@ -53,7 +72,27 @@
 		}
 
 		function set_dbo($dbo) {
+			$dbo
+				->on("update",[$this,"on_update_insert"])
+				->on("insert",[$this,"on_update_insert"]);
+
 			$this->_dbos[get_class($dbo)] = $dbo; return $this;
+		}
+
+		function on_update_insert($dbo, &$data) {
+
+    		foreach($this->describe() as $name=>$config) {
+
+    			if($encode=value($config,"encode")) {
+
+    				if($column=$dbo->get_column($name)) {
+
+    					if($column->is_tagged()) {
+    						$data[$name] = call_user_func($encode,$data[$name]);
+    					}
+	            	}
+        		}
+        	}
 		}
 		
 		/**
@@ -159,7 +198,7 @@
 				return new $class();
 			}
 
-			$has_success = false;			
+			$has_success = false;
 			if(preg_match("/^(?:(set_)|get_)(.*)/",$function,$matches)) {
 			
 				$name = $matches[2];
@@ -223,12 +262,8 @@
 
 									$arg1 	= $args[0];
 									$arg2 	= isset($args[1]) ? $args[1] : null;
-									$arg3 	= isset($args[2]) ? $args[2] : null;
-															
+						
 									$dbo->$function($arg1,$arg2);
-
-									if($arg3)
-										$this->untag_column($name);
 
 									$has_success = true;
 								} else								
@@ -265,42 +300,7 @@
 			
 			return null;
 		}
-		
-		/*
-		removed because there is complexity with keeping track of the state of a column value
-		function is_column_changed($column,$table="") {
-			foreach($this->_dbos as $dbo) {
-				if($table) {
-					if($table==$dbo->get_tablename())
-						return $dbo->is_column_changed($column);
-					
-				} elseif($dbo->has_column($column))
-					return $dbo->is_column_changed($column);					
-			}
-			
-			return false;
-		}
-		*/
-		
-        /**
-         * Returns previous value
-         * @param string $column
-         * @param string $table
-         * @return null 
-         */
-		public function get_previous_value($column,$table="") {
-			foreach($this->_dbos as $dbo) {
-				if($table) {
-					if($table==$dbo->get_tablename())
-						return $dbo->get_previous_value($column);
-					
-				} elseif($dbo->has_column($column))
-					return $dbo->get_previous_value($column);
-			}
-			
-			return null;
-		}
-		
+
         /**
          * Returns column names
          * @return array 
@@ -357,35 +357,7 @@
 					$values[$name] = $column->get_value();					
 			
 			return $values;
-		}		
-		
-        /**
-         * Populate dbo
-         * @param array $data
-         * @param boolean $untag
-         * @param boolean $previous
-         * @return boolean 
-         */
-		public function populate_dbo($data,$untag,$previous=false) {
-
-			if(!is_array($data) || !$data)
-				return $this;
-
-			foreach($data as $field=>$value) {
-
-				$function = "set_".$field;
-				
-				if(method_exists($this,$function)) {
-					$this->$function($value);
-					unset($data[$field]);
-				}
-			}
-	
-			foreach($this->_dbos as &$dbo)
-				$dbo->populate($data,$untag,$previous);
-
-			return $this;
-		}
+		}	
 		
         /**
          * Returns the dbo data
@@ -428,7 +400,20 @@
 			return $this;
 		}	
 
-		public function populate($data,$untag=false,$previous=false) {
+		public function populate($data,$untag=false) {
+
+			if(!is_array($data) || !$data)
+				return $this;
+
+			foreach($data as $field=>$value) {
+
+				$function = "set_".$field;
+				
+				if(method_exists($this,$function)) {
+					$this->$function($value);
+					unset($data[$field]);
+				}
+			}
 
 			foreach($this->_registered_objects as $name=>$object) {
 
@@ -452,7 +437,15 @@
 				}
 			}
 
-			return $this->populate_dbo($data,$untag,$previous);
+			foreach($this->_dbos as &$dbo)
+				$dbo->populate($data,$untag);
+
+			return $this;
+		}
+
+		// Legacy function
+		public function populate_dbo($data,$untag=false) {
+			return $this->populate($data,$untag);
 		}
 
 		public function load() {
@@ -498,14 +491,14 @@
 
 
         protected $_validations = [];
-        public function validations() { return []; }
+        public function describe() { return []; }
 
-        public function validate_message($validation,$string,$vars=[]) {
+        public function validate_message($config,$string,$vars=[]) {
         	
-        	$subject = value($validation,"humanize");
+        	$subject = value($config,"humanize");
 
         	if(!$subject) {
-        		$subject = preg_replace("/^get_/i","",$validation["name"]);
+        		$subject = preg_replace("/^get_/i","",$config["name"]);
         		$subject = str_replace('_', ' ', $subject);
         	}
 
@@ -518,40 +511,76 @@
         	return str_replace(array_keys($replace),array_values($replace),$string);
         }
 
-        public function validate() {
+        public function fill($data,$allow) {
+        	
+        	foreach($data as $name=>$value) {
+
+        		if(!in_array($name,$allow))
+        			continue;
+
+        		if($config=value($this->describe(),$name)) {
+
+	        		if(value($config,"source")=="function")
+	        			$value = call_user_func([$this,$name],$value);
+	        		else {
+
+						foreach($this->_dbos as $dbo)
+							if($column=$dbo->get_column($name)) 
+								$column->set_value($value);
+	        		}
+	        	}
+        	}
+
+        	return $this;
+        }
+
+        public function validate($options=["force"=>false]) {
 
         	$exception = BCMODEL_VALIDATION_EXCEPTION::create();
-        	foreach($this->validations() as $validation) {
+        	foreach($this->describe() as $name=>$config) {
 
-        		$name = $validation["name"];
+        		$config["name"] = $name;
 
-              	$value = call_user_func([$this,$name]);
+        		if(value($config,"source")=="function")
+	              	$value = call_user_func([$this,$name]);
+	            else {
+	            	$column = $this->get_column($name);
 
-        		foreach(value($validation,"validations",[]) as $type=>$config) {
+	            	if(!$column)
+	            		throw new Exception("CMODEL::validate() Failed: The name ".$name." does not exist");
+	            		
+	            	if(!$column->is_tagged())
+	            		continue;
 
-        			if($type=="required" && !strlen($value)) {
-						$exception->add($this->validate_message($validation,value($validation,["messages","required"],"The {name} is required")));
-        			}
+	            	$value = $column->get_value();
+	            }
 
-        			if($type=="minlength" && strlen($value)<$config) {
-						$exception->add($this->validate_message($validation,value($validation,["messages","minlength"],"The {name} has to be a minimum of {min} characters"),["min"=>$config]));
-        			}        			
+        		foreach(value($config,"validations",[]) as $type=>$validation) {
 
-        			if($type=="maxlength" && strlen($value)>$config) {
-						$exception->add($this->validate_message($validation,value($validation,["messages","maxlength"],"The {name} cannot exceed {max} characters"),["max"=>$config]));
-        			}
+        			if($type=="required") {
+        				if(!strlen(trim($value)))
+							$exception->add($this->validate_message($config,value($validation,["messages","required"],"The {name} is required")));
+        			
+        			} elseif($type=="minlength") {
+        				if(strlen(trim($value))<$validation)
+							$exception->add($this->validate_message($config,value($validation,["messages","minlength"],"The {name} has to be a minimum of {min} characters"),["min"=>$validation]));
+        			
+        			} elseif($type=="maxlength") {
+        				if(strlen(trim($value))>$validation)
+							$exception->add($this->validate_message($config,value($validation,["messages","maxlength"],"The {name} cannot exceed {max} characters"),["max"=>$validation]));
+        			
+        			} elseif($type=="email") {
+        				if(trim($value) && !CMODEL_VALIDATE::create($value)->email())
+							$exception->add(value($config,["messages","email"],"The email address is invalid"));
 
-        			if($type=="email") {
-						try {
-							CMODEL_VALIDATE::create($value)->email();
-						} catch(Exception $e) {
-							$exception->add(value($validation,["messages","email"],"The email address is invalid"));
-						}
-        			}
+					} elseif($type=="integer") {
+        				if(preg_match("/^\d+$/",$value))
+							$exception->add(value($config,["messages","integer"],"The {name} is not a valid number"));        			
 
-        			if($type=="custom") {
+        			} else {
+
         				try {
-        					call_user_func($config,$value);
+        					call_user_func($validation,$value);
         				} catch(Exception $e) {
         					$exception->add($e);
         				}

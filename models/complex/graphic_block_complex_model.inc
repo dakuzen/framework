@@ -158,15 +158,4 @@
 			$this->set_state(BASE_DBQ_GRAPHIC_BLOCK::STATE_DELETED);
 			return $this->get_dbo("graphic_block")->update();
 		}
-		
-        /**
-         * Populate
-         * @param array $data
-         * @param boolean $untag
-         * @return boolean 
-         */
-		public function populate($data,$untag=false) {								
-			return $this->populate_dbo($data,$untag);
-		}
-
 	}
