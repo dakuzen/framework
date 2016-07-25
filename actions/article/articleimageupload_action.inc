@@ -13,8 +13,7 @@
 			$temp_cmodel = CMODEL_TEMP::create();
 
 			try {
-
-				foreach(UPLOAD_UTIL::uploads($temp_cmodel->dir(),array("png","jpg")) as $upload_util) {
+				foreach(UPLOAD_UTIL::uploads("file", $temp_cmodel->dir(),array("png","jpg")) as $upload_util) {
 
 					$upload_util->upload();
 
