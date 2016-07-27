@@ -34,7 +34,7 @@
 		}
 
 		public function url($path,$filename=null,$options=[]) {
-			
+
 			$minutes = value($options,"minutes",1);
 
 			if($filename) {
@@ -259,17 +259,17 @@
 			return preg_replace(array("/\\\/","/\/{2,}/"),array("/","/"),$path);
 		}
 
-		public function response($property=null) { 
-			
+		public function response($property=null) {
+
 			if(!is_null($property)) {
 
 				if(!isset($this->_response[$property]))
 					throw new Exception("Failed to load ".$property." property");
-				
+
 				return $this->_response[$property];
 			}
 
-			return $this->_response; 
+			return $this->_response;
 		}
 
 		public function sanitize_path($path) {
