@@ -156,13 +156,13 @@ $.widget("custom.calendar",{
 
 		this.moment(date);
 
-        $(this.element).find(".calendar_display_date").html(this.format(this.options.dateFormat));        
+        $(this.element).find(".calendar_display_date").html(this.format(this.options.dateFormat));
         $(this.element).find(".calendar_clear").show();
 
         var output = '';
         if(this.options.outputFormat=="timestamp") {
         	output = this.time();
-        
+
         } else if(this.options.outputFormat=="utc") {
         	output = this.utc();
         }
@@ -180,11 +180,11 @@ $.widget("custom.calendar",{
 	},
 
 	_create: function() {
-		
+console.log(this.options);
 		var options = $.default.calendar || {};
         this.options.dateFormat = this.options.dateFormat || options.dateFormat || "shortdate";
         this.options.outputFormat = this.options.outputFormat || options.outputFormat || "timestamp";
-        
+
         if(this.options.utcOffset!==null && $.isNumeric(options.outputFormat)) {
         	this.options.utcOffset = options.outputFormat;
         }
@@ -240,6 +240,12 @@ $.widget("custom.calendar",{
 					.click($.proxy(function() {
 						this.clear();
 					},this)));
+
+			if(this.options.minDate)
+				options.minDate = this.options.minDate;
+
+			if(this.options.maxDate)
+				options.maxDate = this.options.maxDate;
 
 		   	calendar_element.datepicker(options);
 
@@ -305,13 +311,13 @@ $.default.transmit = { log: function(type,message) {
 						}};
 
 $.ajaxSetup({ error: function( event, jqxhr, settings, thrownError ) {
-					  
+
 					  if(event.responseJSON && event.responseJSON.errors)
 					  	FF.msg.error(event.responseJSON.errors);
 					  else
 					  	FF.msg.error(event.responseText);
 			}});
-	
+
 
 $.go.it = function(url,opt1,opt2,opt3,el) {
 
