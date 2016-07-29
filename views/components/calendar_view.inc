@@ -96,9 +96,9 @@
 		}
 
 		function get_html($name,$time,$id=null) {
-
-			if($time && !is_numeric($time) && preg_match("/\d{4}-\d{2}-\d{2}(:? \d{2}:\d{2}:\d{2})?/",$time))
-				$time = CMODEL_TIME::create($time)->time();
+			if($time && !is_numeric($time) && preg_match("/\d{4}-\d{2}-\d{2}(:? \d{2}:\d{2}:\d{2})?/",$time)) {
+				$time = TIME_UTIL::totime($time);
+			}
 
 			//remove [ & ] with under
 			$id = trim(preg_replace("/[\[\]]+/","_",($id ? $id : $name)),"_");
