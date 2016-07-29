@@ -67,6 +67,9 @@
          * @return string 
          */
 		public function get_rendered($content,$format=BASE_CMODEL_MESSAGE_RENDERER::FORMAT_TEXT) {
+			
+			if(!$content)
+				return "";
 
 			foreach($this->get_variables() as $variable=>$value) {
 
@@ -81,7 +84,7 @@
 
 				$this->_smarty_cmodel->assign($variable,$value);
 			}
-			
+
 			return $this->_smarty_cmodel->fetch_string($content);
 		}
 
