@@ -104,7 +104,10 @@ $.widget("custom.calendar",{
     _moment: null,
 
     format: function(format) {
-    	return this._moment ? this._moment.format(format) : "";
+    
+    	var moment = this.utc0();
+
+    	return moment ? moment.format(format) : "";
     },
 
     moment: function(date) {
@@ -131,25 +134,11 @@ $.widget("custom.calendar",{
     },
 
     utc: function() {
-    	return this._moment ? this._moment.clone().add(this._moment.utcOffset(), 'minutes').utc().toISOString() : "";
+    	return this._moment ? this._moment.clone().add(this._moment.utcOffset() * -1, 'minutes').utc().toISOString() : "";
     },
 
-    localOffsetDiff: function() {
-
-		var utcOffset 	= this.options.utcOffset;
-		var diff 		= 0;
-
-		if(utcOffset!==null) {
-			var localOffset = parseInt(moment().format("ZZ"));
-			var offset 		= parseInt(moment().zone(utcOffset).format("ZZ"));
-			diff 			= (localOffset + 0)/100;
-		}
-
-		return diff;
-    },
-
-    localized: function() {
-		return $.extend(this._moment,{}).add(this.localOffsetDiff(),"hours");
+    utc0: function() {
+    	return this._moment ? this._moment.clone().add(this._moment.utcOffset() * -1, 'minutes') : null;
     },
 
     date: function(date) {
@@ -165,6 +154,7 @@ $.widget("custom.calendar",{
 
         } else if(this.options.outputFormat=="utc") {
         	output = this.utc();
+
         }
 
         $(this.element).find(".calendar_timestamp").val(output).trigger("change");
@@ -180,7 +170,7 @@ $.widget("custom.calendar",{
 	},
 
 	_create: function() {
-console.log(this.options);
+
 		var options = $.default.calendar || {};
         this.options.dateFormat = this.options.dateFormat || options.dateFormat || "shortdate";
         this.options.outputFormat = this.options.outputFormat || options.outputFormat || "timestamp";
@@ -254,8 +244,7 @@ console.log(this.options);
 			if(date) {
 				// HACK: Because the date time picker does not handle timezones we
 				// manualy have to offset the time.
-				var mm = $.extend(this._moment,{});
-				$(this.element).find(".calendar_element").datepicker("setDate",mm.add(this.localOffsetDiff() * -1,"hours").toDate());
+				$(this.element).find(".calendar_element").datepicker("setDate",this.utc0().toDate());
 			}
 
 		},this));
