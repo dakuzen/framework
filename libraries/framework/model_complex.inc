@@ -1,25 +1,25 @@
 <?
 
 	/**
-	* Class MODEL_COMPLEX  
+	* Class MODEL_COMPLEX
 	*
 	* @package Library
 	* @subpackage Common
 	* @method static $this create() return self
 	*/
-	 	
+
 	class MODEL_COMPLEX extends MODEL {
-		
+
 		/**
 		* The dbos
 		* @var array $dbos
 		*/
 		protected $_dbos 				= array();
 		protected $_registered_objects	= array();
-		                    
+
 		/**
 		* is debug
-		* @var boolean is_debug 
+		* @var boolean is_debug
 		*/
 		protected $_is_debug		 	= false;
 
@@ -29,44 +29,47 @@
         protected $_sanitized = [];
         protected $_validate_errors = [];
         protected $_skip_save = false;
-						
+
 		public function __construct($dbo=null) {
-				
+
 			$dbos = is_array($dbo) ? $dbo : array($dbo);
 
 			foreach($dbos as $dbo)
 				if($dbo)
 					$this->register_dbo($dbo);
 
+			return $this;
+		}
+
+
+		/**
+		* register dbo
+		* @param object $dbo
+		*/
+		function register_dbo($dbo) {
+			if(!array_key_exists(get_class($dbo),$this->_dbos))
+				$this->set_dbo($dbo);
+
 			foreach($this->describe() as $name=>$config) {
 				if($default=value($config,"default")) {
 
 					$column = $this->get_column($name);
 
-					if($default=="guid")
-						$column->set_value(MISC_UTIL::get_guid());
-					
-					elseif($default=="datetime")
-						$column->set_value(DB::get_date_time());
+					if($column) {
+						if($default=="guid")
+							$column->set_value(MISC_UTIL::get_guid());
 
-					elseif(is_callable($default))
-						$column->set_value(call_user_func($default));
+						elseif($default=="datetime")
+							$column->set_value(DB::get_date_time());
 
-					else
-						$column->set_value($default);
+						elseif(is_callable($default))
+							$column->set_value(call_user_func($default));
+
+						else
+							$column->set_value($default);
+					}
 				}
 			}
-
-			return $this;
-		}
-
-		/**
-		* register dbo
-		* @param object $dbo 
-		*/
-		function register_dbo($dbo) {
-			if(!array_key_exists(get_class($dbo),$this->_dbos))
-				$this->set_dbo($dbo);
 
 			return $this;
 		}
@@ -94,15 +97,15 @@
         		}
         	}
 		}
-		
+
 		/**
 		* register db
-		* @param object $db 
+		* @param object $db
 		*/
 		function register_db($db=null) {
-			
+
 			$db = $db ? $db : DB::get_default_db_connection();
-			
+
 			foreach($this->_dbos as $dbo)
 				$dbo->set_db_connection($db);
 
@@ -129,13 +132,13 @@
 			$this->set_{$registered_name}($object);
 			return $this;
 		}
-		
+
 		/**
 		* Returns the dbos
-		* @return array 
+		* @return array
 		*/
 		function get_dbos() 		{ return $this->_dbos; }
-        
+
 
         function dbo($name) {
         	return $this->get_dbo($name);
@@ -144,10 +147,10 @@
 		/**
 		* Returns the dbo
 		* @param string $name
-		* @return object 
+		* @return object
 		*/
-		function get_dbo($name) { 
-			
+		function get_dbo($name) {
+
 			$name = strtoupper($name);
 
 			$dbo = value($this->_dbos,$name);
@@ -158,41 +161,41 @@
 			if(!$dbo)
 				$dbo = value($this->_dbos,"BASE_DBO_".$name);
 
-			return $dbo;			
+			return $dbo;
 		}
-                
+
 		/**
 		* Checks whether is debug
-		* @return boolean 
+		* @return boolean
 		*/
 		function is_debug() 		{ return $this->_is_debug; }
-                
+
 		/**
 		* Checks whether is debug
-		* @return boolean 
+		* @return boolean
 		*/
-		function log($message) { 
+		function log($message) {
 			if($this->is_debug())
 				p($message);
 		}
-                
+
 		/**
 		* debug
 		* @param boolean $debug
-		* @return boolean 
+		* @return boolean
 		*/
 		function debug($debug=true) 	{ $this->_is_debug = $debug; return $this; }
-		
+
 
 		/**
 		 * Call
 		 * @param string $function
 		 * @param array $args
 		 * @return boolean
-		 * @throws Exception 
+		 * @throws Exception
 		 */
 		function __call($function,$args) {
-				
+
 			if($function=="create") {
 				$class = get_called_class();
 				return new $class();
@@ -200,7 +203,7 @@
 
 			$has_success = false;
 			if(preg_match("/^(?:(set_)|get_)(.*)/",$function,$matches)) {
-			
+
 				$name = $matches[2];
 
 				if(array_key_exists($name,$this->_registered_objects)) {
@@ -235,9 +238,9 @@
 								}
 							}
 						}
-					
+
 						return $this;
-					
+
 					} elseif($this->has_data($name)) {
 
 						$data = (array)$this->data($name);
@@ -247,131 +250,131 @@
 
 						return $data;
 					}
-					
+
 					return value($this->_registered_objects,array($name,"default"));
 
 				} else {
-					
+
 					foreach($this->_dbos as &$dbo) {
 
 						if($dbo->has_column($name)) {
-						
+
 							if($matches[1]=="set_") {
-								
+
 								if(count($args)>0) {
 
 									$arg1 	= $args[0];
 									$arg2 	= isset($args[1]) ? $args[1] : null;
-						
+
 									$dbo->$function($arg1,$arg2);
 
 									$has_success = true;
-								} else								
+								} else
 									throw new Exception('Missing argument 1 for '.get_class($this).'->'.$function.'() ');
-								
-							} else 
+
+							} else
 								return $dbo->$function();
 						}
 					}
 				}
 			}
-			
-			if(!$has_success)				
+
+			if(!$has_success)
 				return parent::__call($function,$args);
 
 			return $this;
 		}
-		
+
 		/**
 		* Checks whether column is tagged
 		* @param string $column
 		* @param string $table
-		* @return null 
+		* @return null
 		*/
 		public function is_column_tagged($column,$table="") {
 			foreach($this->_dbos as $dbo) {
 				if($table) {
 					if($table==$dbo->get_tablename())
 						return $dbo->is_column_tagged($column);
-					
+
 				} elseif($dbo->has_column($column))
-					return $dbo->is_column_tagged($column);					
+					return $dbo->is_column_tagged($column);
 			}
-			
+
 			return null;
 		}
 
         /**
          * Returns column names
-         * @return array 
+         * @return array
          */
 		public function get_column_names() {
 			$column_names = array();
 			foreach($this->_dbos as $dbo)
 				$column_names  += $dbo->get_column_names();
-			
+
 			return $column_names;
 		}
-		
+
         /**
          * Checks whether has column
          * @param string $column
-         * @return boolean 
+         * @return boolean
          */
 		public function has_column($column) {
 			foreach($this->_dbos as $dbo)
 				if($dbo->has_column($column))
 					return true;
-			
+
 			return false;
-		}		
-		
+		}
+
         /**
          * Returns column
          * @param string $column
          * @param string $table
-         * @return null 
+         * @return null
          */
 		public function get_column($column,$table="") {
 			foreach($this->_dbos as $dbo) {
 				if($table) {
 					if($table==$dbo->get_tablename())
 						return $dbo->get_column($column);
-					
+
 				} elseif($dbo->has_column($column))
-					return $dbo->get_column($column);					
+					return $dbo->get_column($column);
 			}
-			
+
 			return null;
 		}
-		
+
         /**
          * Return column values
-         * @return array 
+         * @return array
          */
 		public function get_column_values() {
 			$values = array();
-			
-			foreach($this->_dbos as $dbo) 
+
+			foreach($this->_dbos as $dbo)
 				foreach($dbo->get_columns() as $name=>$column)
-					$values[$name] = $column->get_value();					
-			
+					$values[$name] = $column->get_value();
+
 			return $values;
-		}	
-		
+		}
+
         /**
          * Returns the dbo data
-         * @return array 
+         * @return array
          */
 		public function get_dbo_data() {
 			$data = array();
-			
+
 			foreach($this->get_dbos() as $dbo)
 				$data = $data + $dbo->get_data();
-			
+
 			return $data;
-		}		
-		
+		}
+
 	    /**
 	     * untag object
 	     */
@@ -389,7 +392,7 @@
 				$dbo->tag_object();
 			return $this;
 		}
-		
+
         /**
          * untag column
          */
@@ -398,7 +401,7 @@
 				$column->disable_tag();
 
 			return $this;
-		}	
+		}
 
 		public function populate($data,$untag=false) {
 
@@ -408,7 +411,7 @@
 			foreach($data as $field=>$value) {
 
 				$function = "set_".$field;
-				
+
 				if(method_exists($this,$function)) {
 					$this->$function($value);
 					unset($data[$field]);
@@ -418,7 +421,7 @@
 			foreach($this->_registered_objects as $name=>$object) {
 
 				if(@array_key_exists($name,$data)) {
-							
+
 					$value = value($data,$name);
 
 					if(is_string($value)) {
@@ -427,12 +430,12 @@
 							$value = strlen($value) ? (array)explode(value($object,"delimiter"),$value) : array();
 							$this->data($name,$value);
 
-						} elseif(value($object,"type")=="json") 
+						} elseif(value($object,"type")=="json")
 							$this->data($name,JSON_UTIL::decode($value));
-						
+
 						unset($data[$name]);
 
-					} elseif(is_array($value) || is_object($value)) 
+					} elseif(is_array($value) || is_object($value))
 						$this->data($name,$value);
 				}
 			}
@@ -460,25 +463,25 @@
          * Clone
          */
 		function __clone() {
-			
+
 			parent::__clone();
-			
+
 			$this->clone_map_dbo($this);
 		}
-		
+
 		//Note: All child CMODEL and DBOs must have a protected (no private) scope to be cloned and mapped
-		
+
         /**
          * clone map dbo
-         * @param object $object 
+         * @param object $object
          */
 		function clone_map_dbo($object) {
-			
+
 			foreach($this as $key=>$val) {
-			
-				if($val instanceof MODEL_COMPLEX) 
+
+				if($val instanceof MODEL_COMPLEX)
 					$val->clone_map_dbo($object);
-				
+
 				if($val instanceof DBO)
 					$object->set_dbo($val);
 			}
@@ -494,7 +497,7 @@
         public function describe() { return []; }
 
         public function validate_message($config,$string,$vars=[]) {
-        	
+
         	$subject = value($config,"humanize");
 
         	if(!$subject) {
@@ -512,7 +515,7 @@
         }
 
         public function fill($data,$allow) {
-        	
+
         	foreach($data as $name=>$value) {
 
         		if(!in_array($name,$allow))
@@ -525,7 +528,7 @@
 	        		else {
 
 						foreach($this->_dbos as $dbo)
-							if($column=$dbo->get_column($name)) 
+							if($column=$dbo->get_column($name))
 								$column->set_value($value);
 	        		}
 	        	}
@@ -548,7 +551,7 @@
 
 	            	if(!$column)
 	            		throw new Exception("CMODEL::validate() Failed: The name ".$name." does not exist");
-	            		
+
 	            	if(!$column->is_tagged())
 	            		continue;
 
@@ -560,22 +563,22 @@
         			if($type=="required") {
         				if(!strlen(trim($value)))
 							$exception->add($this->validate_message($config,value($validation,["messages","required"],"The {name} is required")));
-        			
+
         			} elseif($type=="minlength") {
         				if(strlen(trim($value))<$validation)
 							$exception->add($this->validate_message($config,value($validation,["messages","minlength"],"The {name} has to be a minimum of {min} characters"),["min"=>$validation]));
-        			
+
         			} elseif($type=="maxlength") {
         				if(strlen(trim($value))>$validation)
 							$exception->add($this->validate_message($config,value($validation,["messages","maxlength"],"The {name} cannot exceed {max} characters"),["max"=>$validation]));
-        			
+
         			} elseif($type=="email") {
         				if(trim($value) && !CMODEL_VALIDATE::create($value)->email())
 							$exception->add(value($config,["messages","email"],"The email address is invalid"));
 
 					} elseif($type=="integer") {
         				if(preg_match("/^\d+$/",$value))
-							$exception->add(value($config,["messages","integer"],"The {name} is not a valid number"));        			
+							$exception->add(value($config,["messages","integer"],"The {name} is not a valid number"));
 
         			} else {
 
@@ -589,7 +592,7 @@
         	}
 
         	if($exception->has_messages())
-        		throw $exception;        		
+        		throw $exception;
 
         	return $this;
         }
