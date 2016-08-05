@@ -95,8 +95,30 @@
 		 * Returns the body
 		 * @return string 
 		 */
-		public function get_body() 		{ return $this->_body; }
-		public function body() 			{ return $this->_body; }
+		public function get_body() 		{ return $this->body($decode); }
+		
+		public function body($decode=false) { 
+
+			if(!$decode)
+				return $this->_body;
+			
+			$content_type = $this->get_header()->get('content-type');
+
+			$data = [];
+			if(preg_match("/urlencoded/",$content_type)) {
+				foreach (explode('&', $this->_body) as $chunk) {
+				    $param = explode("=", $chunk);
+
+				    if ($param) {
+				        $data[urldecode($param[0])] = urldecode($param[1]);
+				    }
+				}
+			} elseif(preg_match("/json/",$content_type)) {
+				$data = JSON_UTIL::decode($this->_body);
+			}
+
+			return $data; 
+		}
 		
 		/**
 		 * Returns the json body

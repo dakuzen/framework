@@ -79,10 +79,10 @@
 						if(is_a($value,"CURLFile") && version_compare(phpversion(), '5.5.0')<0)
 							$value = "@".$value->name;
 
-						elseif(is_string($value) && preg_match("/^@(.*)/",$value,$matches)) 
+						elseif(@preg_match("/^@(.*)/",$value,$matches)) 
 							$value = new CURLFile(value($matches,1));
 
-						if(is_a($value,"CURLFile") || preg_match("/^@/",$value)) 
+						if(is_a($value,"CURLFile") || @preg_match("/^@/",$value)) 
 							$http_request->get_header()->set("content-type","multipart/form-data");
 					}
 				}
