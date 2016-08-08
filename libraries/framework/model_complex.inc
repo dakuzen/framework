@@ -516,15 +516,14 @@
 
         public function fill($data,$allow) {
 
-        	foreach($data as $name=>$value) {
-
-        		if(!in_array($name,$allow))
-        			continue;
-
+        	foreach($allow as $name) {
+        		
         		if($config=value($this->describe(),$name)) {
 
+        			$value = value($data,$name);
+
 	        		if(value($config,"source")=="function")
-	        			$value = call_user_func([$this,$name],$value);
+	        			call_user_func([$this,$name],$value);
 	        		else {
 
 						foreach($this->_dbos as $dbo)
@@ -537,7 +536,14 @@
         	return $this;
         }
 
-        public function validate($options=["force"=>false]) {
+        public function validate($options=["validate"=>true]) {
+
+        	if($options===false)
+        		$options["validate"] = false;
+
+        	if(!value($options,"validate")) {
+        		return $this;
+        	}
 
         	$exception = BCMODEL_VALIDATION_EXCEPTION::create();
         	foreach($this->describe() as $name=>$config) {
@@ -561,7 +567,7 @@
         		foreach(value($config,"validations",[]) as $type=>$validation) {
 
         			if($type=="required") {
-        				if(!strlen(trim($value)))
+        				if($validation && !strlen(trim($value)))
 							$exception->add($this->validate_message($config,value($validation,["messages","required"],"The {name} is required")));
 
         			} elseif($type=="minlength") {
@@ -573,12 +579,16 @@
 							$exception->add($this->validate_message($config,value($validation,["messages","maxlength"],"The {name} cannot exceed {max} characters"),["max"=>$validation]));
 
         			} elseif($type=="email") {
-        				if(trim($value) && !CMODEL_VALIDATE::create($value)->email())
+        				if($validation && trim($value) && !CMODEL_VALIDATE::create($value)->email())
 							$exception->add(value($config,["messages","email"],"The email address is invalid"));
 
 					} elseif($type=="integer") {
-        				if(preg_match("/^\d+$/",$value))
-							$exception->add(value($config,["messages","integer"],"The {name} is not a valid number"));
+        				if($validation && !preg_match("/^\d+$/",$value))
+        					$exception->add($this->validate_message($config,value($validation,["messages","integer"],"he {name} is not a valid number")));
+
+					} elseif($type=="decimal") {
+        				if($validation && !preg_match("/^\d+(\.\d*)?$/",$value))
+        					$exception->add($this->validate_message($config,value($validation,["messages","decimal"],"he {name} is not a valid decimal")));
 
         			} else {
 
