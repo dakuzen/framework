@@ -522,6 +522,16 @@
 
         			$value = value($data,$name);
 
+        			if($sanitize=value($config,"sanitize")) {
+
+	        			if($sanitize=="time") {
+	        				if($value)
+	        					$value = CMODEL_TIME::create($value);
+	        			} else {
+	        				$value = call_user_func([$this,$sanitize],$value);
+	        			}
+	        		}
+
 	        		if(value($config,"source")=="function")
 	        			call_user_func([$this,$name],$value);
 	        		else {
@@ -566,11 +576,14 @@
 
         		foreach(value($config,"validations",[]) as $type=>$validation) {
 
-        			if($type=="required") {
+        			if($type=="required")
         				if($validation && !strlen(trim($value)))
 							$exception->add($this->validate_message($config,value($validation,["messages","required"],"The {name} is required")));
 
-        			} elseif($type=="minlength") {
+					if(!strlen(trim($value)))
+						continue;
+
+        			if($type=="minlength") {
         				if(strlen(trim($value))<$validation)
 							$exception->add($this->validate_message($config,value($validation,["messages","minlength"],"The {name} has to be a minimum of {min} characters"),["min"=>$validation]));
 
@@ -590,7 +603,7 @@
         				if($validation && !preg_match("/^\d+(\.\d*)?$/",$value))
         					$exception->add($this->validate_message($config,value($validation,["messages","decimal"],"he {name} is not a valid decimal")));
 
-        			} else {
+        			} elseif($type!="required") {
 
         				try {
         					call_user_func($validation,$value);
