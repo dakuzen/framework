@@ -524,12 +524,14 @@
 
         			if($sanitize=value($config,"sanitize")) {
 
-	        			if($sanitize=="time") {
-	        				if($value)
-	        					$value = CMODEL_TIME::create($value);
-	        			} else {
-	        				$value = call_user_func([$this,$sanitize],$value);
-	        			}
+        				if(strlen($value)) {
+
+		        			if($sanitize=="time") {
+		        				$value = CMODEL_TIME::create($value);
+		        			} else {
+		        				$value = call_user_func([$this,$sanitize],$value);
+		        			}
+		        		}
 	        		}
 
 	        		if(value($config,"source")=="function")
@@ -597,11 +599,11 @@
 
 					} elseif($type=="integer") {
         				if($validation && !preg_match("/^\d+$/",$value))
-        					$exception->add($this->validate_message($config,value($validation,["messages","integer"],"he {name} is not a valid number")));
+        					$exception->add($this->validate_message($config,value($validation,["messages","integer"],"The {name} is not a valid number")));
 
 					} elseif($type=="decimal") {
         				if($validation && !preg_match("/^\d+(\.\d*)?$/",$value))
-        					$exception->add($this->validate_message($config,value($validation,["messages","decimal"],"he {name} is not a valid decimal")));
+        					$exception->add($this->validate_message($config,value($validation,["messages","decimal"],"The {name} is not a valid decimal")));
 
         			} elseif($type!="required") {
 

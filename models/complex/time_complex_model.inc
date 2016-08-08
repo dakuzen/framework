@@ -390,6 +390,6 @@
         }
 
         public function __toString() {
-            return $this->time().": ".$this->long_datetime()." ".$this->timezone_abr()." ".$this->gmt();
+            return $this->iso8601();
         }
     }
