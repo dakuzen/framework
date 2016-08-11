@@ -23,6 +23,12 @@
 		*/
 		protected $_is_debug		 	= false;
 
+		/**
+		* a copy of this model, cloned when start_diff() is called so that we can compare when end_diff is called
+		* @var CMODEL clone_cmodel
+		*/
+		protected $_clone_cmodel 		= null;
+
 
         protected $_rules = [];
         protected $_dirty = [];
@@ -517,7 +523,7 @@
         public function fill($data,$allow) {
 
         	foreach($allow as $name) {
-        		
+
         		if($config=value($this->describe(),$name)) {
 
         			$value = value($data,$name);
@@ -563,6 +569,8 @@
         		$config["name"] = $name;
 
         		if(value($config,"source")=="function")
+	              	$value = call_user_func([$this,$name]);
+        		elseif(value($config,"source")=="object")
 	              	$value = call_user_func([$this,$name]);
 	            else {
 	            	$column = $this->get_column($name);
@@ -621,6 +629,118 @@
 
         	return $this;
         }
+
+
+
+		public function start_diff() {
+			$this->_clone_cmodel = $this->clone();
+
+			//ensure all the needed subobject lists are loaded
+			foreach($this->describe() as $name=>$config) {
+				if(value($config,"source")=="function") {
+					$this->$name(true);
+					$this->_clone_cmodel->$name(true);
+
+				} elseif(value($config,"source")=="object") {
+					if($this->$name(true))
+						$this->$name(true)->start_diff();
+
+					if($this->_clone_cmodel->$name(true))
+						$this->_clone_cmodel->$name(true)->start_diff();
+				}
+			}
+			return $this;
+		}
+
+
+		public function end_diff() {
+
+			if(!$this->_clone_cmodel)
+				throw new Exception("Unable to calculate changes on ".get_class($this).", start_diff() was not called.");
+
+			$diff = [];
+
+			foreach($this->describe() as $name=>$config) {
+
+				//field is excluded from diff, just skip it
+				if(value($config,"diff")===false) {
+					continue;
+
+
+				//compare a field value, then get a nice display value from an array for the diff.  ie.  compare state values, but use state name
+				} elseif(value($config,"diff-value")) {
+					$label = value($config,["diff-value","label"], ucwords(str_replace("_", " ", $name)));
+
+					if($this->{"get_".$name}()!=$this->_clone_cmodel->{"get_".$name}()) {
+						$list = call_user_func($config["value"][0]."::".$config["value"][1]);
+						$value = value($list, $this->{"get_".$name}());
+						$diff[] = $label." = `".$value."`";
+					}
+
+
+				//compare a field, but lookup the human name.  i.e. compare office_id but lookup the office name if it changed
+				} elseif(value($config,"diff-lookup")) {
+					$label = value($config,["diff-lookup","label"], ucwords(str_replace("_", " ", $name)));
+
+					if($this->{"get_".$name}()!=$this->_clone_cmodel->{"get_".$name}()) {
+						$callstack = value($config,["diff-lookup","value"]);
+						$value = $callstack[0]->{$callstack[1]}(true)->{$callstack[2]}();
+						$diff[] = $label." = `".$value."`";
+					}
+
+
+				//compare lists of child objects. used when adding/subtracting items from a list. i.e. adding a user permission
+				} elseif(value($config,"diff-list")) {
+					$new_list = $this->$name();
+					$old_list = $this->_clone_cmodel->$name();
+					$compare_func = value($config,["diff-list","compare"]);
+					$value_func = value($config,["diff-list","value"]);
+					$label = value($config,["diff-list","label"], ucwords(str_replace("_", " ", $name)) );
+
+					foreach($new_list as $new) {
+						foreach($old_list as $old) {
+							if($new->$compare_func()==$old->$compare_func())
+								continue 2;
+						}
+
+						$diff[] = "Added ".$label." `".$new->$value_func()."`";
+					}
+
+					foreach($old_list as $old) {
+						foreach($new_list as $new) {
+							if($new->$compare_func()==$old->$compare_func())
+								continue 2;
+						}
+
+						$diff[] = "Removed ".$label." `".$old->$value_func()."`";
+					}
+
+
+				} else {
+					$label = value($config,["diff","label"], ucwords(str_replace("_", " ", $name)));
+
+					//compare fields in child object. i.e. an office->get_address()
+					if(value($config,"source")=="object") {
+
+						$child_diff = $this->$name()->end_diff();
+						foreach($child_diff as $row) {
+							$diff[] = $label." ".$row;
+						}
+
+					//boring old default compare of 2 fields.  i.e.  users name
+					} else if($this->{"get_".$name}()!=$this->_clone_cmodel->{"get_".$name}())
+						$diff[] = $label." = `".$this->{"get_".$name}()."`";
+				}
+			}
+
+
+			return $diff;
+		}
+
+
+
+
+
 
 		public function array_merge_recursive_distinct ( array &$array1, array &$array2 )
 		{
