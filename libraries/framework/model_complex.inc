@@ -609,6 +609,18 @@
         				if($validation && !preg_match("/^\d+$/",$value))
         					$exception->add($this->validate_message($config,value($validation,["messages","integer"],"The {name} is not a valid number")));
 
+					} elseif($type=="range") {
+        				if($validation && ($value<$validation[0] || $value>$validation[1]))
+        					$exception->add($this->validate_message($config,value($validation,["messages","range"],"The {name} must be between ".$validation[0]." and ".$validation[1])));
+
+					} elseif($type=="lesser") {
+        				if(is_numeric($validation) && $value>$validation)
+        					$exception->add($this->validate_message($config,value($validation,["messages","lesser"],"The {name} cannot be less then ".$validation)));
+
+					} elseif($type=="greater") {
+        				if(is_numeric($validation) && $value<$validation)
+        					$exception->add($this->validate_message($config,value($validation,["messages","greater"],"The {name} must be greater then ".$validation)));
+
 					} elseif($type=="decimal") {
         				if($validation && !preg_match("/^\d+(\.\d*)?$/",$value))
         					$exception->add($this->validate_message($config,value($validation,["messages","decimal"],"The {name} is not a valid decimal")));
