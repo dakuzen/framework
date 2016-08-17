@@ -147,7 +147,7 @@
 			$right_bracket 	= "";
 			$is_in_operator = false;
 
-			if(stripos($this->_operator,"IN")!==false) {
+			if(preg_match("/IN/i",$this->_operator)) {
 				$is_in_operator = true;
 				$left_bracket 	= "(";
 				$right_bracket 	= ")";
@@ -172,21 +172,26 @@
 					//if the item is not a select statement
 					if(!preg_match("/^[\(\s]*(count|exists|select)/i",$item)) {
 
+						//This was redundent because it was being done below
 						//if the item is encapsulated with '
-						if(preg_match("/^'{1}.*'{1}$/",$item)) {
-							$item = trim($item,"'");
-							if($this->_escape)
-								$item = addslashes($item);
-							$pad_value = true;
-						} else {
+						//if(preg_match("/^'[^']'$/",$item)) {
+						//	$item = trim($item,"'");
+						//	if($this->_escape)
+						//		$item = addslashes($item);
+						//	$pad_value = true;
+						//} else {
 
-							if(preg_match("/^[\"']{1}(.*?)[\"']{1}$/",$item,$matches)) {
-								$item = get_value($matches,1);
+							//if the item is wrapped in " or ' then remove the quotes
+							if(preg_match("/^[\"']([^\"']*)[\"']$/",$item,$matches)) {
+								$item = value($matches,1);
 								if($this->_escape)
 									$item = "'".addslashes($item)."'";
+							} elseif(preg_match("/IN/i",$this->_operator)) {
+								$item = addslashes($item);
+							
 							} elseif($this->_escape)
 								$item = addslashes($item);
-						}
+						//}
 
 						// Never pad a null value
 						if($pad_value && !$is_null)
