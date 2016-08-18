@@ -674,7 +674,7 @@
 				$object 				= $object ? $object : $relation;
 				$source_function 		= "get_".$source."_id";
 				$relation_function 		= "get_".$relation."_id";
-				$relation_id 			= $relation."_id";
+				$relation_id 			= ($object ? LANG_UTIL::plural($object)."." : "").$relation."_id";
 				$object_set_function 	= "set_".LANG_UTIL::plural($object);
 	
 				$ids = array_filter(array_unique(ARRAY_UTIL::listing($cmodels,$source_function)));
