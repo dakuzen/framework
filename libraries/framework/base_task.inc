@@ -1,4 +1,4 @@
-<?php
+<?
 	/**
         * Class BASE_TASK  
         *
@@ -24,6 +24,7 @@
 		function post()							{ return $this->registry()->post(func_get_args()); }
 		function posts()						{ return $this->registry()->posts(); }
 		function request()						{ return $this->registry()->request(func_get_args()); }
+		function has_post($value)				{ return $this->registry()->has_post($value); }
 		function get_route() 					{ return $this->_route; }
 		function get_roles() 					{ return $this->_roles; }
 		function get_type()						{ return $this->_type; }
