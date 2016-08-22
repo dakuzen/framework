@@ -417,8 +417,8 @@
          * @return array 
          */
 		public function get_column_data($only_tagged=false,$include_pri_key=true) {
-			$data = array();
-
+			
+			$data = [];
 			foreach($this->_columns as $name=>$column) {
 				
 				if($only_tagged && !$column->is_tagged())
@@ -429,13 +429,19 @@
 
 				$value = $this->get_column_value($name);
 
-				if(!is_empty($value) && ($column->get_data_type()=="date" || $column->get_data_type()=="datetime") && is_numeric($value)) {
+				if(!is_empty($value) && ($column->get_data_type()=="date" || $column->get_data_type()=="datetime")) {
 
-					if($column->get_data_type()=="date")
-						$value = @date("Y-m-d",$value);
+					if(is_numeric($value)) {
 
-					if($column->get_data_type()=="datetime")
-						$value = @date("Y-m-d h:i:s",$value);
+						if($column->get_data_type()=="date")
+							$value = @date("Y-m-d",$value);
+
+						if($column->get_data_type()=="datetime")
+							$value = @date("Y-m-d h:i:s",$value);
+
+					} elseif(is_a($value,"CMODEL_TIME")) {
+						$value = $value->iso8601();
+					}
 				}
 				
 				$data[$name] = $value;

@@ -11,7 +11,7 @@
         /**
          * Encode json object
          * @param object $object
-         * @return string 
+         * @return string
          */
 		static function encode($object,$options=array("type_cast"=>true,"bigint_string"=>true,"exponential_string"=>true)) {
 
@@ -25,11 +25,11 @@
 
 			return json_encode($object,$bits);
 		}
-		
+
         /**
          * Decode a json object
          * @param string $string
-         * @return mix 
+         * @return mix
          */
 		static function decode($string) {
 
@@ -40,47 +40,47 @@
 
 			if(in_array($type,array("array","object","resource")))
 				return $string;
-			
+
 			$json =  json_decode($string,true);
 
 			if(!$json)
 				$json = json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $string), true);
-			
+
 			return $json;
 		}
-		
+
 		/**
 		 * Checks if its encoded
 		 *
 		 * @param string $string string being checked
 		 * @return string
 		 */
-		static function is_encoded($string) {	
-			
+		static function is_encoded($string) {
+
 			if(!is_string($string))
 				return false;
-			
-			return preg_match('/(^{.+}$|^\"\"$|^\[.*\]$|^".+"$)/',$string);			
+
+			return preg_match('/(^{.+}$|^\"\"$|^\[.*\]$|^".+"$)/',$string);
 		}
 
         /**
          * Stream the object
-         * @param object $object 
+         * @param object $object
          */
-		static function stream($object,$die=true) {	
+		static function stream($object,$die=true) {
 			HTTP_UTIL::stream_string(self::encode($object),"json.json");
 			if($die) die;
 		}
-		
+
         /**
          * Encode jsonp
          * @param string $callback
          * @param object $object
          * @return string
-         * @todo review description and parameters 
+         * @todo review description and parameters
          */
-		static function encode_jsonp($callback,$object) {	
+		static function encode_jsonp($callback,$object) {
 			return $callback."(".self::encode($object).")";
 		}
-						
+
 	}

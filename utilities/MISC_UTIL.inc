@@ -84,8 +84,9 @@
 					$guid .= rand(0,1) ? strtoupper($char) : $char;
 			}
 
-			if(is_numeric($guid))
-				$guid = self::get_guid($length,$mixed_case);
+			//if guid is numeric or infinite regenerate
+			if(is_numeric($guid) || @is_infinite($guid))
+				$guid = self::guid($length,$mixed_case);
 
 			return $guid;
 		}

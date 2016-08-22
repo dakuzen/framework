@@ -526,6 +526,9 @@
 
         		if($config=value($this->describe(),$name)) {
 
+        			if(!array_key_exists($name,$data))
+        				continue;
+
         			$value = value($data,$name);
 
         			if($sanitize=value($config,"sanitize")) {
@@ -577,9 +580,6 @@
 
 	            	if(!$column)
 	            		throw new Exception("CMODEL::validate() Failed: The name ".$name." does not exist");
-
-	            	if(!$column->is_tagged())
-	            		continue;
 
 	            	$value = $column->get_value();
 	            }
