@@ -30,7 +30,7 @@
 		public function __construct($time,$options=array("offset"=>true,"locale"=>null,"timezone"=>self::TIMEZONE_UTC)) {
 
             $this->_options             = $options;
-            $this->_options["timezone"] = ($timezone=$this->option("timezone")) ? $timezone : date_default_timezone_get();            
+            $this->_options["timezone"] = ($timezone=$this->option("timezone")) ? $timezone : date_default_timezone_get();
 
             $this->_date_time = new DateTime();
 
@@ -82,10 +82,11 @@
             return new CMODEL_TIME($time,$options);
         }
 
-        function option($name)      { return value($this->_options,$name); }
-        function get_time()         { return $this->_date_time ? $this->_date_time->getTimestamp() : 0; }
-        function get_date_time()    { return $this->_date_time; }
-        function set_time($time)    { $this->_date_time->setTimestamp($time); return $this; }
+        function option($name)              { return value($this->_options,$name); }
+        function get_time()                 { return $this->_date_time ? $this->_date_time->getTimestamp() : 0; }
+        function get_date_time()            { return $this->_date_time; }
+        function set_time($time)            { $this->_date_time->setTimestamp($time); return $this; }
+        function set_timezone($timezone)    { $this->_date_time->setTimezone(new DateTimeZone($timezone)); return $this; }
 
         /**
          * Return time of day seconds
@@ -216,12 +217,12 @@
         function month_abr()                    { return $this->_format("M"); }
         function long_date()                    { return $this->format()->long_date(); }
         function long_datetime()                { return $this->format()->long_date_time(); }
-        function short_datetime()               { return $this->format()->short_date_time(); }        
+        function short_datetime()               { return $this->format()->short_date_time(); }
         function iso8601()                      { return $this->format()->iso8601(); }
 
         function time_age()                     { return BCMODEL_TIME_AGE::create($this->get_time()); }
         function cloner()                       { return clone $this; }
-        
+
         function format($options=["timezone"=>self::TIMEZONE_UTC]) {
             return CMODEL_FORMAT::create($this,$options);
         }
@@ -345,12 +346,12 @@
 
         function diff_days($time)              { return @$this->diff_minutes($time)/1440; }
         function diff_hours($time)             { return @$this->diff_minutes($time)/60; }
-        function diff_seconds($time)           { return $this->diff_minutes($time) * 60; }        
-        
-        function diff_minutes($time,$total=false) { 
+        function diff_seconds($time)           { return $this->diff_minutes($time) * 60; }
+
+        function diff_minutes($time,$total=false) {
             $interval = $this->diff($time);
             return ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i + @($interval->s/60);
-        }        
+        }
 
         //Reference http://en.wikipedia.org/wiki/ISO_8601
         function ios8601($options=array()) { return $this->iso8601($options); }
