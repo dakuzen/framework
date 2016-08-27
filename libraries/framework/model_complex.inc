@@ -523,8 +523,8 @@
         public function fill($data,$allow) {
 
         	foreach($allow as $name) {
-
-        		if($config=value($this->describe(),$name)) {
+        		$config = value($this->describe(),$name);
+        		if($config || is_array($config)) {
 
         			if(!array_key_exists($name,$data))
         				continue;

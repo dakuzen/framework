@@ -19,7 +19,7 @@
 		function set_relation($value) 	{ $this->_relation = $value; return $this; }
 		function get_condition_count() 	{ return count($this->_conditions); }
 		function has_conditions() 		{ return count($this->_conditions)>0; }
-		
+
 		public static function create() {
 			return new DB_GROUP();
 		}
@@ -186,9 +186,9 @@
 								$item = value($matches,1);
 								if($this->_escape)
 									$item = "'".addslashes($item)."'";
-							} elseif(preg_match("/IN/i",$this->_operator)) {
+							} elseif(preg_match("/^(NOT\s+)?IN$/i",trim($this->_operator))) {
 								$item = addslashes($item);
-							
+
 							} elseif($this->_escape)
 								$item = addslashes($item);
 						//}
@@ -208,11 +208,11 @@
 			if(in_array(strtolower($this->get_field()),array("default")))
 				$field = "`".$this->get_field()."`";
 
-			$condition = $field." ".$this->get_operator()." ".$left_bracket.$value.$right_bracket."";			
-			
+			$condition = $field." ".$this->get_operator()." ".$left_bracket.$value.$right_bracket."";
+
 			if($is_in_operator && is_array($this->_value)) {
-				
-				// If there is an IN operator and there is null in the array use the "is null" operator 
+
+				// If there is an IN operator and there is null in the array use the "is null" operator
 				// otherwise kill the query with 1 = 0
 				if(in_array(null,$this->_value,true))
 					$condition = "(".$condition." OR ".$this->_field." IS null)";
