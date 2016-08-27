@@ -559,8 +559,8 @@
 
         public function validate($options=["validate"=>true]) {
 
-        	if($options===false)
-        		$options["validate"] = false;
+        	if(is_bool($options))
+        		$options = ["validate"=>$options];
 
         	if(!value($options,"validate")) {
         		return $this;
