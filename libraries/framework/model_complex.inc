@@ -644,8 +644,11 @@
 
 
 
-		public function start_diff() {
-			$this->_clone_cmodel = $this->clone();
+		public function start_diff($empty_cmodel=null) {
+			if($empty_cmodel)
+				$this->_clone_cmodel = $empty_cmodel;
+			else
+				$this->_clone_cmodel = $this->clone();
 
 			//ensure all the needed subobject lists are loaded
 			foreach($this->describe() as $name=>$config) {
@@ -684,7 +687,7 @@
 					$label = value($config,["diff-value","label"], ucwords(str_replace("_", " ", $name)));
 
 					if($this->{"get_".$name}()!=$this->_clone_cmodel->{"get_".$name}()) {
-						$list = call_user_func($config["value"][0]."::".$config["value"][1]);
+						$list = call_user_func($config["diff-value"]["value"][0]."::".$config["diff-value"]["value"][1]);
 						$value = value($list, $this->{"get_".$name}());
 						$diff[] = $label." = `".$value."`";
 					}
@@ -740,8 +743,22 @@
 						}
 
 					//boring old default compare of 2 fields.  i.e.  users name
-					} else if($this->{"get_".$name}()!=$this->_clone_cmodel->{"get_".$name}())
-						$diff[] = $label." = `".$this->{"get_".$name}()."`";
+					} else {
+						$column = $this->get_column($name);
+						$value1 = $this->{"get_".$name}();
+						$value2 = $this->_clone_cmodel->{"get_".$name}();
+
+						if($column->is_data_type_datetime() || $column->is_data_type_date()) {
+							if(!is_a($value1,"CMODEL_TIME"))
+								$value1 = CMODEL_TIME::create($value1);
+							if(!is_a($value2,"CMODEL_TIME"))
+								$value2 = CMODEL_TIME::create($value2);
+						}
+
+						if($value1!=$value2) {
+							$diff[] = $label." = `".$value1."`";
+						}
+					}
 				}
 			}
 
