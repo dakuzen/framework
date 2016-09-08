@@ -444,11 +444,15 @@
 							$value = strlen($value) ? (array)explode(value($object,"delimiter"),$value) : array();
 							$this->data($name,$value);
 
-						} elseif(value($object,"type")=="json")
-							$this->data($name,JSON_UTIL::decode($value));
+						} elseif(value($object,"type")=="json") {
 
-						elseif(value($object,"type")=="serialized")
+							$json = [];
+							if($value)
+								$json = JSON_UTIL::decode($value);
+							$this->data($name,$json);
+						} elseif(value($object,"type")=="serialized") {
 							$this->data($name,unserialize($value));
+						}
 
 						unset($data[$name]);
 
