@@ -393,4 +393,9 @@
         public function __toString() {
             return $this->iso8601();
         }
+
+        /**@return BASE_CMODEL_TIME*/
+        public function get_week_start(){
+            return $this->cloner()->subtract_day($this->weekday());
+        }
     }
