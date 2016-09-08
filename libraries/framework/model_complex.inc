@@ -132,6 +132,11 @@
 			return $this;
 		}
 
+		function register_serialized($name,$default=array()) {
+			$this->_registered_objects[$name] = array("type"=>"serialized","default"=>$default);
+			return $this;
+		}
+
 		function update_registered($registered_name,$key,$value) {
 			$object = $this->get_{$registered_name}();
 			$object[$key] = $value;
@@ -236,6 +241,9 @@
 
 									if($object["type"]=="json")
 										$objects = JSON_UTIL::encode($objects);
+
+									elseif($object["type"]=="serialized")
+										$objects = serialize($objects);
 
 									elseif($object["type"]=="delimit" && is_array($objects))
 										$objects = implode($object["delimiter"],$objects);
@@ -438,6 +446,9 @@
 
 						} elseif(value($object,"type")=="json")
 							$this->data($name,JSON_UTIL::decode($value));
+
+						elseif(value($object,"type")=="serialized")
+							$this->data($name,unserialize($value));
 
 						unset($data[$name]);
 
