@@ -556,7 +556,6 @@
 		        			if($sanitize=="time") {
 		        				$value = CMODEL_TIME::create($value);
 		        			} else {
-		        				p($name, $sanitize, $value);
 		        				$value = call_user_func([$this,$sanitize],$value);
 		        			}
 		        		}
