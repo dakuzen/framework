@@ -91,9 +91,9 @@
 
         /* Cross-Origin Resource Sharing */
         public function cors() {
-        	
+
             HTTP_UTIL::cors();
-            
+
             return $this;
         }
 
@@ -113,7 +113,7 @@
             if(!$this->_object)
                 throw new Exception("There is no service object registered");
 
-            //Removed for now. 
+            //Removed for now.
             //$this->code(500);
 
             $e = null;
@@ -133,7 +133,7 @@
                    $this->_object->$method($this->path("group_id"),$this->path("member_id"),$this->path("member_action"));
 
                 if(!$exists) {
-                   
+
                     //If there is a custom url remove the first two parts and find a matching function
                     $parts = array_slice(explode("/",$url),2);
 

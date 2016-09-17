@@ -1,62 +1,62 @@
 <?php
 	/**
-	 * Class HTTP_RESPONSE  
+	 * Class HTTP_RESPONSE
 	 *
 	 * @package Library
 	 * @subpackage Transport
 	 */
 	class HTTP_RESPONSE {
-	   
+
 		/**
 		 * The code
-		 * @var integer $code 
+		 * @var integer $code
 		 */
 		public $_code 		= 100;
-		
+
 		/**
 		 * The header
-		 * @var string $header 
+		 * @var string $header
 		 */
 		public $_header		= null;
-		
+
 		/**
 		 * Request header
-		 * @var string $equest_header 
+		 * @var string $equest_header
 		 */
 		public $_request_header	= null;
-		
+
 		/**
 		 * The cookies
 		 * @var array $cookies
 		 */
 		public $_cookies	= array();
-		
+
 		/**
 		 * The body
-		 * @var string $body 
+		 * @var string $body
 		 */
 		public $_body 		= '';
-		
+
 		/**
 		 * The http version
-		 * @var string $http_version 
+		 * @var string $http_version
 		 */
 		public $_http_version	= '';
-		
+
 		/**
 		 * The path
-		 * @var string $path 
+		 * @var string $path
 		 */
 		public $_path		= '';
-		
+
 		/**
 		 * SHORT DESCRIPTION
-		 * @var array $SHORT_DESCRIPTION 
+		 * @var array $SHORT_DESCRIPTION
 		 */
 		static $SHORT_DESCRIPTION = array(	"301"=>"Moved",
 											"302"=>"Found",
 											"303"=>"Method",
-											"304"=>"Not Modified",		
+											"304"=>"Not Modified",
 											"400"=>"Bad request",
 											"401"=>"Unauthorized",
 											"402"=>"PaymentRequired",
@@ -74,9 +74,9 @@
 		 * @param string $header
 		 * @param array $cookies
 		 * @param string $http_version
-		 * @param string $uri 
+		 * @param string $uri
 		 */
-		public function __construct($code=0, $body="", $header=null, $cookies=array(), $http_version="",$uri=null) {			
+		public function __construct($code=0, $body="", $header=null, $cookies=array(), $http_version="",$uri=null) {
 			$this->_code    	= (int)$code;
 			$this->_body    	= $body;
 			$this->_header 		= $header;
@@ -87,57 +87,79 @@
 
 		/**
 		 * To string
-		 * @return string 
+		 * @return string
 		 */
 		public function __toString() 		{ return $this->_body; }
-		
+
 		/**
 		 * Returns the body
-		 * @return string 
+		 * @return string
 		 */
-		public function get_body() 		{ return $this->_body; }
-		public function body() 			{ return $this->_body; }
-		
+		public function get_body($decode=false) 		{ return $this->body($decode); }
+
+		public function body($decode=false) {
+
+			if(!$decode)
+				return $this->_body;
+
+			$content_type = $this->get_header()->get('content-type');
+
+			$data = [];
+			if(preg_match("/urlencoded/",$content_type)) {
+				foreach (explode('&', $this->_body) as $chunk) {
+				    $param = explode("=", $chunk);
+
+				    if ($param) {
+				        $data[urldecode($param[0])] = urldecode($param[1]);
+				    }
+				}
+			} elseif(preg_match("/json/",$content_type)) {
+				$data = JSON_UTIL::decode($this->_body);
+			}
+
+			return $data;
+		}
+
 		/**
 		 * Returns the json body
-		 * @return string 
+		 * @return string
 		 */
 		public function get_json_body() 	{ return JSON_UTIL::decode($this->_body); }
 
 		public function json() 	{ return $this->get_json_body(); }
-		
+
 		/**
 		 * Returns the header
-		 * @return string 
+		 * @return string
 		 */
 		public function get_header() 		{ return $this->_header; }
-		
+
 		/**
 		 * Returns the cookies
-		 * @return array 
+		 * @return array
 		 */
 		public function get_cookies() 		{ return $this->_cookies; }
-		
+
 		/**
 		 * Returns the code
-		 * @return string 
+		 * @return string
 		 */
 		public function get_code() 		{ return (int)$this->_code; }
-		
+
 		/**
 		 * Returns the path
-		 * @return string 
+		 * @return string
 		 */
 		public function get_path() 		{ return $this->_path; }
-		
+
 		/**
 		 * Returns the content type
-		 * @return string 
+		 * @return string
 		 */
-		public function get_content_type() 	{   
+		public function get_content_type() 	{
 
 			p($this->_header); return $this->_header->get_content_type(); }
-		
+
 		/**
 		 * Set request header
 		 * @param string $request_header
@@ -148,81 +170,81 @@
 		 * Get request header
 		 * @param string $request_header
 		 */
-		public function get_request_header() 	{ return $this->_request_header; }		
-		
+		public function get_request_header() 	{ return $this->_request_header; }
+
 		/**
 		 * Checks whether the code is success
-		 * @return boolean 
+		 * @return boolean
 		 */
 		public function is_code_success() 	{ return preg_match("/^2[\d]{2}/",$this->get_code()); }
-		
+
 		/**
 		 * Checks whether the code is redirect
-		 * @return boolean 
+		 * @return boolean
 		 */
 		public function is_code_redirect() 	{ return preg_match("/^3[\d]{2}/",$this->get_code()); }
-		
+
 		/**
 		 * Checks whether the code is client error
-		 * @return boolean 
+		 * @return boolean
 		 */
 		public function is_code_client_error() 	{ return preg_match("/^4[\d]{2}/",$this->get_code()); }
-		
+
 		/**
 		 * Checks whether the code is server error
-		 * @return boolean 
+		 * @return boolean
 		 */
 		public function is_code_server_error() 	{ return preg_match("/^5[\d]{2}/",$this->get_code()); }
-		
+
 
 		public function success() 	{ return $this->is_code_success(); }
 		/**
 		 * Set the body
-		 * @param string $body 
+		 * @param string $body
 		 */
 		public function set_body($body) 	{ $this->_body = $body; }
-		
+
 		/**
 		 * Returns the content extension
-		 * @return string|null 
+		 * @return string|null
 		 */
-		public function get_content_extension() { 
-			$content_type = $this->_header->get_content_type(); 
-			
+		public function get_content_extension() {
+			$content_type = $this->_header->get_content_type();
+
 			if(preg_match("/image\/(.*)$/",$content_type,$matches)) {
 				$extension = get_value($matches,1);
-				
+
 				if($extension=="jpeg")
 					return "jpg";
-				
+
 				return $extension;
 			}
-			
+
 			return null;
 		}
-		
+
 		/**
 		 * Returns the charset
-		 * @return string 
+		 * @return string
 		 */
-		public function get_charset() { 
-			$content_type = $this->_header->get_content_type(); 
-			
+		public function get_charset() {
+			$content_type = $this->_header->get_content_type();
+
 			if(preg_match("/charset\s*=\s*(.*)/",$content_type,$matches))
 				return strtolower(get_value($matches,1));
-			
+
 			return null;
-		}		
-		
+		}
+
 		/**
 		 * Returns the code descriptions
-		 * @return string 
+		 * @return string
 		 */
 		public function get_code_description() { return $this->get_code().": ".$this->get_code_short_description(); }
-		
+
 		/**
 		 * Returns the code short description
-		 * @return string 
+		 * @return string
 		 */
 		public function get_code_short_description() {
 			return get_value(self::$SHORT_DESCRIPTION,$this->_code);

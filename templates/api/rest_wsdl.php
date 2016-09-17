@@ -12,17 +12,17 @@
   <body>
 
 <style>
-		* { 
+		* {
 			font-family: 'Roboto';
 		}
-	
+
 		a:hover, a:focus {
 		    text-decoration: none;
 		}
 
 		.method {
 			float:left;
-			width: 100px;	
+			width: 100px;
 		}
 
 		.method.get,
@@ -83,7 +83,7 @@
 		h1 .glyphicon {
 			font-size: 18px;
 		}
-			
+
 		h1 .glyphicon-record {
 			margin-left: 2px;
 			margin-right: 5px;
@@ -95,7 +95,7 @@
 		h1 .glyphicon-link {
 			position: absolute;
 			left: -25px;
-			top: 10px; 
+			top: 10px;
 			display: none;
 		}
 
@@ -165,7 +165,7 @@
 
 		.wa {
 			width: auto !important;
-		}	
+		}
 
 		.table-nested td {
 			border-top: none !important;
@@ -216,7 +216,7 @@
 			display: inline;
 		}
 
-		header .title a {			
+		header .title a {
 			font-size: 12px;
 			line-height: 18px;
 			font-weight: normal;
@@ -230,12 +230,12 @@
 			display: inline;
 			color: #bbb;
 			font-size: 32px;
-			font-weight: 100;		
+			font-weight: 100;
 			margin-bottom: 25px;
 		}
 
 		header .host-title {
-			
+
 		}
 
 		header .links {
@@ -335,7 +335,7 @@
   	<div class="container">
 
   		<header>
-  			
+
 			<div class="links">
 				<a href="/api?wadl">wadl</a>
 				<a href="/api?wsdl">wsdl</a>
@@ -344,7 +344,7 @@
 	    		<i class="glyphicon glyphicon-cloud"><span>API</span></i>
 	    		<!--<div class="title">Documentation</div>-->
 	    		<span class="host"><?=SERVER_UTIL::get_server_host()?></span>
-	    	</div>	    	
+	    	</div>
 	    </header>
 
 	    <nav>
@@ -353,11 +353,11 @@
 	    	<? foreach($config as $api) { ?>
 
 	  			<? $paths = (array)value($api,array("endpoints",0,"path"),array()) ?>
-	  			
+
   				<li>
   					<a href="#<?=value($paths,0)?>"><?=value($api,"name")?></a>
   				</li>
-  			
+
 		  	<? } ?>
 		  	</ul>
 		  	</div>
@@ -365,13 +365,13 @@
   		</nav>
   		<div class="endpoints">
 		    <? foreach($config as $api) { ?>
-		    	<? 
-		    		$path = value((array)value($api,array("endpoints",0,"path")),0); 
+		    	<?
+		    		$path = value((array)value($api,array("endpoints",0,"path")),0);
 		    	?>
-				<div class="api" data-api="<?=$path?>"> 
-			    	
+				<div class="api" data-api="<?=$path?>">
+
 			    	<h1 id="<?=$path?>">
-				    
+
 			    		<span class="name">
 							<a href="/api/?wsdl#<?=$path?>"><span class="glyphicon glyphicon-link"></span>
 								<?=value($api,"name")?>
@@ -390,13 +390,13 @@
 			    				<span class="glyphicon glyphicon glyphicon-list-alt" data-toggle="tooltip" data-placement="top" title="Object description for a <?=value($api,"name")?>"></span>
 			    			</a>
 			    		<? } ?>
-			    		
+
 			    		<? if($description=value($api,"description")) { ?>
 				    		<div class="description"><?=$description?></div>
 				    	<? } ?>
 			    	</h1>
 			    	<div class="api-body">
-				   
+
 					    <? foreach(value($api,"endpoints",array()) as $endpoint) { ?>
 					    	<h2>
 				    			<div class="method <?=strtolower(value($endpoint,"method"))?>"><?=strtoupper(value($endpoint,"method"))?></div>
@@ -428,14 +428,17 @@
 						    						$values 		= value($value,"values");
 						    						$object 		= value($value,"object");
 
+						    						if(value($value,"name"))
+						    							$name = value($value,"name");
+
 						    						if(!array_key_exists("description",$value) && !array_key_exists("default",$value) && !array_key_exists("values",$value))
 						    							$values = $value;
 						    					?>
-						    					
+
 				    							<tr>
 							    					<td>
 							    						<span class="parameter-name"><?=$name?></span>
-							    					</td>														
+							    					</td>
 													<td width="80%">
 														<? if($description) { ?>
 															<div class="description"><?=$description?></div>
@@ -449,7 +452,7 @@
 
 							    							<div class="parameter-values">
 							    								<h5 class="heading">Parameter Values</h5>
-								    							<div class="parameter-values-table">								    							
+								    							<div class="parameter-values-table">
 									    							<table class="table table-values">
 											    						<?	foreach($values as $name=>$item) { ?>
 											    							<tr>
@@ -470,7 +473,7 @@
 								    					<? if($object && is_array($object)) { ?>
 
 							    							<div class="parameter-values">
-								    							<div class="parameter-values-table">								    							
+								    							<div class="parameter-values-table">
 									    							<table class="table table-values">
 											    						<?	foreach($object as $name=>$item) { ?>
 											    							<tr>
@@ -601,6 +604,6 @@
 		});
 
 	</script>
-	
+
   </body>
 </html>

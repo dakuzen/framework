@@ -19,7 +19,7 @@
 		function set_relation($value) 	{ $this->_relation = $value; return $this; }
 		function get_condition_count() 	{ return count($this->_conditions); }
 		function has_conditions() 		{ return count($this->_conditions)>0; }
-		
+
 		public static function create() {
 			return new DB_GROUP();
 		}
@@ -147,7 +147,7 @@
 			$right_bracket 	= "";
 			$is_in_operator = false;
 
-			if(stripos($this->_operator,"IN")!==false) {
+			if(preg_match("/IN/i",$this->_operator)) {
 				$is_in_operator = true;
 				$left_bracket 	= "(";
 				$right_bracket 	= ")";
@@ -172,21 +172,26 @@
 					//if the item is not a select statement
 					if(!preg_match("/^[\(\s]*(count|exists|select)/i",$item)) {
 
+						//This was redundent because it was being done below
 						//if the item is encapsulated with '
-						if(preg_match("/^'{1}.*'{1}$/",$item)) {
-							$item = trim($item,"'");
-							if($this->_escape)
-								$item = addslashes($item);
-							$pad_value = true;
-						} else {
+						//if(preg_match("/^'[^']'$/",$item)) {
+						//	$item = trim($item,"'");
+						//	if($this->_escape)
+						//		$item = addslashes($item);
+						//	$pad_value = true;
+						//} else {
 
-							if(preg_match("/^[\"']{1}(.*?)[\"']{1}$/",$item,$matches)) {
-								$item = get_value($matches,1);
+							//if the item is wrapped in " or ' then remove the quotes
+							if(preg_match("/^[\"']([^\"']*)[\"']$/",$item,$matches)) {
+								$item = value($matches,1);
 								if($this->_escape)
 									$item = "'".addslashes($item)."'";
+							} elseif(preg_match("/^(NOT\s+)?IN$/i",trim($this->_operator))) {
+								$item = addslashes($item);
+
 							} elseif($this->_escape)
 								$item = addslashes($item);
-						}
+						//}
 
 						// Never pad a null value
 						if($pad_value && !$is_null)
@@ -203,11 +208,11 @@
 			if(in_array(strtolower($this->get_field()),array("default")))
 				$field = "`".$this->get_field()."`";
 
-			$condition = $field." ".$this->get_operator()." ".$left_bracket.$value.$right_bracket."";			
-			
+			$condition = $field." ".$this->get_operator()." ".$left_bracket.$value.$right_bracket."";
+
 			if($is_in_operator && is_array($this->_value)) {
-				
-				// If there is an IN operator and there is null in the array use the "is null" operator 
+
+				// If there is an IN operator and there is null in the array use the "is null" operator
 				// otherwise kill the query with 1 = 0
 				if(in_array(null,$this->_value,true))
 					$condition = "(".$condition." OR ".$this->_field." IS null)";

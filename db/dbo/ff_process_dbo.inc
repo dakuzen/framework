@@ -1,8 +1,8 @@
 <?php
-	class BASE_DBO_PROCESS extends DBO {
+	class BASE_DBO_FF_PROCESS extends DBO {
 
 		function __construct() {
-			$this->_tablename = "processes";
+			$this->_tablename = "ff_processes";
 			$this->_columns["process_id"] = new DBO_COLUMN("int",11,false,true);
 			$this->_columns["name"] = new DBO_COLUMN("varchar",100,true,false);
 			$this->_columns["state"] = new DBO_COLUMN("char",1,true,false);

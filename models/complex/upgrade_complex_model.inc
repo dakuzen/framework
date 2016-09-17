@@ -47,7 +47,7 @@
          * @return string
          */
 		public function get_upgrade_directory()	{
-			
+
 			$dir = $this->_instance_directory."backend/upgrade/";
 
 			if(is_dir($dir))
@@ -180,8 +180,8 @@
 			$db = $this->_db ? $this->_db : DB::get_instance();
 
 			if(!$db)
-				throw new Exception("There is no DB connection available");				
-			
+				throw new Exception("There is no DB connection available");
+
 			$db_utility = $db->get_db_utility();
 
 			//This has to be left becauase the first time the upgrade is ran the upgrade table
@@ -258,12 +258,15 @@
 
 			if(!$db_utility->is_table_column_exist("email_messages","reply_email"))
 				$db->script("ALTER TABLE `email_messages` ADD COLUMN reply_email VARCHAR(100)");
-			
+
 			if(!$db_utility->is_table_column_exist("email_message_queues","reply_email"))
 				$db->script("ALTER TABLE `email_message_queues` ADD COLUMN reply_email VARCHAR(100)");
-			
+
+			if($db_utility->is_table_exist("processes"))
+				$db->script("RENAME TABLE `processes` TO `ff_processes`");
+
 			//Run any upgrades from the site content system.
-			//CMODEL_SITE_CONTENT::create()->upgrade(); 
+			//CMODEL_SITE_CONTENT::create()->upgrade();
 			CMODEL_SITE_CONTENT_WIDGET::create()->upgrade();
 			CMODEL_MESSAGE::create()->upgrade();
 		}

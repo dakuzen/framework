@@ -7,14 +7,14 @@
         */
 
 	class BASE_CMODEL_API_RESPONSE {
-		
-        
+
+
         const CODE_SUCCESS  = 200;
         const CODE_FAIL     = 400;
 
         /**
          * The success
-         * @var integer $success 
+         * @var integer $success
          */
         protected $_success 	= 0;
 
@@ -40,7 +40,7 @@
 
         /**
          * The code
-         * @var integer $code 
+         * @var integer $code
          */
         protected $_code 	= null;
 
@@ -53,28 +53,32 @@
         protected $_data	= array();
 
         /**
-         * Render 
+         * Render
          */
 		public function render($jsonp="",$die=true) {
-				
+
 			header("Content-Type: ".HTTP_UTIL::get_content_type("json"));
 
             $payload = JSON_UTIL::encode($this->get_payload());
+
+            if($payload===false) {
+                $payload = JSON_UTIL::encode(["message"=>json_last_error_msg()]);
+            }
 
             if($jsonp)
                 $payload = $jsonp."(".$payload.")";
 
             echo $payload;
-            
+
             if($die) die;
 		}
 
         public function get_payload() {
-           
+
             $payload["success"] = $this->_success;
             $payload["code"]    = (int)$this->_code;
             $payload["data"]    = $this->_data;
-         
+
             if($this->_messages) {
                 $payload["message"]     = $this->get_message();
                 $payload["messages"]    = $this->_messages;
@@ -88,18 +92,18 @@
                 $trace = [];
                 foreach($this->_exception->getTrace() as $line)
                     $trace[] = value($line,"class")."->".value($line,"function")."() @ ".value($line,"file")." on ".value($line,"line");
-                
+
                 $payload["exception_message"] = $this->_exception->getMessage();
-                $payload["exception_trace"] = $trace;                
+                $payload["exception_trace"] = $trace;
             }
 
             $payload = array_merge($payload,$this->_payload);
-            
+
             return $payload;
-        }        
+        }
 
         /**
-         * Response 
+         * Response
          */
         public function get_response() {
             return JSON_UTIL::encode($this->get_payload());
@@ -107,26 +111,26 @@
 
         /**
          * Success
-         * @param integer $success 
-         * @param integer $code 
+         * @param integer $success
+         * @param integer $code
          */
-		public function success($success=1,$code=null) { 
+		public function success($success=1,$code=null) {
             $code = $code===null ? $this->_codes["success"] : $code;
-            $this->_success = !is_empty($success); 
+            $this->_success = !is_empty($success);
             $this->_code = $code;
-        }	
-        
+        }
+
         /**
          * Sets data
          * @param string $name
-         * @param string $value 
+         * @param string $value
          */
         public function data($name,$value)      { $this->_data[$name] = $value; return $this; }
 
         /**
          * Sets payload
          * @param string $name
-         * @param string $value 
+         * @param string $value
          */
         public function payload($name,$value)      { $this->_payload[$name] = $value; return $this; }
 
@@ -135,50 +139,50 @@
         /**
          * Sets data
          * @param string $name
-         * @param string $value 
+         * @param string $value
          */
-        public function set_data($value)      { $this->_data = $value; return $this; }        
-        
+        public function set_data($value)      { $this->_data = $value; return $this; }
+
         /**
          * Sets the message
-         * @param string $message 
+         * @param string $message
          */
         public function set_message($message)       { $this->_messages = array($message); return $this; }
 
         public function get_messages()              { return $this->_messages; }
-        
+
         /**
          * Sets the reference
-         * @param string $reference 
+         * @param string $reference
          */
         public function set_reference($reference)       { $this->_reference = $reference; return $this;  }
-                
+
         /**
          * Sets the code
-         * @param integer $code 
+         * @param integer $code
          */
 		public function set_code($code)			{ $this->_code = $code; return $this; }
-                
+
         /**
          * Sets the error
          * @param string $message
-         * @param integer $code 
+         * @param integer $code
          */
-		public function error($message,$code=null) { 
+		public function error($message,$code=null) {
             $this->_messages[] = array("message"=>$message,"code"=>$code,"type"=>"error"); $this->_code = $code;
-            return $this; 
+            return $this;
         }
 
         public function set_error($message,$code=null)  { return $this->error($message,$code); }
-                
+
         /**
          * Fail
          * @param string $message
-         * @param integer $code 
+         * @param integer $code
          */
         public function fail($message,$code=null)  {
             $code = $code===null ? $this->_codes["fail"] : $code;
-            return $this->set_error($message,$code)->success(false,$code); 
+            return $this->set_error($message,$code)->success(false,$code);
         }
 
         /**
@@ -197,11 +201,11 @@
          * Returns the reference
          * @return integer
          */
-        public function get_reference()          { return $this->_reference; }        
+        public function get_reference()          { return $this->_reference; }
 
         /**
          * Returns success
-         * @return integer 
+         * @return integer
          */
         public function get_success()           { return $this->_success; }
 
@@ -209,13 +213,13 @@
 
         /**
          * Checks whether is has errors
-         * @return boolean 
+         * @return boolean
          */
         public function has_errors()                    { return !is_empty($this->_messages); }
 
         /**
          * Listen for requests
-         * @return boolean 
+         * @return boolean
          */
-        public function listen() {}			
+        public function listen() {}
 	}
