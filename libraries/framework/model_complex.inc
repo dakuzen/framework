@@ -305,17 +305,16 @@
 		* @param string $table
 		* @return null
 		*/
-		public function is_column_tagged($column,$table="") {
-			foreach($this->_dbos as $dbo) {
-				if($table) {
-					if($table==$dbo->get_tablename())
-						return $dbo->is_column_tagged($column);
+		public function is_column_tagged($columns,$table="") {
+			$columns = (array)$columns;
+			foreach($this->_dbos as $dbo)
+				if($table==$dbo->get_tablename() || !$table)
+					foreach($columns as $name)
+						if($column=$dbo->get_column($name))
+							if($column->is_tagged())
+								return true;
 
-				} elseif($dbo->has_column($column))
-					return $dbo->is_column_tagged($column);
-			}
-
-			return null;
+			return false;
 		}
 
         /**
