@@ -28,7 +28,7 @@
 		public function rmdir($dir) {
 			FILE_UTIL::rmdir($dir,$this->_debug); return $this;
 		}
-		
+
 		public function delete($file) {
 			FILE_UTIL::delete($file,$this->_debug); return $this;
 		}
@@ -36,7 +36,7 @@
 		public function move($from,$to,$options=array("override"=>false)) {
 			FILE_UTIL::move($from,$to,value($options,"override"),false,$this->_debug); return $this;
 		}
-		
+
 		public function rename($from,$to,$options=array("override"=>false)) {
 			FILE_UTIL::move($from,$to,value($options,"override"),$this->_debug); return $this;
 		}
@@ -46,7 +46,7 @@
 		}
 
 		public function listing($directory,$pattern="*",$options=array("expand_braces"=>true,"only_directories"=>false,"only_files"=>false,"absolute"=>false)) {
-			
+
 			$directory = $this->sanitize($directory);
 
 			$flag_bit = 0;
@@ -70,13 +70,13 @@
 		public function directories($directory,$pattern="*",$options=array("absolute"=>false)) {
 			$options["only_directories"] = true;
 			return self::listing($directory,$pattern,$options);
-		}	
-		
+		}
+
 		public function count($directory,$pattern="*") {
 			return FILE_UTIL::get_file_count($directory,$pattern,$this->_debug);
 		}
 
-		public function put($file,$contents,$options=array()) {		
+		public function put($file,$contents,$options=array()) {
 			return FILE_UTIL::put($file,$contents,0,$this->_debug);
 		}
 

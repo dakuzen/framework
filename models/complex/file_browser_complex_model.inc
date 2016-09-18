@@ -419,7 +419,11 @@
 
 			$this->_storage_cmodel->mkdir($directory);
 
-			$has_success = $this->_storage_cmodel->put($source_file,$file);
+			if($this->_storage_cmodel->is_local())
+				$has_success = $this->_storage_cmodel->copy($source_file,$file);
+
+			elseif($this->_storage_cmodel->is_s3())
+				$has_success = $this->_storage_cmodel->put($source_file,$file);
 
 			if(!$has_success)
 				throw new Exception("Failed to copy the file");

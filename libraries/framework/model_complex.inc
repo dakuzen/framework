@@ -460,8 +460,11 @@
 				}
 			}
 
-			foreach($this->_dbos as &$dbo)
+			foreach($this->_dbos as &$dbo) {
 				$dbo->populate($data,$untag);
+				if($untag)
+					$dbo->untag_object();
+			}
 
 			return $this;
 		}
@@ -560,7 +563,6 @@
 	        		if(value($config,"source")=="function")
 	        			call_user_func([$this,$name],$value);
 	        		else {
-
 						foreach($this->_dbos as $dbo)
 							if($column=$dbo->get_column($name))
 								$column->set_value($value);
