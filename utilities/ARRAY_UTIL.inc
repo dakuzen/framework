@@ -5,13 +5,13 @@
         * @package Framework
         * @subpackage Utilities
         */
-	 
+
 	class ARRAY_UTIL {
-	
-		/** 
+
+		/**
 		 * Returns an array that is padded using the $pad_str on the left and right
 		 *
-		 * <code> 
+		 * <code>
 		 *   ARRAY_UTIL::get_padded(array("dog","cat","mouse"),"bird");
 		 * </code>
 		 * <pre>
@@ -23,34 +23,34 @@
 		 * 	)
 		 * </pre>
 		 *
-		 * @param array $array to be padded  
-		 * @param string $pad_str string padded to each element 
-		 * @return array 
-		 */ 
-		 
+		 * @param array $array to be padded
+		 * @param string $pad_str string padded to each element
+		 * @return array
+		 */
+
 		static function get_padded($array,$pad_str) {
 			foreach($array as &$element)
 				$element = $pad_str.$element.$pad_str;
-			
+
 			return $array;
-					
-		}		 
+
+		}
 
         /**
          * Return the padded array elements
          * @param array $array
          * @param string $pad_str
-         * @return array 
+         * @return array
          */
 		static function get_padded_array_elements($array,$pad_str) {
 			return self::get_padded($array,$pad_str);
-					
+
 		}
-		
-		/** 
+
+		/**
 		 * Returns an array that is padded using the $pad_str on the left and right
-		 * <code> 
-		 * 	ARRAY_UTIL::get_exploded($string,$delimiter)  
+		 * <code>
+		 * 	ARRAY_UTIL::get_exploded($string,$delimiter)
 		 * </code>
 		 * <pre>
 		 *	Array
@@ -64,50 +64,50 @@
 		 *
 		 * @param string $string string to be exploded
 		 * @param string $delimiter string delimiter used to explode the $string
-		 * @param string $key_value_delim string used to delimit the keys and the values 
+		 * @param string $key_value_delim string used to delimit the keys and the values
 		 * @param boolean $retain_keys boolean used to retain key values
 		 * @param string $valid_regex string that validates it being a regular expression
-		 * @return array 
-		 */ 
+		 * @return array
+		 */
 		static function get_exploded($string,$delimiter,$key_value_delim="",$retain_keys=false,$valid_regex=null) {
 			return self::explode($string,$delimiter,$key_value_delim,$retain_keys,$valid_regex);
 		}
 
 		static function explode($string,$delimiter,$key_value_delim="",$retain_keys=false,$valid_regex=null) {
-			
+
 			$string = trim($string);
 
 			if(strlen($string)==0)
 				return array();
-			
-			$array = array();			
+
+			$array = array();
 			$values = explode($delimiter,$string);
-			
+
 			foreach($values as $value) {
-				
+
 				$is_valid = true;
-				
+
 				$key = null;
 				if($key_value_delim) {
 					$values = explode($key_value_delim,$value);
 					$key 	= value($values,0);
 					$value 	= value($values,1);
 				}
-				
-				if($valid_regex) 
-					$is_valid = preg_match($valid_regex,$value,$matches);	
-				
+
+				if($valid_regex)
+					$is_valid = preg_match($valid_regex,$value,$matches);
+
 				if($is_valid) {
 					if($retain_keys)
 						$array[$key] = trim($value);
-					else 
+					else
 						$array[] = trim($value);
 				}
 			}
-				
-			return $array;			
+
+			return $array;
 		}
-		
+
         /**
          * Return the exploded array
          * @param string $string
@@ -115,17 +115,17 @@
          * @param string $key_value_delim
          * @param boolean $retain_keys
          * @param string $valid_regex
-         * @return array 
+         * @return array
          */
 		static function get_exploded_array($string,$delimiter,$key_value_delim="",$retain_keys=false,$valid_regex=null) {
 			return self::get_exploded($string,$delimiter,$key_value_delim,$retain_keys,$valid_regex);
 		}
-		
-		
-		/** 
-		 * Passes an array and returns a key value string 
+
+
+		/**
+		 * Passes an array and returns a key value string
 		 * <code>
-		 * 	ARRAY_UTIL::get_imploded(array("dog","cat","pig")) 
+		 * 	ARRAY_UTIL::get_imploded(array("dog","cat","pig"))
 		 * </code>
 		 * <pre>
 		 *	0="dog" 1="cat" 2="pig"
@@ -135,8 +135,8 @@
 		 * @param string $delim string that is placed between values
 		 * @param string $quote string that is placed around each value
 		 * @param string $key_value_delim string that is placed between key and value
-		 * @return string 
-		 */ 
+		 * @return string
+		 */
 		static function get_imploded($array,$delim=" ",$quote='"',$key_value_delim="=") {
 			return self::implode($array,$delim,$quote,$key_value_delim) ;
 		}
@@ -147,23 +147,23 @@
 				$temp_array[] = $key.$key_value_delim.$quote.$value.$quote;
 			return implode($delim,$temp_array);
 		}
-		
+
         /**
          * Return the imploded string
          * @param array $array
          * @param string $delim
          * @param string $quote
          * @param string $key_value_delim
-         * @return string 
+         * @return string
          */
 		static function get_imploded_string($array,$delim=" ",$quote='"',$key_value_delim="=") {
 			return self::get_imploded($array,$delim,$quote,$key_value_delim);
 		}
-		
-		/** 
+
+		/**
 		 * Passes an array and removes any empty values
 		 * <code>
-		 * 	ARRAY_UTIL::remove_empty_attributes(array("dog","cat","mouse",""))  
+		 * 	ARRAY_UTIL::remove_empty_attributes(array("dog","cat","mouse",""))
 		 * </code>
 		 * <pre>
 		 *	Array
@@ -175,7 +175,7 @@
  		 * </pre>
 		 *
 		 * @param array $attributes array to be passed
-		 * @return string 
+		 * @return string
 		 */
 		static function remove_empty_attributes(&$attributes) {
 			foreach($attributes as $key=>$value) {
@@ -184,11 +184,11 @@
 			}
 			return $attributes;
 		}
-		
-		/** 
+
+		/**
 		 * Returns a numbered list represented by an array
 		 * <code>
-		 *	ARRAY_UTIL::get_numbered_list(5,10);  
+		 *	ARRAY_UTIL::get_numbered_list(5,10);
 		 * </code>
 		 * <pre>
 		 *	 Array
@@ -201,61 +201,61 @@
  		 * </pre>
 		 *
 		 * @param int $from integer of the starting point of the list
-		 * @param int $to integer of the ending point of the list 
+		 * @param int $to integer of the ending point of the list
                  * @param string $value_format
                  * @param string $key_format
 		 * @return array
 		 */
 		static function get_numbered_list($from,$to,$value_format="",$key_format="") {
-			$list = array();			
+			$list = array();
 			for($i=$from;$i<=$to;$i++) {
 				$value = $key = $i;
-				
+
 				if($value_format)
 					$value = sprintf($value_format,$value);
-					
+
 				if($key_format)
 					$key = sprintf($key_format,$value);
-				
+
 				$list[$key] = $value;
 			}
 			return $list;
 		}
-		
+
 	    /**
 	     * Return the numeric ranges
 	     * @param array $numbers
-	     * @return string 
+	     * @return string
 	     */
 		static function get_numeric_ranges($numbers) {
-		
+
 			$numbers = array_unique(array_values($numbers));
 			sort($numbers);
-			
+
 			$ranges = array();
 
 			for($i=0;$i<count($numbers);$i++) {
 				$current_number = get_value($numbers,$i);
-				
+
 				$next_number = $joiner = "";
 
 				while($tmp_next_number=get_value($numbers,$i + 1)) {
-			
+
 					if($tmp_next_number == get_value($numbers,$i) + 1) {
 						$joiner 	= "-";
 						$next_number 	= $tmp_next_number;
 
 					} else
-						break;						
+						break;
 					$i++;
-				} 
+				}
 
 				$ranges[] = $current_number.$joiner.$next_number;
-			}		
+			}
 			return $ranges;
 		}
-		
-		/** 
+
+		/**
 		 * Returns an array with grouped objects based on the function name given
 		 *
 		 * <code>
@@ -269,8 +269,8 @@
 		 *
 		 *		function get_x() { return $this->_x; }
 		 *	}
-		 * 
-		 * 	ARRAY_UTIL::group(array(new ABC("1"),new ABC("2"),new ABC("2")),"get_x")  
+		 *
+		 * 	ARRAY_UTIL::group(array(new ABC("1"),new ABC("2"),new ABC("2")),"get_x")
 		 * </code>
 		 * <pre>
 		 *	 Array
@@ -307,28 +307,28 @@
 		const GROUP_TYPE_ARRAY 	= "A";
 
 		static function group($objects,$groupings,$type=self::GROUP_TYPE_OBJECT) {
-			
+
 			if(!is_array($objects))
 				return array();
 
 			if(!is_array($groupings))
-				$groupings = array($groupings,"");			
+				$groupings = array($groupings,"");
 
 			$group = $grouped_objects = array();
-			
+
 			if($type==self::GROUP_TYPE_OBJECT) {
-				
+
 				foreach($groupings as &$group)
 					$group = $group ? "[\$object->".$group."()]" : "[]";
-				
+
 				foreach($objects as $object)
 					eval("\$grouped_objects".implode("",$groupings)." = \$object;");
-			
+
 			} elseif($type==self::GROUP_TYPE_ARRAY) {
-				
+
 				foreach($groupings as &$group)
 					$group = $group ? "[get_value(\$object,'".$group."')]" : "[]";
-				
+
 				foreach($objects as $object)
 					eval("\$grouped_objects".implode("",$groupings)." = \$object;");
 			}
@@ -344,23 +344,29 @@
 	     * Return the indexed objects
 	     * @param objects $objects
 	     * @param function $index_function
-	     * @return object 
+	     * @return object
 	     */
-	    
-		static function get_indexed_objects($objects,$index_function) {
-		
-			$indexed_objects = array();
-			
+
+		static function get_indexed_objects($objects,$name) {
+
+			$list = [];
 			foreach($objects as $object) {
-				$index = $object->$index_function();
-				$indexed_objects[$index] = $object;
-			}	
-			
-			return $indexed_objects;
+
+				$index = null;
+				if(is_array($object) && isset($object[$name])) {
+					$index = $object[$name];
+				} else {
+					$index = $object->$name();
+				}
+
+				$list[$index] = $object;
+			}
+
+			return $list;
 		}
 
 		static function index($objects,$index_function) { return self::get_indexed_objects($objects,$index_function); }
-		
+
 		static function get_list($objects,$value,$key=null,$multiple_values=false) {
 
 			$object = get_value(array_values($objects),0);
@@ -372,10 +378,10 @@
 				$list = self::get_list_from_objects($objects,$value,$key);
 			return $list;
 		}
-		
+
 		static function listing($objects,$value,$key=null,$multiple_values=false) { return self::get_list($objects,$value,$key,$multiple_values); }
 
-		/** 
+		/**
 		 * Returns an array of values based on the function name
 		 * <code>
 		 *	class ABC {
@@ -389,7 +395,7 @@
 		 *	}
 		 *
 		 *	ARRAY_UTIL::get_list_from_objects(array(new ABC("1"),new ABC("2"),new ABC("2")),"get_x")
-		 * </code> 
+		 * </code>
 		 * <pre>
 		 *	 Array
 		 *	 (
@@ -405,32 +411,32 @@
 		 * @return array
 		 */
 		static function get_list_from_objects($objects,$function_name,$function_name_key=null) {
-			
+
 			if(!$objects)
 				return array();
-			
+
 			$function_name 	= is_array($function_name) ? $function_name : array($function_name);
 			$value_args 	= get_value($function_name,1)===null ? array() : array(get_value($function_name,1));
-			
+
 			if($function_name)
 				$key_args = get_value($function_name,1)===null ? array() : array(get_value($function_name,1));
-					
+
 			$list = array();
 			foreach($objects as $object) {
 
 				$value 		= call_user_func_array(array($object,get_value($function_name,0)),$value_args);
-				
+
 				if($function_name_key) {
-					$key = call_user_func_array(array($object, $function_name_key),$key_args);				
+					$key = call_user_func_array(array($object, $function_name_key),$key_args);
 					$list[$key] = $value;
 				} else
 					$list[] = $value;
 			}
 			return $list;
 		}
-		
-		/** 
-		 * Returns an array of values based on the key name		
+
+		/**
+		 * Returns an array of values based on the key name
 		 *
 		 * @param array $array array of values to get values from
 		 * @param string $value_key string to be grouped by
@@ -440,19 +446,19 @@
 		 */
 
 		static function get_list_from_array($array,$value_key,$value_key_key=null,$multiple_values=false) {
-			$list = array();			
+			$list = array();
 			if($multiple_values && !is_array($value_key))
-				$value_key = array($value_key); 
-			
+				$value_key = array($value_key);
+
 			foreach($array as $item) {
-				
+
 				if($multiple_values) {
 					$values = array();
 					foreach($value_key as $key)
 						$values[$key] = get_value($item,$key);
 				} else
 					$values = get_value($item,$value_key);
-				
+
 				if($value_key_key!==null)
 					$list[get_value($item,$value_key_key)] = $values;
 				else
@@ -466,7 +472,7 @@
 		}
 
 		static function names($array,$selected) {
-			
+
 			$list = array();
 			if(is_array($selected))
 				foreach($selected as $index)
@@ -480,16 +486,16 @@
          * Return the padded array elements
          * @param array $array
          * @param string $pad_str
-         * @return array 
+         * @return array
          */
 		static function in($needle,$hastack) {
 			$needle = is_array($needle) ? $needle : array($needle);
-			
+
 			foreach($hastack as $item)
 				if(in_array($item,$needle))
 					return true;
 
-			return false;					
+			return false;
 		}
 
 		static function filter_keys($array,$keys) {
@@ -499,11 +505,11 @@
 				if($value=value($array,$key))
 					$list[$key] = $value;
 
-			return $list;					
+			return $list;
 		}
 
 		static function array_slice_assoc($array,$keys) {
 			return array_intersect_key($array,array_flip($keys));
-		}		
-		
+		}
+
 	}
