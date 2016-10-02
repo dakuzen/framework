@@ -15,7 +15,7 @@
 		protected $_route				= null;
 		protected $_is_force_ssl		= false;
 		protected $_is_skip_ssl			= false;
-		protected $_roles				= array();
+		protected $_roles				= [];
 		protected $_type				= null;
 		protected $_login_redirect		= false;
 

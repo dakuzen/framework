@@ -557,6 +557,7 @@ table {
 .br3 { border-radius: 3px; }
 .br5 { border-radius: 5px; }
 .br10 { border-radius: 10px; }
+.br50p { border-radius: 50%; }
 
 .lsn { list-style: none; }
 

@@ -16,7 +16,7 @@
 
         public function render() {
             $this->_response_cmodel->render(); return $this;
-        }        
+        }
 
         public function has_error() {
             return $this->_response_cmodel->has_error();
@@ -32,7 +32,7 @@
 
         public function has_success() {
         	return $this->_response_cmodel->has_success();
-        }       
+        }
 
         public function error($error,$encode=true) {
             $this->_response_cmodel->add_error($error,$encode); return $this;
@@ -53,15 +53,15 @@
                 return $this->_response_cmodel->redirect();
 
             $this->_response_cmodel->redirect($redirect); return $this;
-        }  
-        
+        }
+
         public function get_data($name) {
             return $this->_response_cmodel->get_data($name);
         }
-        
+
         public function set_data($data) {
             return $this->_response_cmodel->set_data($data);
-        }             
+        }
 
         public function get_response() {
             return $this->_response_cmodel;
