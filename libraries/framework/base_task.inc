@@ -11,11 +11,11 @@
 		const TYPE_COMPONENT			= "C";
 
 		protected $_authorizable		= true;
-		protected $_is_authorized		= true;
 		protected $_route				= null;
 		protected $_is_force_ssl		= false;
 		protected $_is_skip_ssl			= false;
 		protected $_roles				= [];
+		protected $_permissions			= [];
 		protected $_type				= null;
 		protected $_login_redirect		= false;
 
@@ -28,8 +28,10 @@
 		function has_get($value)				{ return $this->registry()->has_get($value); }
 		function get_route() 					{ return $this->_route; }
 		function get_roles() 					{ return $this->_roles; }
+		function get_permissions()				{ return $this->_permissions; }
 		function get_type()						{ return $this->_type; }
 		function has_role($role)				{ return in_array($role,$this->_roles); }
+		function has_permissions($permission)	{ return in_array($role,$this->_permissions); }
 
 		function is_force_ssl()					{ return $this->_is_force_ssl; }
 		function is_skip_ssl()					{ return $this->_is_skip_ssl; }
@@ -47,8 +49,10 @@
 		function enable_type_component()		{ $this->type_component(); }
 		function enable_type_blank()			{ $this->type_blank(); }
 
-		function set_roles($roles) 				{ $this->_roles = is_array($roles) ? $roles : array($roles); return $this; }
+		function set_roles($roles) 				{ $this->_roles = (array)$roles; return $this; }
 		function set_role($role) 				{ $this->set_roles(array($role)); return $this; }
+		function set_permissions($value) 		{ $this->_permissions = (array)$value; return $this; }
+		function set_permission($value) 		{ $this->set_permissions($value); return $this; }
 		function set_type($type)				{ $this->_type = $type; return $this; }
 		function debug_format_text()			{ DEBUG_UTIL::format_text(); }
 		function debug_format_html()			{ DEBUG_UTIL::format_html(); }
@@ -89,11 +93,6 @@
 			if(!$this->is_authorizable())
 				return true;
 
-			if(!$this->_is_authorized)
-				return false;
-
-			$has_access = SYSTEM_MANAGER::has_access($this->get_roles(),$this);
-
-			return $has_access;
+			return SYSTEM_MANAGER::has_access($this->get_roles(),$this->get_permissions());
 		}
 	}
