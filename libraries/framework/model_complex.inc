@@ -606,7 +606,7 @@
         				if($validation && !strlen(trim($value)))
 							$exception->add($this->validate_message($config,value($validation,["messages","required"],"The {name} is required")));
 
-					if(!strlen(trim($value)))
+					if(is_string($value) && !strlen(trim($value)))
 						continue;
 
         			if($type=="minlength") {
