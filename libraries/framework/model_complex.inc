@@ -44,6 +44,7 @@
 				if($dbo)
 					$this->register_dbo($dbo);
 
+
 			return $this;
 		}
 
@@ -57,6 +58,15 @@
 				$this->set_dbo($dbo);
 
 			foreach($this->describe() as $name=>$config) {
+				if($format = value($config,"format")) {
+					if(value($format,"type")=="json")
+						$this->register_json($name, value($format,"default",[]));
+					else if(value($format,"type")=="delimited")
+						$this->register_delimited($name, value($format,"delimiter",","), value($format,"default",[]));
+					else if(value($format,"type")=="serialized")
+						$this->register_serialized($name, value($format,"default",[]));
+				}
+
 				if($default=value($config,"default")) {
 
 					$column = $this->get_column($name);
@@ -560,12 +570,15 @@
 		        		}
 	        		}
 
-	        		if(value($config,"source")=="function")
+	        		if(value($config,"source")=="function") {
 	        			call_user_func([$this,$name],$value);
-	        		else {
-						foreach($this->_dbos as $dbo)
+					} else if(isset($this->_registered_objects[$name])) {
+						$this->{"set_".$name}($value);
+	        		} else {
+						foreach($this->_dbos as $dbo) {
 							if($column=$dbo->get_column($name))
 								$column->set_value($value);
+						}
 	        		}
 	        	}
         	}
@@ -589,8 +602,10 @@
 
         		if(value($config,"source")=="function")
 	              	$value = call_user_func([$this,$name]);
-        		elseif(value($config,"source")=="object")
+        		else if(value($config,"source")=="object")
 	              	$value = call_user_func([$this,$name]);
+				else if(in_array(value($config,["format","type"]), ["json","delimited","serialized"]))
+					$value = $this->{"get_".$name}();
 	            else {
 	            	$column = $this->get_column($name);
 
