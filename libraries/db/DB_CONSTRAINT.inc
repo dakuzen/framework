@@ -11,8 +11,6 @@
 		protected $_conditions 		= array();
 		protected $_relation 		= DB_CONSTRAINT::RELATION_AND;
 
-		function __construct() {}
-
 		function get_conditions() 		{ return $this->_conditions; }
 		function get_constraints() 		{ return $this->_conditions; }
 		function get_relation() 		{ return $this->_relation; }
@@ -20,23 +18,19 @@
 		function get_condition_count() 	{ return count($this->_conditions); }
 		function has_conditions() 		{ return count($this->_conditions)>0; }
 
-		public static function create() {
-			return new DB_GROUP();
-		}
-
 		function initialize() {
 			$this->_conditions 	= array();
 			$this->_relation 	= DB_CONSTRAINT::RELATION_AND;
 			return $this;
 		}
 
-		function where($value1,$operator,$value2,$relation=DB_CONSTRAINT::RELATION_AND,$parms=true,$pad_value=false,$escape=true) {
-			$this->_conditions[] = new DB_CONSTRAINT($value1,$operator,$value2,$relation,$parms,$pad_value,$escape);
+		function where($value1,$operator,$value2,$relation=DB_CONSTRAINT::RELATION_AND,$parms=true,$pad=false,$escape=true) {
+			$this->_conditions[] = new DB_CONSTRAINT($value1,$operator,$value2,$relation,$parms,$pad,$escape);
 			return $this;
 		}
 
-		function add_where($value1,$operator,$value2,$relation=DB_CONSTRAINT::RELATION_AND,$parms=true,$pad_value=false,$escape=true) {
-			return $this->where($value1,$operator,$value2,$relation,$parms,$pad_value,$escape);
+		function add_where($value1,$operator,$value2,$relation=DB_CONSTRAINT::RELATION_AND,$parms=true,$pad=false,$escape=true) {
+			return $this->where($value1,$operator,$value2,$relation,$parms,$pad,$escape);
 		}
 
 		function add_subquery($subquery,$relation=DB_CONSTRAINT::RELATION_AND) {
@@ -44,8 +38,7 @@
 		}
 
 		function subquery($subquery,$relation=DB_CONSTRAINT::RELATION_AND) {
-			$this->add_where("","",$subquery,$relation,false,false,false);
-			return $this;
+			return $this->add_where("","",$subquery,$relation,false,false,false);
 		}
 
 		function add_group($db_group,$relation=DB_CONSTRAINT::RELATION_AND) {
@@ -64,14 +57,11 @@
 
 				$relation = ($idx>0) ? $condition->get_relation()." " : "";
 
-				switch(get_class($condition)) {
-					case "DB_CONSTRAINT":
-						$condition_ary[] = $relation." ".$condition->get_condition($parms,$pad);
-						break;
-					case "DB_GROUP":
-						$condition_ary[] = $relation." ".$condition->get_condition_string($parms,$pad);
-						break;
-				}
+				if(is_a($condition,"DB_CONSTRAINT"))
+					$condition_ary[] = $relation." ".$condition->get_condition($parms,$pad);
+
+				elseif(is_a($condition,"DB_GROUP"))
+					$condition_ary[] = $relation." ".$condition->get_condition_string($parms,$pad);
 			}
 
 			$condition_string = implode(" ",$condition_ary);
@@ -83,8 +73,10 @@
 		}
 
 		function disable_parms() {
-			foreach($this->_conditions as $condition)
-				$condition->disable_parms();
+			foreach($this->_conditions as $condition) {
+				if(!is_a($condition,"DB_GROUP_SUBQUERY"))
+					$condition->disable_parms();
+			}
 		}
 
 		function has_wheres() {
@@ -92,12 +84,20 @@
 		}
 	}
 
-        /**
-        * Class DB_CONSTRAINT
-        *
-        * @package Library
-        * @subpackage Db
-        */
+	class DB_GROUP_SUBQUERY extends DB_GROUP {
+
+		function where($value1,$operator,$value2,$relation=DB_CONSTRAINT::RELATION_AND,$pad=true,$escape=true) {
+			$this->_conditions[] = new DB_CONSTRAINT($value1,$operator,$value2,$relation,false,$pad,$escape);
+			return $this;
+		}
+	}
+
+    /**
+    * Class DB_CONSTRAINT
+    *
+    * @package Library
+    * @subpackage Db
+    */
 
 	class DB_CONSTRAINT extends OBJECT {
 
@@ -108,17 +108,17 @@
 		protected $_value 		= null;
 		protected $_operator 	= null;
 		protected $_relation 	= null;
-		protected $_is_parms	= true;
-		protected $_pad_value	= false;
-		protected $_escape		= true;
+		protected $_parms		= null; //true
+		protected $_pad			= null; //false
+		protected $_escape		= null; //true
 
-		function __construct($field,$operator="=",$value,$relation=DB_CONSTRAINT::RELATION_AND,$parms=true,$pad_value=false,$escape=true) {
+		function __construct($field,$operator="=",$value,$relation=DB_CONSTRAINT::RELATION_AND,$parms=true,$pad=false,$escape=true) {
 
 			$this->_field 		= $field;
 			$this->_operator 	= $operator;
 			$this->_relation 	= $relation;
-			$this->_is_parms 	= $parms;
-			$this->_pad_value 	= $pad_value;
+			$this->_parms 		= $parms;
+			$this->_pad 		= $pad;
 			$this->_escape 		= $escape;
 
 			if(is_array($value)) {
@@ -136,10 +136,17 @@
 		function get_operator()		{ return $this->_operator; }
 		function get_value() 		{ return $this->_value; }
 		function get_relation() 	{ return $this->_relation; }
-		function disable_parms()	{ $this->_is_parms = false; $this->_pad_value = true; return $this; }
-		function is_parms() 		{ return $this->_is_parms; }
+		function parms() 			{ return $this->_parms; }
+		function pad() 				{ return $this->_pad; }
+		function escape() 			{ return $this->_escape; }
 
-		function get_condition($is_parms=null,$pad_value=null) {
+		function disable_parms() {
+			$this->_parms = false;
+			$this->_pad = true;
+			return $this;
+		}
+
+		function get_condition($parms=null,$pad=null) {
 
 			$value		= null;
 			$delimit 	= ",";
@@ -155,10 +162,10 @@
 			} elseif(stripos($this->_operator,"BETWEEN")!==false)
 				$delimit = " AND ";
 
-			$is_parms 	= is_null($is_parms) ? $this->_is_parms : $is_parms;
-			$pad_value 	= is_null($pad_value) ? $this->_pad_value : $pad_value;
+			$parms 	= is_null($parms) ? $this->parms() : $parms;
+			$pad 		= is_null($pad) ? $this->pad() : $pad;
 
-			if($is_parms) {
+			if($parms) {
 				if($this->_value)
 					$value = implode($delimit,array_fill(0,count($this->_value),DBQ::get_parm_holder()));
 			} else {
@@ -178,23 +185,23 @@
 						//	$item = trim($item,"'");
 						//	if($this->_escape)
 						//		$item = addslashes($item);
-						//	$pad_value = true;
+						//	$pad = true;
 						//} else {
 
 							//if the item is wrapped in " or ' then remove the quotes
 							if(preg_match("/^[\"']([^\"']*)[\"']$/",$item,$matches)) {
 								$item = value($matches,1);
-								if($this->_escape)
+								if($this->escape())
 									$item = "'".addslashes($item)."'";
 							} elseif(preg_match("/^(NOT\s+)?IN$/i",trim($this->_operator))) {
 								$item = addslashes($item);
 
-							} elseif($this->_escape)
+							} elseif($this->escape())
 								$item = addslashes($item);
 						//}
 
 						// Never pad a null value
-						if($pad_value && !$is_null)
+						if($pad && !$is_null)
 							$item = "'".$item."'";
 
 					}
