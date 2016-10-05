@@ -5,13 +5,11 @@
 
 		protected $_key 		= "";
 		protected $_secret 		= "";
-		protected $_region 		= "";
 		protected $_parameters 	= array();
 
 		public function __construct($config) {
 			$this->_key = value($config,"key");
 			$this->_secret = value($config,"secret");
-			$this->_region = value($config,"region","us-west-2");
 		}
 
 		public static function create($config=array(),$parameters=array()) {
@@ -20,15 +18,15 @@
 
 		public function s3() {
 			return Aws\S3\S3Client::factory(array('key'    => $this->_key,
-						             			   'secret' => $this->_secret))->setRegion($this->_region);
+						             			   'secret' => $this->_secret));
 		}
 
 		public function cloudfront() {
 
 			return Aws\CloudFront\CloudFrontClient::factory(array('key'    => $this->_key,
-						             			  				 'secret' => $this->_secret))->setRegion($this->_region);
+						             			  				 'secret' => $this->_secret));
 
-		}		
+		}
 
 		public static function get_key() { return $this->_key; }
 		public static function get_secret() { return $this->_secret; }
