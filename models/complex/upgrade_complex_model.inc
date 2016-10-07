@@ -250,7 +250,7 @@
 									  PRIMARY KEY (`cron_id`));");
 
 
-			if(!$db_utility->is_table_column_exist("ff_article_authors","url"))
+			if($db_utility->is_table_exist("ff_article_authors") && !$db_utility->is_table_column_exist("ff_article_authors","url"))
 				$db->script("ALTER TABLE `ff_article_authors` ADD COLUMN url VARCHAR(40);");
 
 			if(!$db_utility->is_table_column_exist("ff_crons","long_running"))
