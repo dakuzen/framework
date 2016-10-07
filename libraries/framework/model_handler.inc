@@ -369,7 +369,8 @@
 		}
 
 		function clear_order() {
-			return $this->_order_bys = [];
+			$this->_order_bys = [];
+			return $this;
 		}
 
 		/**
