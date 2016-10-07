@@ -368,6 +368,10 @@
 			return $this->add_order_by($field,$direction);
 		}
 
+		function clear_order() {
+			return $this->_order_bys = [];
+		}
+
 		/**
 		 * Add group
 		 * @param string $db_group
