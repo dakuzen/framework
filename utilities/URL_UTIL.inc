@@ -234,7 +234,7 @@
 		}
 
 		static function sanitize($url) {
-			return preg_replace("/\/{2,}/","/",$url);
+			return preg_replace("/([^:])(\/{2,})/","$1/",$url);
 		}
 
 	}
