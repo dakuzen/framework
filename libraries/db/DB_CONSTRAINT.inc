@@ -73,10 +73,9 @@
 		}
 
 		function disable_parms() {
-			foreach($this->_conditions as $condition) {
-				if(!is_a($condition,"DB_GROUP_SUBQUERY"))
+			if(!is_a($this,"DB_GROUP_SUBQUERY"))
+				foreach($this->_conditions as $condition)
 					$condition->disable_parms();
-			}
 		}
 
 		function has_wheres() {
