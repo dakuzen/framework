@@ -78,7 +78,7 @@
 						elseif($default=="datetime")
 							$column->set_value(DB::get_date_time());
 
-						elseif(is_callable($default))
+						elseif((is_array($default) && is_callable($default)) || (is_object($default) && $default instanceof Closure))
 							$column->set_value(call_user_func($default));
 
 						else
