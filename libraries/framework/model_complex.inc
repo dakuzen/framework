@@ -730,7 +730,12 @@
 
 					if($this->{"get_".$name}()!=$this->_clone_cmodel->{"get_".$name}()) {
 						$callstack = value($config,["diff-lookup","value"]);
-						$value = $callstack[0]->{$callstack[1]}(true)->{$callstack[2]}();
+                        $object = $callstack[0]->{$callstack[1]}(true);
+                        if($object){
+                            $value = $object->{$callstack[2]}();
+                        }else{
+                            $value = 'NONE';
+                        }
 						$diff[] = $label." = `".$value."`";
 					}
 
