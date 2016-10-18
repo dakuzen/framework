@@ -138,17 +138,29 @@
 			if($name=="get") {
 
 				if(array_key_exists(0,$arguments)) {
-					$key = get_value($arguments,0);
-					$this->where($this->get_dbq()->get_tablename().".".$this->get_dbq()->get_primary_key(),"=",$key);
+					$key = value($arguments,0);					$this->where($this->get_dbq()->get_tablename().".".$this->get_dbq()->get_primary_key(),"=",$key);
 				}
 
 				$this->limit(1);
 
 				return value($this->gets(),0);
-			} elseif($name=="create")
+
+			} elseif($name=="create") {
 			 	return new $class();
 
-			else
+			} elseif($name=="require") {
+
+				$cmodel = $this->get();
+
+				if(!$cmodel) {
+
+					$message = "Invalid ".get_class($this);
+					throw new Exception($message);
+				}
+
+				return $cmodel;
+
+			} else
 				return parent::__call($name,$arguments);
 		}
 
