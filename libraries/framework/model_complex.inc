@@ -567,7 +567,11 @@
 		        			} else {
 		        				$value = call_user_func([$this,$sanitize],$value);
 		        			}
-		        		}
+                        }else{
+                            if($sanitize=="time") {
+                                $value = null;
+                            }
+                        }
 	        		}
 
 	        		if(value($config,"source")=="function") {
@@ -637,23 +641,23 @@
 							$exception->add(value($config,["messages","email"],"The email address is invalid"));
 
 					} elseif($type=="integer") {
-        				if($validation && !preg_match("/^\d+$/",$value))
+        				if($validation && trim($value) && !preg_match("/^\d+$/",$value))
         					$exception->add($this->validate_message($config,value($validation,["messages","integer"],"The {name} is not a valid number")));
 
 					} elseif($type=="range") {
-        				if($validation && ($value<$validation[0] || $value>$validation[1]))
+        				if($validation && trim($value) && ($value<$validation[0] || $value>$validation[1]))
         					$exception->add($this->validate_message($config,value($validation,["messages","range"],"The {name} must be between ".$validation[0]." and ".$validation[1])));
 
 					} elseif($type=="lesser") {
-        				if(is_numeric($validation) && $value>$validation)
+        				if(is_numeric($validation) && trim($value) && $value>$validation)
         					$exception->add($this->validate_message($config,value($validation,["messages","lesser"],"The {name} cannot be less then ".$validation)));
 
 					} elseif($type=="greater") {
-        				if(is_numeric($validation) && $value<$validation)
+        				if(is_numeric($validation) && trim($value) && $value<$validation)
         					$exception->add($this->validate_message($config,value($validation,["messages","greater"],"The {name} must be greater then ".$validation)));
 
 					} elseif($type=="decimal") {
-        				if($validation && !preg_match("/^\d+(\.\d*)?$/",$value))
+        				if($validation && trim($value) && !preg_match("/^\d+(\.\d*)?$/",$value))
         					$exception->add($this->validate_message($config,value($validation,["messages","decimal"],"The {name} is not a valid decimal")));
 
         			} elseif($type!="required") {
