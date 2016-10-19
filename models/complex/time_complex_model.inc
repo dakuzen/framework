@@ -19,9 +19,10 @@
          * The time
          * @var integer $time
          */
-		protected $_time      = 0;
-        protected $_date_time = null;
-        protected $_options   = array();
+		protected $_time        = 0;
+        protected $_date_time   = null;
+        protected $_offset      = 0;
+        protected $_options     = array();
 
         /**
          * Constructor
@@ -34,8 +35,11 @@
 
             $this->_date_time = new DateTime();
 
+            $timezone = new DateTimeZone($this->option("timezone"));
+
             if(!is_numeric($time)) {
 
+                //match and offset on the end ie: +04:00 or +04
                 if(preg_match("/(.*)([\+\-])(\d{2}):?(\d{2})$/",$time,$match)) {
 
                     $time = $match[1];
@@ -46,14 +50,18 @@
 
                         $offset = (((int)$match[3]) * 60 * 60) + (((int)$match[4]) * 60);
 
-                        if(value($options,"offset")===null && $match[2]=="-")
+                        if($match[2]=="-")
                             $offset *= -1;
+                    }
+
+                    if($offset) {
+                        $timezoneName = timezone_name_from_abbr("",$offset, false);
+                        $timezone = new DateTimezone($timezoneName);
                     }
 
                     $time = strtotime($time) - $offset;
 
 				} else {
-
 
 					$time = preg_replace("/(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})/","$1 $2",$time);
 
@@ -69,9 +77,9 @@
 
             }
 
-            $this->time($time);
 
-            $this->_date_time->setTimezone(new DateTimeZone($this->option("timezone")));
+            $this->time($time);
+            $this->_date_time->setTimezone($timezone);
 		}
 
         public static function create($time,$options=array("locale"=>null)) {
@@ -210,18 +218,26 @@
         function gmt()                          { return $this->_format("P"); }
         function timezone_abr()                 { return $this->_format("e"); }
         function short_date()                   { return $this->_format("Y-m-d"); }
-        function db($options=array())           { return $this->_format("Y-m-d H:i:s",null,$options); }
-        function db_date()                      { return $this->_format("Y-m-d"); }
-        function db_time()                      { return $this->_format("H:i:s"); }
         function month_name()                   { return $this->_format("F"); }
         function month_abr()                    { return $this->_format("M"); }
         function long_date()                    { return $this->format()->long_date(); }
         function long_datetime()                { return $this->format()->long_date_time(); }
         function short_datetime()               { return $this->format()->short_date_time(); }
-        function iso8601()                      { return $this->format()->iso8601(); }
-
+        function timezone()                     { return $this->_date_time->getTimezone(); }
         function time_age()                     { return BCMODEL_TIME_AGE::create($this->get_time()); }
         function cloner()                       { return clone $this; }
+        function db_date()                      { return $this->_format("Y-m-d"); }
+        function db_time()                      { return $this->_format("H:i:s"); }
+
+        function db($utc=true) {
+            $options = $utc ? ["timezone"=>self::TIMEZONE_UTC] : ["timezone"=>$this->timezone()];
+            return $this->_format("Y-m-d H:i:s",null,$options);
+        }
+
+        function iso8601($utc=true) {
+            $options = $utc ? ["timezone"=>self::TIMEZONE_UTC] : ["timezone"=>$this->timezone()];
+            return $this->format()->iso8601($options);
+        }
 
         function format($options=["timezone"=>self::TIMEZONE_UTC]) {
             return CMODEL_FORMAT::create($this,$options);
@@ -232,23 +248,28 @@
         }
 
         function hour($value=null) {
-            if(func_num_args())
-                return $this->time($value,$this->minute(),$this->second());
+            if(func_num_args()) {
+                $this->_date_time->setTime($value,$this->minute());
+                return $this;
+            }
             return (int)$this->_format("H");
         }
 
         function minute($value=null) {
-            if(func_num_args())
-                return $this->time($this->hour(),$value,$this->second());
+            if(func_num_args()) {
+                $this->_date_time->setTime($this->hour(),$value);
+                return $this;
+            }
             return (int)$this->_format("i");
         }
 
         function second($value=null) {
-            if(func_num_args())
-                return $this->time($this->hour(),$this->minute(),$value);
+            if(func_num_args()) {
+                $this->_date_time->setTime($this->hour(),$this->minute(),$value);
+                return $this;
+            }
             return (int)$this->_format("s");
         }
-
 
         function week_of_month() {
 			$maxday    = date("t",$this->time());
@@ -311,7 +332,7 @@
 
         function _format($format,$time=null,$options=array()) {
 
-            $timezone = value($options,"timezone");
+            $timezone = value($options,"timezone",$this->timezone());
 
             $date_time = $this->_date_time;
 
@@ -322,8 +343,13 @@
                 if($time)
                     $date_time->setTimestamp($time);
 
-                if($timezone)
-                    $date_time->setTimezone(new DateTimeZone($timezone));
+                if($timezone) {
+
+                    if(!is_a($timezone,"DateTimeZone"))
+                        $timezone = new DateTimeZone($timezone);
+
+                    $date_time->setTimezone($timezone);
+                }
             }
 
             if(!$date_time->getTimestamp())

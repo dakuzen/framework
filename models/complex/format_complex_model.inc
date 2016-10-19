@@ -133,7 +133,7 @@
 
             if(value($options,"time",true)) {
                 $parts[] = "\TH:i:s";
-               
+
                 if(value($options,"timezone")!==false)
                     $parts[] = "P";
             }
@@ -190,8 +190,13 @@
 
             $timezone = value($options,"timezone",value($this->_options,"timezone"));
 
-            if($timezone)
-                $date_time->setTimezone(new DateTimeZone($timezone));
+            if($timezone) {
+
+                if(!is_a($timezone,"DateTimeZone"))
+                    $timezone = new DateTimeZone($timezone);
+
+                $date_time->setTimezone($timezone);
+            }
 
             return $date_time->format($format);
         }
