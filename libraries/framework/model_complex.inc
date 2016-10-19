@@ -567,7 +567,11 @@
 		        			} else {
 		        				$value = call_user_func([$this,$sanitize],$value);
 		        			}
-		        		}
+                        }else{
+                            if($sanitize=="time") {
+                                $value = null;
+                            }
+                        }
 	        		}
 
 	        		if(value($config,"source")=="function") {
