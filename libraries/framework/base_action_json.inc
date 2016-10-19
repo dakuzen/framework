@@ -3,10 +3,14 @@
 
     	protected $_response_cmodel = null;
 
-        public function __construct($roles=array()) {
-			$this->set_roles($roles);
+        public function __construct($roles=null) {
+
+            if($roles)
+                $this->set_roles($roles);
+
 			$this->type_ajax();
 			$this->_response_cmodel = new BASE_CMODEL_RESPONSE();
+
             return $this;
         }
 

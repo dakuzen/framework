@@ -14,8 +14,8 @@
 		protected $_route				= null;
 		protected $_is_force_ssl		= false;
 		protected $_is_skip_ssl			= false;
-		protected $_roles				= [];
-		protected $_permissions			= [];
+		protected $_roles				= null;
+		protected $_permissions			= null;
 		protected $_type				= null;
 		protected $_login_redirect		= false;
 
@@ -30,15 +30,15 @@
 		function get_roles() 					{ return $this->_roles; }
 		function get_permissions()				{ return $this->_permissions; }
 		function get_type()						{ return $this->_type; }
-		function has_role($role)				{ return in_array($role,$this->_roles); }
-		function has_permissions($permission)	{ return in_array($role,$this->_permissions); }
+		function has_role($role)				{ return @in_array($role,$this->_roles); }
+		function has_permissions($permission)	{ return @in_array($role,$this->_permissions); }
 
 		function is_force_ssl()					{ return $this->_is_force_ssl; }
 		function is_skip_ssl()					{ return $this->_is_skip_ssl; }
 		function is_type_component()			{ return $this->_type == self::TYPE_COMPONENT; }
 		function is_type_blank()				{ return $this->_type == self::TYPE_BLANK; }
-		function is_view() 						{ return false; }
-		function is_action() 					{ return false; }
+		function is_view() 						{ return is_a($this,"BASE_VIEW"); }
+		function is_action() 					{ return is_a($this,"BASE_ACTION"); }
 		function can_login_redirect()			{ return $this->_login_redirect; }
 
 		function enable_force_ssl()				{ $this->enable_force_ssl(); }
@@ -92,6 +92,19 @@
 
 			if(!$this->is_authorizable())
 				return true;
+
+			if($this->_permissions===null && $this->_roles===null) {
+
+				$type = "task";
+
+				if($this->is_view())
+					$type = "view";
+
+				if($this->is_action())
+					$type = "action";
+
+				throw new Exception("The ".$type." ".get_class($this)." does not have any permissions or roles specified.");
+			}
 
 			return SYSTEM_MANAGER::has_access($this->get_roles(),$this->get_permissions());
 		}

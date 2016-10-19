@@ -63,12 +63,6 @@
 		public function get_route()		{ return $this->_route; }
 
 		/**
-		 * Checks whether is action
-		 * @return boolean
-		 */
-		public function is_action() 		{ return true; }
-
-		/**
 		 * Type ajax
 		 */
 		public function type_ajax() {

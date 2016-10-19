@@ -84,8 +84,6 @@
 
 		function disable_autoload() 			{ $this->_is_autoload = false; return $this; }
 		function is_autoload()					{ return $this->_is_autoload; }
-		function is_view() 						{ return true; }
-
 
 		function is_type_popup()				{ return $this->_type == self::TYPE_POPUP; }
 		function is_type_body()					{ return $this->_type == self::TYPE_BODY; }
