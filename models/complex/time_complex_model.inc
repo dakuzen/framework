@@ -226,8 +226,16 @@
         function timezone()                     { return $this->_date_time->getTimezone(); }
         function time_age()                     { return BCMODEL_TIME_AGE::create($this->get_time()); }
         function cloner()                       { return clone $this; }
-        function db_date()                      { return $this->_format("Y-m-d"); }
-        function db_time()                      { return $this->_format("H:i:s"); }
+
+        function db_date($utc=true)                      {
+            $options = $utc ? ["timezone"=>self::TIMEZONE_UTC] : ["timezone"=>$this->timezone()];
+            return $this->_format("Y-m-d",null,$options);
+        }
+
+        function db_time($utc=true)                      {
+            $options = $utc ? ["timezone"=>self::TIMEZONE_UTC] : ["timezone"=>$this->timezone()];
+            return $this->_format("H:i:s",null,$options);
+        }
 
         function db($utc=true) {
             $options = $utc ? ["timezone"=>self::TIMEZONE_UTC] : ["timezone"=>$this->timezone()];
