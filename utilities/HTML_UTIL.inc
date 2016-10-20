@@ -208,7 +208,7 @@
 				$classes[] = $class;
 
 			if($class=get_value($attribs,"class"))
-				$classes[] = $class;			
+				$classes[] = $class;
 
 			$attribs["type"] 			= get_value($attribs,"type","text");
 			$attribs["value"] 			= str_replace('"',"&quot;",$value);
@@ -254,7 +254,7 @@
 				$classes[] = $class;
 
 			if($class=get_value($attributes,"class"))
-				$classes[] = $class;				
+				$classes[] = $class;
 
 			$attribs["type"] 		= "password";
 			$attribs["value"] 		= self::escape_quotes($value);
@@ -458,7 +458,7 @@
 		static function textarea($name,$value="",$attributes=array()) {
 
 			$attribs["name"] 	= $name;
-			$attribs["id"] 		= $name;			
+			$attribs["id"] 		= $name;
 			$value			= str_replace(array(">","<"),array("&gt;","&lt;"),$value);
 
 			foreach($attributes as $key=>$v)
@@ -471,7 +471,7 @@
 			if($class=get_value($attributes,"class"))
 				$classes[] = $class;
 
-			$attribs["class"] 	= implode(" ",$classes);			
+			$attribs["class"] 	= implode(" ",$classes);
 
 			HTML_UTIL::apply_name_standard($attribs);
 
@@ -614,7 +614,7 @@
 		 * @return string
 	 	 */
 		static function a($link,$text,$attributes=array()) {
-			return self::link($link,$text,$attributes);	
+			return self::link($link,$text,$attributes);
 		}
 
 		static function link($link,$text,$attributes=array()) {
@@ -688,7 +688,7 @@
 				$attribs[$key] = $value;
 
 			$checkbox = self::get_inline_tag("input",$attribs);
-			
+
 			$nested_checkbox = value(self::$DEFAULTS,array("checkbox","nested"),false);
 
 			$wrap_class = value($wrap_attribs,"class");
@@ -698,7 +698,7 @@
 			if(!is_null($label)) {
 
 				$label_attributes["for"] = value($attribs,"id");
-				
+
 				if($nested_checkbox)
 					$checkbox = HTML_UTIL::span(self::get_open_tag("label",$label_attributes).$checkbox." ".$label."</label>",$wrap_attribs);
 				else
@@ -748,7 +748,7 @@
 
 			$checkboxes = array();
 			foreach($list as $value=>$item) {
-				
+
 				$label = $item;
 
 				$tmp_attribs 		= $attribs;
@@ -756,7 +756,7 @@
 				$tmp_wrap_attribs 	= $wrap_attribs;
 
 				if(is_array($item)) {
-				
+
 					foreach($item as $item_key=>$item_value) {
 						if($item_key=="label")
 							$label = $item_value;
@@ -814,7 +814,7 @@
 				return "";
 
 			$default = is_array($default) ? array_shift($default) : $default;
-			
+
 			if($force_select && count($list)>0) {
 				if(!array_key_exists($default,$list)) {
 					$key_ary = array_keys($list);
@@ -844,7 +844,7 @@
 				$tmp_wrap_attribs 	= $wrap_attribs;
 
 				if(is_array($item)) {
-				
+
 					foreach($item as $item_key=>$item_value) {
 						if($item_key=="label")
 							$label = $item_value;
@@ -1277,7 +1277,7 @@
 
 		static public function get_heading1($value,$attribs=array()){
 			return self::heading1($value,$attribs);
-		}	
+		}
 
 		static public function li($value,$attribs=array()){
 			return self::get_tag("li",$attribs,$value);
@@ -1596,15 +1596,22 @@
 
 		static function parse($tag) {
 
-			$tag = trim($tag);
-			
-			preg_match_all("/(\S+)=[\"']?((?:.(?![\"']?\s+(?:\S+)=|[>\"']))+.)[\"']?/",$tag,$matches);
+			$value = $name = "";
+			$attributes = [];
+			if(preg_match("/<([^\s>]+)\s?(.*)>(.*)<\/[^>]+>/",trim($tag),$matches)) {
 
-			$attributes = array();
-			for($i=0;$i<(count($matches,0) - 1);$i++)
-				$attributes[value($matches,array(1,$i))] = value($matches,array(2,$i));
-			preg_match("/^<\s*([^\s]+)/",$tag,$match);
+				$name = $matches[1];
+				$value = $matches[3];
 
-			return array("name"=>value($match,1),"attributes"=>$attributes);
+				preg_match_all("/([^=]+)=\"([^\"]*)\"/",$matches[2],$matches);
+
+				foreach(value($matches,1) as $index=>$key) {
+					$attributes[$key] = $matches[2][$index];
+				}
+			} else {
+				throw new Exception("Invalid tag");
+			}
+
+			return array("name"=>$name,"attributes"=>$attributes,"value"=>$value);
 		}
 	}
