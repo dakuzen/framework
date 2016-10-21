@@ -115,7 +115,7 @@
 
 			if($value!==null) {
 
-				if(!$this->is_data_type_string()) {
+				if(!$this->is_data_type_string() && !is_a($value,"DBQ_PARM")) {
 
 					if($this->is_data_type_int())
 						$value = strlen($value)==0 ? null : (int)$value;

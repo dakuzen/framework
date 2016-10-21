@@ -1075,5 +1075,5 @@
 
 		public static function create($parm) { return new DBQ_PARM($parm); }
 
-		public function get_parm() { return $this->_parm; }
+		public function get_parm() { return "(".$this->_parm.")"; }
 	}

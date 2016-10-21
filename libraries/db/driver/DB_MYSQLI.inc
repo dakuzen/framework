@@ -156,12 +156,15 @@
 			if(!is_array(value($data,0)))
 				$data = array($data);
 
-			foreach($data as $d) {
+			foreach($data as $row) {
 				$fields = $values = array();
 
-				foreach($d as $field=>$item) {
+				foreach($row as $field=>$item) {
 
-					$value = isset($item["parm"]) ? "'".$item["parm"]."'" : DB::PARM_CHARACTER;
+					$value = DB::PARM_CHARACTER;
+
+					if(is_array($value) && isset($item["parm"]))
+						$value = "'".$item["parm"]."'";
 
 					$fields[] = $field;
 					$values[] = $value;
@@ -357,18 +360,17 @@
 			}
 
 			$start_time = microtime(true);
+			$error_number = null;
 
 			if($this->_connection) {
 
 				$result = $this->_connection->query($sql);
 
 				$this->_error_message = @mysqli_connect_error();
+				$error_number = @mysqli_errno($this->_connection);
 
 				if(!$this->_error_message)
 					$this->_error_message = @mysqli_error($this->_connection);
-
-				if($error_number=@mysqli_connect_errno())
-					$this->_error_message .= " (".$error_number.")";
 			} else
 				$this->_error_message = "No db connection exists";
 
@@ -394,10 +396,10 @@
 				if($this->_is_logging) {
 
 					if($this->config("error_method")==self::ERROR_METHOD_TRIGGER_ERROR)
-						trigger_error("Database Error: ".$this->_error_message."  ".$sql,E_USER_ERROR);
+						trigger_error("Database Error: ".$error_number." - ".$this->_error_message."  ".$sql,E_USER_ERROR);
 
 					elseif($this->config("error_method")==self::ERROR_METHOD_EXCEPTION)
-						throw new Exception("Database Error: ".$this->_error_message."  ".$sql);
+						throw new Exception("Database Error: ".$this->_error_message."  ".$sql,$error_number);
 				}
 
 				if($this->_transaction_starts>0)
