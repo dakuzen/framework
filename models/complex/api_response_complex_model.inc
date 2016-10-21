@@ -94,6 +94,7 @@
                     $trace[] = value($line,"class")."->".value($line,"function")."() @ ".value($line,"file")." on ".value($line,"line");
 
                 $payload["exception_message"] = $this->_exception->getMessage();
+                $payload["exception_code"] = $this->_exception->getCode();
                 $payload["exception_trace"] = $trace;
             }
 
