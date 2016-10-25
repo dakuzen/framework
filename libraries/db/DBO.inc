@@ -440,7 +440,7 @@
 							$value = @date("Y-m-d h:i:s",$value);
 
 					} elseif(is_a($value,"CMODEL_TIME")) {
-						$value = $value->iso8601();
+						$value = $value->db();
 					}
 				}
 
