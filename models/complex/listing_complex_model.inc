@@ -12,46 +12,47 @@
 		}
 
 		/*
-		
+
 			Internally calls $contact_cmodel->data("contact_id")
 
 			CMODEL_LISTING::create($contact_cmodels)
 				->column(array("data"=>array("contact_id")));
 
-			
+
 			Internally calls $contact_cmodel->get_contact_id();
-			
+
 			CMODEL_LISTING::create($contact_cmodels)
 				->column("get_contact_id");
 
 		*/
 
 		public function column($value_name,$key_name=null) {
-			
-			if(!$this->_objects) return array();
-			
-			foreach($this->_objects as $object) {
 
-				if(is_array($object) && isset($object[$value_name])) {
+			$list = [];
+			if($this->_objects) {
+				foreach($this->_objects as $object) {
 
-					$value = $object[$value_name];
+					if(is_array($object) && isset($object[$value_name])) {
 
-					if($key_name)
-						$list[$object[$key_name]] = $value;
-					else
-						$list[] = $value;
+						$value = $object[$value_name];
 
-				} else {
+						if($key_name)
+							$list[$object[$key_name]] = $value;
+						else
+							$list[] = $value;
 
-					$value_name = (array)$value_name;
-					$key_name = (array)$key_name;					
-				
-					$value = $this->_get($object,$value_name);
+					} else {
 
-					if($key_name)
-						$list[$this->_get($object,$key_name)] = $value;
-					else
-						$list[] = $value;
+						$value_name = (array)$value_name;
+						$key_name = (array)$key_name;
+
+						$value = $this->_get($object,$value_name);
+
+						if($key_name)
+							$list[$this->_get($object,$key_name)] = $value;
+						else
+							$list[] = $value;
+					}
 				}
 			}
 
@@ -63,7 +64,7 @@
 			if(!$this->_objects) return array();
 
 			$functions 	= (array)$functions;
-			
+
 			$list = array();
 			foreach($this->_objects as $object) {
 
