@@ -425,14 +425,15 @@
 						    					<?
 						    						$description 	= value($value,"description");
 						    						$default 		= value($value,"default");
-						    						$values 		= value($value,"values");
+						    						$values 		= value($value,"values",[]);
 						    						$object 		= value($value,"object");
 
 						    						if(value($value,"name"))
 						    							$name = value($value,"name");
 
-						    						if(!array_key_exists("description",$value) && !array_key_exists("default",$value) && !array_key_exists("values",$value))
+						    						if(!array_key_exists("object",$value) && !array_key_exists("description",$value) && !array_key_exists("default",$value) && !array_key_exists("values",$value)) {
 						    							$values = $value;
+						    						}
 						    					?>
 
 				    							<tr>
@@ -451,7 +452,7 @@
 							    						<? if($values && is_array($values)) { ?>
 
 							    							<div class="parameter-values">
-							    								<h5 class="heading">Parameter Values</h5>
+							    								<h5 class="heading">Acceptable Values</h5>
 								    							<div class="parameter-values-table">
 									    							<table class="table table-values">
 											    						<?	foreach($values as $name=>$item) { ?>
