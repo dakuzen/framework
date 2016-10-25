@@ -1,4 +1,4 @@
-<?php
+<?
 	/**
     * Class BASE_VIEW
     *
@@ -26,11 +26,10 @@
 
 		static function create() { return new BASE_VIEW(); }
 
-		function __construct($controller="",$task="",$roles=array(),$form_id="",$form_url="") {
-			$this
-				->set_route($controller,$task)
-				->set_roles($roles);
-
+		function __construct($controller="",$task="",$roles=null, $form_id="",$form_url="") {
+			$this->set_route($controller,$task);
+			$this->set_roles($roles);
+	
 			if($form_id || $form_url) {
 
 				if(!$form_url)
