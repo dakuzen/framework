@@ -26,7 +26,7 @@
 
 		public function has_read($permission,$cmodel=null) {
 			try {
-				return $this->validate($permission,self::ACCESS_READ,$cmodel,false);
+				return !!$this->validate($permission,self::ACCESS_READ,$cmodel,false);
 			} catch(Exception $e) {
 				return false;
 			}
@@ -34,7 +34,7 @@
 
 		public function has_write($permission,$cmodel=null) {
 			try {
-				return $this->validate($permission,self::ACCESS_WRITE,$cmodel,false);
+				return !!$this->validate($permission,self::ACCESS_WRITE,$cmodel,false);
 			} catch(Exception $e) {
 				return false;
 			}
@@ -42,7 +42,7 @@
 
 		public function has_admin($permission,$cmodel=null) {
 			try {
-				return $this->validate($permission,self::ACCESS_ADMIN,$cmodel,false);
+				return !!$this->validate($permission,self::ACCESS_ADMIN,$cmodel,false);
 			} catch(Exception $e) {
 				return false;
 			}
@@ -130,24 +130,3 @@
 			return CMODEL_LISTING::create(self::permissions($filters))->column("name","value");
 		}
 	}
-
-
-
-/*
-		public function able($permission=null,$access=null,$cmodel=null,$exception=true) {
-
-			try {
-
-				$hmodel = $this->able_hmodel($cmodel);
-
-				if(!$hmodel->exists())
-					throw new Exception("Invalid access");
-
-			} catch(Exception $e) {
-				if($exception)
-					throw $e;
-				return false;
-			}
-
-			return true;
-		}*/
