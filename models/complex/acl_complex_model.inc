@@ -1,7 +1,7 @@
 <?
-	abstract class BCMODEL_ACL extends CMODEL {
+	abstract class BCMODEL_ACL extends MODEL {
 
-		abstract public function able_hmodel($cmodel);
+		abstract public function validate($permission=null,$access=null,$cmodel=null);
 		abstract public function apply($hmodel,$permission,$access=CMODEL_ACL::ACCESS_READ);
 
 		const ACCESS_READ 	= 5;
@@ -25,45 +25,39 @@
 		}
 
 		public function has_read($permission,$cmodel=null) {
-			return $this->able($permission,self::ACCESS_READ,$cmodel,false);
+			try {
+				return $this->validate($permission,self::ACCESS_READ,$cmodel,false);
+			} catch(Exception $e) {
+				return false;
+			}
 		}
 
 		public function has_write($permission,$cmodel=null) {
-			return $this->able($permission,self::ACCESS_WRITE,$cmodel,false);
+			try {
+				return $this->validate($permission,self::ACCESS_WRITE,$cmodel,false);
+			} catch(Exception $e) {
+				return false;
+			}
 		}
 
 		public function has_admin($permission,$cmodel=null) {
-			return $this->able($permission,self::ACCESS_ADMIN,$cmodel,false);
+			try {
+				return $this->validate($permission,self::ACCESS_ADMIN,$cmodel,false);
+			} catch(Exception $e) {
+				return false;
+			}
 		}
 
 		public function readable($permission,$cmodel=null) {
-			return $this->able($permission,self::ACCESS_READ,$cmodel);
+			return $this->validate($permission,self::ACCESS_READ,$cmodel);
 		}
 
 		public function writable($permission,$cmodel=null) {
-			return $this->able($permission,self::ACCESS_WRITE,$cmodel);
+			return $this->validate($permission,self::ACCESS_WRITE,$cmodel);
 		}
 
 		public function adminable($permission,$cmodel=null) {
-			return $this->able($permission,self::ACCESS_ADMIN,$cmodel);
-		}
-
-		public function able($permission=null,$access=null,$cmodel=null,$exception=true) {
-
-			try {
-
-				$hmodel = $this->able_hmodel($cmodel);
-
-				if(!$hmodel->exists())
-					throw new Exception("Invalid access");
-
-			} catch(Exception $e) {
-				if($exception)
-					throw $e;
-				return false;
-			}
-
-			return true;
+			return $this->validate($permission,self::ACCESS_ADMIN,$cmodel);
 		}
 
 		public function write($hmodel,$permission=null) {
@@ -119,7 +113,7 @@
 		public static function permissions($filters=[]) {
 
 			$list = [];
-			foreach(self::$permissions as $permission) {
+			foreach(CMODEL_ACL::$permissions as $permission) {
 
 				$valid = true;
 				foreach($filters as $name=>$value)
@@ -131,4 +125,29 @@
 
 			return $list;
 		}
+
+		public static function permission_list($filters=[]) {
+			return CMODEL_LISTING::create(self::permissions($filters))->column("name","value");
+		}
 	}
+
+
+
+/*
+		public function able($permission=null,$access=null,$cmodel=null,$exception=true) {
+
+			try {
+
+				$hmodel = $this->able_hmodel($cmodel);
+
+				if(!$hmodel->exists())
+					throw new Exception("Invalid access");
+
+			} catch(Exception $e) {
+				if($exception)
+					throw $e;
+				return false;
+			}
+
+			return true;
+		}*/

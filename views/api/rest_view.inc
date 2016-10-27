@@ -1,10 +1,14 @@
 <?
-	class BASE_VIEW_API_REST extends VIEW {
+	abstract class BASE_VIEW_API_REST extends VIEW {
+
+		abstract public function get_api_token();
 
 		protected $_rest_server_cmodel 	= null;
-		
+		protected $_acl_cmodel = null;
+		protected $_api_token_cmodel = null;
+
 		public function __construct() {
-		
+
 			if(SYSTEM_MANAGER::is_system_mode_debug()) {
 
 				DEBUG_UTIL::remove_error_reporting_level(E_USER_ERROR & E_ERROR);
@@ -20,10 +24,10 @@
 
 					return true;
 				});
-			
+
 				//DEBUG_UTIL::enable_system_error_handler($this,"error_handler");
-			}			
-			
+			}
+
 			$this->disable_authorization();
 			$this->type_blank();
 			$this->debug_format_text();
@@ -35,14 +39,24 @@
 		}
 
 		public function error_handler($type,$message,$file,$line) {
-		
-			//if(!DEBUG_UTIL::is_reportable($type,$message)) 
+
+			//if(!DEBUG_UTIL::is_reportable($type,$message))
 			//	return false;
 
 			p($type,$message,$file,$line);
 
 		}
-		
+
+		public function acl() {
+			if(!$this->_acl_cmodel)
+				$this->_acl_cmodel = CMODEL_ACL::create($this->get_api_token());
+
+			return $this->_acl_cmodel;
+		}
+
+
+		public function get_api_token_key() 		{ return $this->header("api-key") ? $this->header("api-key") : $this->post("api-key"); }
+		public function get_api_token_id() 			{ return $this->get_api_token() ? $this->get_api_token()->get_api_token_id() : null; }
 		public function uri() 						{ return $this->_rest_server_cmodel->uri(); }
 		public function registry() 					{ return $this->_rest_server_cmodel->registry(); }
 		public function data($name,$value) 			{ return $this->server()->response()->data($name,$value); }
@@ -50,7 +64,7 @@
 		public function is_put()					{ return SERVER_UTIL::is_put(); }
 		public function is_get()					{ return SERVER_UTIL::is_get(); }
 		public function is_post()					{ return SERVER_UTIL::is_post(); }
-		public function is_delete()					{ return SERVER_UTIL::is_delete(); }		
+		public function is_delete()					{ return SERVER_UTIL::is_delete(); }
 		public function header($name)				{ return SERVER_UTIL::get_header($name); }
 		public function path($name)					{ return $this->_rest_server_cmodel->path($name); }
 		public function server() 					{ return $this->_rest_server_cmodel; }
@@ -61,7 +75,7 @@
 
 		public function parm($description="",$values=null,$default=null,$object=null) { return ["description"=>$description,"values"=>$values,"default"=>$default,"object"=>$object]; }
 
-		public function set_path($groups,$group_id=null,$members=null,$member_id=null,$group_action=null,$member_action=null) { 
+		public function set_path($groups,$group_id=null,$members=null,$member_id=null,$group_action=null,$member_action=null) {
 			$this->_rest_server_cmodel->set_path($groups,$group_id,$members,$member_id,$group_action,$member_action);
 			return $this;
 		}
@@ -87,7 +101,7 @@
             			}
             		}
 
-	            	if(!is_null($this->get("wsdl"))) {        	
+	            	if(!is_null($this->get("wsdl"))) {
 
 	            		$config = array();
 			            foreach($views as $view) {
@@ -99,24 +113,24 @@
 
 			            	$wsdl["require_api_token"] 		= $view->require_api_token();
 			            	$wsdl["require_user_api_token"] = $view->require_user_api_token();
-			        
+
 	            			$config = array_merge($config,array($wsdl));
 	            		}
 
 		            	echo APPLICATION::get_base_view_instance("api","rest_wsdl")
 					            				->config($config)
 					            				->get_html();
-		            
+
 		            } elseif(!is_null($this->get("wadl"))) {
 
 		            	$base = URL_UTIL::remove_query(SERVER_UTIL::get_redirect_url());
-		            	
+
 		            	$xml_writer_util = XML_WRITER_UTIL::create()
 	            		->open("application",array("xmlns:postman"=>"http://wadl"))
 	            			->open("resources",array("base"=>$base));
 
 	            		foreach($views as $view_name=>$view) {
-	            			
+
 	            			$wsdl = $view->wsdl();
 
 	            			$xml_writer_util->open("resource",array("path"=>$view_name,"wsdl"=>$base."/".value($wsdl,"model")."?wsdl","postman:name"=>ucwords($view_name)));
@@ -153,9 +167,9 @@
 
 			            				} else
 			            				*/
-				            				
 
-				            			$xml_writer_util->add("param","",array("name"=>$name,"type"=>"xsd:string","style"=>"query"));			            			
+
+				            			$xml_writer_util->add("param","",array("name"=>$name,"type"=>"xsd:string","style"=>"query"));
 			            			}
 
 			            			$xml_writer_util
@@ -163,12 +177,12 @@
 			            				->close("method");
 
 			            			$xml_writer_util->close("resource");
-			            		}		
+			            		}
 	            			}
 
 	            			$xml_writer_util->close("resource");
 	            		}
-	            		
+
 		            	$xml_writer_util
 		            		->close("resources")
 	            		->close("application");
@@ -182,13 +196,13 @@
         }
 
         public function process() {
-		
+
 			if($this->skip_group())
 				$this->_rest_server_cmodel->skip_group();
 
 			$this->_rest_server_cmodel->listen();
 		}
-		
+
 		public function skip_group() { return false; }
 
 		public function remove_group_id() {
