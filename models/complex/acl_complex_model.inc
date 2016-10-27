@@ -2,7 +2,7 @@
 	abstract class BCMODEL_ACL extends CMODEL {
 
 		abstract public function able_hmodel($cmodel);
-		abstract public function apply($hmodel,$permission=null,$access=CMODEL_ACL::ACCESS_READ);
+		abstract public function apply($hmodel,$permission,$access=CMODEL_ACL::ACCESS_READ);
 
 		const ACCESS_READ 	= 5;
 		const ACCESS_WRITE 	= 10;
@@ -24,34 +24,35 @@
 			return $this->_object;
 		}
 
-		public function has_read($cmodel,$permission=null) {
-			return $this->able($cmodel,$permission,self::ACCESS_READ,false);
+		public function has_read($permission,$cmodel=null) {
+			return $this->able($permission,self::ACCESS_READ,$cmodel,false);
 		}
 
-		public function has_write($cmodel,$permission=null) {
-			return $this->able($cmodel,$permission,self::ACCESS_WRITE,false);
+		public function has_write($permission,$cmodel=null) {
+			return $this->able($permission,self::ACCESS_WRITE,$cmodel,false);
 		}
 
-		public function has_admin($cmodel,$permission=null) {
-			return $this->able($cmodel,$permission,self::ACCESS_ADMIN,false);
+		public function has_admin($permission,$cmodel=null) {
+			return $this->able($permission,self::ACCESS_ADMIN,$cmodel,false);
 		}
 
-		public function readable($cmodel,$permission=null) {
-			return $this->able($cmodel,$permission,self::ACCESS_READ);
+		public function readable($permission,$cmodel=null) {
+			return $this->able($permission,self::ACCESS_READ,$cmodel);
 		}
 
-		public function writable($cmodel,$permission=null) {
-			return $this->able($cmodel,$permission,self::ACCESS_WRITE);
+		public function writable($permission,$cmodel=null) {
+			return $this->able($permission,self::ACCESS_WRITE,$cmodel);
 		}
 
-		public function adminable($cmodel,$permission=null) {
-			return $this->able($cmodel,$permission,self::ACCESS_ADMIN);
+		public function adminable($permission,$cmodel=null) {
+			return $this->able($permission,self::ACCESS_ADMIN,$cmodel);
 		}
 
-		public function able($cmodel,$permission=null,$access=null,$exception=true) {
+		public function able($permission=null,$access=null,$cmodel=null,$exception=true) {
 
 			try {
-				$hmodel = $this->able_hmodel($cmodel,$permission,$access);
+
+				$hmodel = $this->able_hmodel($cmodel);
 
 				if(!$hmodel->exists())
 					throw new Exception("Invalid access");
