@@ -60,29 +60,29 @@
 			return $this->validate($permission,self::ACCESS_ADMIN,$cmodel);
 		}
 
-		public function write($hmodel,$permission=null) {
-
-			$cmodel = $this->apply($hmodel,$permission,self::ACCESS_WRITE)->get();
-
-			if(!$cmodel) {
-
-				$message = "Invalid ".get_class($hmodel);
-
-				throw new Exception($message);
-			}
-
-			return $cmodel;
+		public function read($hmodel,$permission=null) {
+			return $this->get($hmodel,$permission,self::ACCESS_READ);
 		}
 
-		public function read($hmodel,$permission=null) {
+		public function write($hmodel,$permission=null) {
+			return $this->get($hmodel,$permission,self::ACCESS_WRITE);
+		}
 
-			$this->apply($hmodel,$permission,self::ACCESS_READ);
+		public function admin($hmodel,$permission=null) {
+			return $this->get($hmodel,$permission,self::ACCESS_ADMIN);
+		}
+
+		public function get($hmodel,$permission=null,$access=null) {
+
+			$this->apply($hmodel,$permission,$access);
 
 			$cmodel = $hmodel->get();
 
 			if(!$cmodel) {
 
-				$message = "Invalid ".get_class($hmodel);
+				$name = preg_replace("/HMODEL_/i","",strtolower(get_class($hmodel)));
+
+				$message = "Access Denied for ".STRING_UTIL::propercase($name);
 
 				throw new Exception($message);
 			}
