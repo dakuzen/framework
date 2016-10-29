@@ -428,11 +428,12 @@
 						    						$values 		= value($value,"values",[]);
 						    						$object 		= value($value,"object");
 
-						    						if(value($value,"name"))
-						    							$name = value($value,"name");
-
 						    						if(!array_key_exists("object",$value) && !array_key_exists("description",$value) && !array_key_exists("default",$value) && !array_key_exists("values",$value)) {
 						    							$values = $value;
+						    						} else {
+							    						if(value($value,"name")) {
+							    							$name = value($value,"name");
+							    						}
 						    						}
 						    					?>
 
