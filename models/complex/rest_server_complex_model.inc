@@ -145,10 +145,22 @@
                 }
 
                 if(!$exists && $this->path("member")) {
-                    $exists = method_exists($this->_object,$this->path("member"));
 
-                    if($exists)
-                        $this->_object->{$this->path("member")}($this->path("group_id"),$this->path("member_id"),$this->path("member_action"));
+                	if($this->path("member_id")) {
+
+                		$method = $this->path("member")."_".$this->path("member_id");
+						$exists = method_exists($this->_object,$method);
+
+						if($exists)
+							$this->_object->$method($this->path("group_id"));
+                	}
+
+                    if(!$exists) {
+                    	$exists = method_exists($this->_object,$this->path("member"));
+
+	                    if($exists)
+	                        $this->_object->{$this->path("member")}($this->path("group_id"),$this->path("member_id"),$this->path("member_action"));
+	                }
                 }
 
                 if(!$exists) {

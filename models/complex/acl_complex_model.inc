@@ -48,15 +48,15 @@
 			}
 		}
 
-		public function readable($permission,$cmodel=null) {
+		public function readable($permission=null,$cmodel=null) {
 			return $this->validate($permission,self::ACCESS_READ,$cmodel);
 		}
 
-		public function writable($permission,$cmodel=null) {
+		public function writable($permission=null,$cmodel=null) {
 			return $this->validate($permission,self::ACCESS_WRITE,$cmodel);
 		}
 
-		public function adminable($permission,$cmodel=null) {
+		public function adminable($permission=null,$cmodel=null) {
 			return $this->validate($permission,self::ACCESS_ADMIN,$cmodel);
 		}
 

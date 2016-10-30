@@ -138,7 +138,8 @@
 			if($name=="get") {
 
 				if(array_key_exists(0,$arguments)) {
-					$key = value($arguments,0);					$this->where($this->get_dbq()->get_tablename().".".$this->get_dbq()->get_primary_key(),"=",$key);
+					$key = value($arguments,0);
+					$this->where($this->get_dbq()->get_tablename().".".$this->get_dbq()->get_primary_key(),"=",$key);
 				}
 
 				$this->limit(1);
