@@ -146,6 +146,29 @@
 			return $contents;
 		}
 
+		public function get($file) {
+
+			$this->has_connection();
+
+			DEBUG_UTIL::enable_exception_error_handler();
+
+			try {
+
+				ob_start();
+				$result = @ftp_get($ftp, "php://output", $file, FTP_BINARY);
+				$data = ob_get_contents();
+				ob_end_clean();
+				return $data;
+
+			} catch(Exception $e) {
+				self::throw_exception($e);
+			}
+
+			DEBUG_UTIL::restore_error_handler();
+
+			return $this;
+		}
+
         /**
          * Download a file
          * @param string $local_file
@@ -168,7 +191,7 @@
 
 			DEBUG_UTIL::restore_error_handler();
 
-			return $has_success;
+			return $this;
 		}
 
         /**
@@ -261,11 +284,13 @@
 			return $has_success;
 		}
 
+		public function change_directory($dir) { return $this->cd($dir); }
+
         /**
          * Changes directory
          * @param string $dir
          */
-		public function change_directory($dir) {
+		public function cd($dir) {
 
 			$this->has_connection();
 
