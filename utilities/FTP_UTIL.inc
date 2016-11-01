@@ -260,12 +260,14 @@
 
 		public function upload_file($local_file,$remote_file) { return $this->put($local_file,$remote_file); }
 
+		public function delete_file($remote_file) { return $this->delete($remote_file); }
+
         /**
          * Deletes a file
          * @param string $remote_file
          * @return boolean
          */
-		public function delete_file($remote_file) {
+		public function delete($remote_file) {
 
 			$this->has_connection();
 
@@ -273,7 +275,7 @@
 
 			try {
 
-				$has_success = @ftp_delete($this->_connection,$remote_file);
+				@ftp_delete($this->_connection,$remote_file);
 
 			} catch(Exception $e) {
 				self::throw_exception($e);
@@ -281,7 +283,7 @@
 
 			DEBUG_UTIL::restore_error_handler();
 
-			return $has_success;
+			return $this;
 		}
 
 		public function change_directory($dir) { return $this->cd($dir); }
@@ -298,7 +300,7 @@
 
 			try {
 
-				$has_success = @ftp_chdir($this->_connection,$dir);
+				@ftp_chdir($this->_connection,$dir);
 
 			} catch(Exception $e) {
 				self::throw_exception($e);
@@ -306,7 +308,11 @@
 
 			DEBUG_UTIL::restore_error_handler();
 
-			return $has_success;
+			return $this;
+		}
+
+		public function mv($from,$to) {
+			//not implemeneted yet
 		}
 
         /**
