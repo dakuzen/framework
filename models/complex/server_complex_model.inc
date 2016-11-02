@@ -1,5 +1,5 @@
 <?
-  
+
   	class BASE_CMODEL_SERVER extends CMODEL {
 
 		public function exec_stream($cmd) {
@@ -19,7 +19,7 @@
 				$cmd = $cmd." 2>&1";
 
 			$this->log($cmd);
-			
+
 			$return_var = null;
 			exec($cmd,$output,$return_var);
 
@@ -27,7 +27,13 @@
 
 			if($return_var)
 				throw new Exception(implode("\n",$output),$return_var);
-			
+
 			return $this;
-		}		
+		}
+
+		public function get($cmd,$options=["capture"=>true]) {
+			$output = "";
+			$this->exec($cmd,$output,$options);
+			return $output;
+		}
 	}
