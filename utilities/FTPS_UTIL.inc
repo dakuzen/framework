@@ -1,7 +1,7 @@
 <?
 	class FTPS_UTIL extends FTP_UTIL {
 
-		public function __construct($host="", $user="", $pass="", $port=21, $options=array("passive_mode"=>true,"ssl"=>true)) {
+		public function __construct($host="", $user="", $pass="", $port=990, $options=array("passive_mode"=>true,"ssl"=>true)) {
 			parent::__construct($host,$user,$pass,$port,$options);
 		}
 

@@ -46,7 +46,7 @@
          * @param integer $port the port number.
          * @param boolean $passive_mode the passive mode.
          */
-		public function __construct($host="", $user="", $pass="", $port=21,$options=array("passive_mode"=>true,"ssl"=>false)) {
+		public function __construct($host="", $user="", $pass="", $port=21, $options=array("passive_mode"=>true,"ssl"=>false)) {
 			$this->_host 			= $host;
 			$this->_user 			= $user;
 			$this->_pass 			= $pass;
@@ -55,7 +55,7 @@
 			$this->_ssl				= value($options,"ssl",false);
 		}
 
-		public static function create($host="", $user="", $pass="", $port=21,$passive_mode=true) {
+		public static function create($host="", $user="", $pass="", $port=21, $passive_mode=true) {
 			return new FTP_UTIL($host,$user,$pass,$port,$passive_mode);
 		}
 
@@ -87,9 +87,9 @@
 			try {
 
 				if($this->_ssl)
-					$this->_connection = ftp_ssl_connect($this->_host, $this->_port, $this->_timeout);
+					$this->_connection = @ftp_ssl_connect($this->_host, $this->_port, $this->_timeout);
 				else
-					$this->_connection = ftp_connect($this->_host, $this->_port, $this->_timeout);
+					$this->_connection = @ftp_connect($this->_host, $this->_port, $this->_timeout);
 
 				if($this->_connection) {
 
@@ -98,10 +98,10 @@
 					if (!$has_success) {
 						throw new Exception("Login failed for ".$this->_user."@".$this->_host);
 
-					} else {
-						$has_success = @ftp_pasv($this->_connection, $this->_passive_mode);
+					if($this->_passive_mode) {
+						ftp_set_option($this->_connection, FTP_USEPASVADDRESS, true);
 
-						if(!$has_success)
+						if(!@ftp_pasv($this->_connection, $this->_passive_mode))
 							throw new Exception("Failed to switch to passive mode");
 					}
 

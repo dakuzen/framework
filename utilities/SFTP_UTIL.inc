@@ -7,25 +7,25 @@
 	* @package Framework
 	* @subpackage Utilities
 	*/
-	
+
 	class SFTP_UTIL extends SSH_UTIL {
-        
+
         /**
          * Constructor
          * @param string $host
          * @param integer $port
-         * @throws Exception 
+         * @throws Exception
          */
 		public function __construct($host,$port=22) {
 
 			if(!$host)
 				throw new Exception("No host address supplied");
-			
+
 			//define('NET_SFTP_LOGGING', NET_SFTP_LOG_COMPLEX); // or NET_SFTP_LOG_SIMPLE
 
 			$this->start_error_handler();
 
-			$this->_connection = new \phpseclib\Net\SFTP($host);
+			$this->_connection = new \phpseclib\Net\SFTP($host,$port);
 
 			$this->complete_error_handler();
 		}
@@ -33,7 +33,7 @@
 		public static function create($host,$port=22) {
 			return new SFTP_UTIL($host,$port);
 		}
- 
+
         public function listing() {
         	return $this->_connection->nlist();
         }
@@ -43,7 +43,7 @@
 
         	if(!$result)
         		throw new Exception("Failed to make directory");
-        	
+
         	return $this;
         }
 
@@ -52,7 +52,7 @@
 
         	if(!$result)
         		throw new Exception("Failed to change directory");
-        	
+
         	return $this;
         }
 
@@ -61,7 +61,7 @@
 
         	if(!$result)
         		throw new Exception("Failed to move file");
-        	
+
         	return $this;
         }
 
@@ -70,19 +70,19 @@
 
         	if(!$result)
         		throw new Exception("Failed to delete file");
-        	
+
         	return $this;
         }
- 
+
         /**
          * Exec
-         * @param string $exec 
+         * @param string $exec
          */
 		public function exec($exec) {}
 
         /**
          * pwd
-         * @return string 
+         * @return string
          */
 		public function pwd() { return $this->_connection->pwd(); }
 
@@ -91,7 +91,7 @@
          * @param string $remote_file
          * @param array $data
          * @return boolean
-         * @throws Exception 
+         * @throws Exception
          */
 		public function put($remote_file,$data) {
 
@@ -111,17 +111,17 @@
 
 			if(!$return)
 				throw new Exception("Failed to put file: ".$this->_connection->getLastSFTPError());
-			
+
 			return $this;
 		}
 
 		public function get($remote_file,$local_file=null) {
-			
+
 			if($local_file===null)
 				return $this->_connection->get($remote_file);
 
 			$this->_connection->get($remote_file,$local_file);
 
 			return $this;
-		}		
+		}
 	}
