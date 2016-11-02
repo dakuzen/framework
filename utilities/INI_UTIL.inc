@@ -115,7 +115,7 @@
 			if(is_string($value))
 				$value = trim($value);
 
-			return MISC_UTIL::type_cast($value);
+			return MISC_UTIL::type_cast($value,["cast_float"=>false]);
 		}
 
 		function exists($keys) {
