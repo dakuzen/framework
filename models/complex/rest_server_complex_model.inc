@@ -187,7 +187,14 @@
                     $this->response()->error($message["message"],$message["code"]);
 
             } catch(Exception $e) {
-                $this->response()->error($e->getMessage(),$e->getCode());
+
+            	$message = $e->getMessage();
+                if(SYSTEM_MANAGER::is_system_mode_production()) {
+                	DEBUG_UTIL::notify_exception($e);
+                	$message = "Oops, looks like something went wrong. Please contact support";
+                }
+
+                $this->response()->error($message,$e->getCode());
             }
 
             foreach(value($this->_events,"complete",array()) as $function)

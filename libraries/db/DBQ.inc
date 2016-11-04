@@ -681,7 +681,7 @@
          * @return object
          */
 		function db_join(DB_JOIN $db_join) {
-			$this->_db_joins[] = $db_join;
+			$this->_db_joins[$db_join->guid()] = $db_join;
 			return $this;
 		}
 

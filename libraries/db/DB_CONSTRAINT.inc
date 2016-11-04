@@ -8,7 +8,7 @@
 
 	class DB_GROUP extends OBJECT {
 
-		protected $_conditions 		= array();
+		protected $_conditions 		= [];
 		protected $_relation 		= DB_CONSTRAINT::RELATION_AND;
 
 		function get_conditions() 		{ return $this->_conditions; }
@@ -19,7 +19,7 @@
 		function has_conditions() 		{ return count($this->_conditions)>0; }
 
 		function initialize() {
-			$this->_conditions 	= array();
+			$this->_conditions 	= [];
 			$this->_relation 	= DB_CONSTRAINT::RELATION_AND;
 			return $this;
 		}
@@ -239,10 +239,10 @@
 
 	class DB_JOIN extends OBJECT {
 
-		protected $_tablename2 		= null;
+		protected $_tablename2 			= null;
 		protected $_tablename2_alias 	= null;
-		protected $_type			= null;
-		protected $_db_group 		= null;
+		protected $_type				= null;
+		protected $_db_group 			= null;
 
 		function __construct($tablename1=null,$tablename2=null,$column1=null,$column2=null,$type="INNER") {
 			$this->_db_group	= new DB_GROUP();
@@ -253,6 +253,15 @@
 
 			if($tablename1!=null && $tablename2!=null && $column1!=null && $column2!=null)
 				$this->add_condition($tablename1,$tablename2,$column1,$column2);
+		}
+
+		public function guid() {
+			$key = $this->_tablename2.$this->_tablename2_alias.$this->_type;
+
+			foreach($this->_db_group->get_conditions() as $condition)
+				$key .= $condition->get_field().$condition->get_operator().implode("",$condition->get_value()).$condition->get_relation();
+
+			return md5($key);
 		}
 
 		public static function create($tablename1=null,$tablename2=null,$column1=null,$column2=null,$type="INNER") {
@@ -277,8 +286,8 @@
 			}
 
 			$tablename2_ary 		= explode(" ",$tablename2);
-			$this->_tablename2 		= get_value($tablename2_ary,0);
-			$this->_tablename2_alias	= get_value($tablename2_ary,0);
+			$this->_tablename2 		= value($tablename2_ary,0);
+			$this->_tablename2_alias= value($tablename2_ary,0);
 
 			if(count($tablename2_ary)>1) {
 				$second_arg = get_value($tablename2_ary,1);
