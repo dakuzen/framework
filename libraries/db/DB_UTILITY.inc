@@ -1,52 +1,52 @@
 <?
     /**
-    * Class DB_UTILITY  
+    * Class DB_UTILITY
     *
     * @package Library
     * @subpackage Db
     */
 
 	abstract class DB_UTILITY {
-                
+
 		/**
 		 * The debug
-		 * @var boolean $debug 
+		 * @var boolean $debug
 		 */
 		protected $_debug 	= false;
 
 		/**
 		 * The db
-		 * @var object $db 
+		 * @var object $db
 		 */
 		protected $_db 		= null;
 
 		/**
 		 * The db user
-		 * @var string $db_user 
+		 * @var string $db_user
 		 */
 		protected $_db_user	= null;
 
 		/**
 		 * The db port
-		 * @var string $db_port 
+		 * @var string $db_port
 		 */
 		protected $db_port	= null;
 
 		/**
 		 * The db pass
-		 * @var string $db_pass 
+		 * @var string $db_pass
 		 */
-		protected $_db_pass	= null;		
+		protected $_db_pass	= null;
 
 		/**
 		 * The db sock
-		 * @var string $db_sock 
+		 * @var string $db_sock
 		 */
 		protected $_db_sock	= null;
 
 		/**
 		 * The db host
-		 * @var string $db_host 
+		 * @var string $db_host
 		 */
 		protected $_db_host 	= "127.0.0.1";
 
@@ -57,75 +57,75 @@
 		 * @param string $db_pass
 		 * @param string $db_name
 		 * @param array $options
-		 * @throws Exception 
+		 * @throws Exception
 		 */
 		function __construct($db_host=null,$db_user=null,$db_pass=null,$db_name=null,$options=array()) {
-			
+
 			$db_sock = get_value($options,"sock");
 			$db_port = get_value($options,"port");
-         
+
             if($db_host || $db_user || $db_pass || $db_name || $db_sock) {
-				
+
 				if(!$db_host && !$db_sock)
-					throw new Exception("Invalid database host address or socket");
+					throw new BCMODEL_DB_EXCEPTION("Invalid database host address or socket");
 
 				if(!$db_user)
-					throw new Exception("Invalid database user");
+					throw new BCMODEL_DB_EXCEPTION("Invalid database user");
 
 				if(!$db_pass)
-					throw new Exception("Invalid database password");
+					throw new BCMODEL_DB_EXCEPTION("Invalid database password");
 
 				$this->_db = DB::get_db_connection($db_host,$db_user,$db_pass,$db_name,null,$options);
-				
+
 				$this->_db_host = $db_host;
 				$this->_db_pass = $db_pass;
 				$this->_db_user = $db_user;
 				$this->_db_port = $db_port;
-			} else 
+			} else
 				$this->_db = DB::get_instance();
 		}
-		
+
 		/**
 		 * Debug
-		 * @param boolean $debug 
+		 * @param boolean $debug
 		 */
 		function debug($debug=true)	{ $this->_debug = $debug; }
 
 		/**
 		 * Set db connection
-		 * @param object $db 
+		 * @param object $db
 		 */
 		function set_db_connection($db) { $this->_db = $db; }
 
 		/**
 		 * Return the db
-		 * @return object 
+		 * @return object
 		 */
 		function get_db() 		{ return $this->_db; }
 
 		/**
 		 * Export
 		 * @param string $db_name
-		 * @param string $db_file 
+		 * @param string $db_file
 		 * @param array $options
 		 */
 		abstract function export($db_name,$db_file,$options=array());
 
 		/**
-		 * Import 
+		 * Import
 		 * @param string $db_name
-		 * @param string $db_file 
+		 * @param string $db_file
 		 */
 		abstract function import($db_name,$db_file);
 
 		/**
-		 * drop database 
+		 * drop database
 		 * @param string $db_name
 		 */
 		abstract function drop_database($db_name);
 
 		/**
-		 * create database 
+		 * create database
 		 * @param string $db_name
 		 */
 		abstract function create_database($db_name);
@@ -139,25 +139,25 @@
 
 		/**
 		 * truncate table
-		 * @param string $table_name 
+		 * @param string $table_name
 		 */
 		abstract function truncate_table($table_name);
 
 		/**
 		 * Checks whether table exists
-		 * @param string $table_name 
+		 * @param string $table_name
 		 */
 		abstract function is_table_exist($table_name);
 
 		/**
 		 * Checks whether database exists
-		 * @param string $db_name 
+		 * @param string $db_name
 		 */
-		abstract function is_database_exist($db_name);	
+		abstract function is_database_exist($db_name);
 
 		/**
 		 * Checks whether table column exist
-		 * @param string $table_name 
+		 * @param string $table_name
 		 * @param string $column
 		 */
 		abstract function is_table_column_exist($table_name,$column);
@@ -168,7 +168,7 @@
 		/**
 		 * Return table names
 		 */
-		abstract function get_table_names();		
+		abstract function get_table_names();
 
 		/**
 		 * Return table fields
@@ -213,7 +213,7 @@
 		 * @param boolean $insert
 		 * @param array $privs
 		 */
-		abstract function grant_user($host,$database,$username,$password,$select=true,$update=true,$delete=true,$insert=true,$privs=array());	
+		abstract function grant_user($host,$database,$username,$password,$select=true,$update=true,$delete=true,$insert=true,$privs=array());
 
 		/**
 		 * revoke user
@@ -225,5 +225,5 @@
 		 * @param boolean $delete
 		 * @param boolean $insert
 		 */
-		abstract function revoke_user($host,$database,$username,$select=true,$update=true,$delete=true,$insert=true);	
+		abstract function revoke_user($host,$database,$username,$select=true,$update=true,$delete=true,$insert=true);
 	}

@@ -46,13 +46,13 @@
 		function connect($db_host,$db_user,$db_pass,$db_name=null,$options=array()) {
 
 			if(!$db_host && !get_value($options,"sock"))
-				throw new Exception("No host or sock supplied");
+				throw new BCMODEL_DB_EXCEPTION("No host or sock supplied");
 
 			if(array_key_exists("disable_logging",$options))
 				$this->disable_logging();
 
 			if(!extension_loaded("mysqli"))
-				throw new Exception("mySQLi extension not loaded");
+				throw new BCMODEL_DB_EXCEPTION("mySQLi extension not loaded");
 
 			$commands = (array)value($options,"commands",array());
 
@@ -67,7 +67,7 @@
 				$connection = new extend_mysqli($db_host,$db_user,$db_pass,null,$options);
 
 			if(mysqli_connect_errno())
-				throw new Exception("DB Connection failed: ".@mysqli_connect_error());
+				throw new BCMODEL_DB_EXCEPTION("DB Connection failed: ".@mysqli_connect_error());
 
 			$connection->set_charset("utf8");
 
@@ -399,7 +399,7 @@
 						trigger_error("Database Error: ".$error_number." - ".$this->_error_message."  ".$sql,E_USER_ERROR);
 
 					elseif($this->config("error_method")==self::ERROR_METHOD_EXCEPTION)
-						throw new Exception("Database Error: ".$this->_error_message."  ".$sql,$error_number);
+						throw new BCMODEL_DB_EXCEPTION("Database Error: ".$this->_error_message."  ".$sql,$error_number);
 				}
 
 				if($this->_transaction_starts>0)

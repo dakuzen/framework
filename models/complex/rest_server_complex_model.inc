@@ -111,7 +111,7 @@
             if($this->is_options()) die();
 
             if(!$this->_object)
-                throw new Exception("There is no service object registered");
+                throw new BCMODEL_SYSTEM_EXCEPTION("There is no service object registered");
 
             //Removed for now.
             //$this->code(500);
@@ -177,7 +177,7 @@
                 }
 
                 if(!$exists)
-                    throw new Exception("The endpoint does not exist",BASE_CMODEL_API_RESPONSE::CODE_FAIL);
+                    throw new BCMODEL_SYSTEM_EXCEPTION("The endpoint does not exist",BASE_CMODEL_API_RESPONSE::CODE_FAIL);
 
                 if(!$this->response()->get_code())
                     $this->response()->success();
@@ -190,8 +190,10 @@
 
             	$message = $e->getMessage();
                 if(SYSTEM_MANAGER::is_system_mode_production()) {
-                	DEBUG_UTIL::notify_exception($e);
-                	$message = "Oops, looks like something went wrong. Please contact support";
+                	if(is_a($e,"BCMODEL_DB_EXCEPTION") || is_a($e,"BCMODEL_SYSTEM_EXCEPTION")) {
+                		DEBUG_UTIL::notify_exception($e);
+                		$message = "Oops, looks like something went wrong. Please contact support";
+                	}
                 }
 
                 $this->response()->error($message,$e->getCode());

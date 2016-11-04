@@ -313,11 +313,11 @@
 		/**
 		* Set the database connection
 		* @param object $db
-		* @throws Exception
+		* @throws DB_EXCEPTION
 		*/
 		function set_db_connection($db) {
 			if(!$db)
-				throw new Exception("Failed to get a valid db connection");
+				throw new BCMODEL_DB_EXCEPTION("Failed to get a valid db connection");
 			$this->_db = $db;
 		}
 
