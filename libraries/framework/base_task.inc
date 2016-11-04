@@ -106,6 +106,6 @@
 				throw new Exception("The ".$type." ".get_class($this)." does not have any permissions or roles specified.");
 			}
 
-			return SYSTEM_MANAGER::has_access($this->get_roles(),$this->get_permissions());
+			return SYSTEM_MANAGER::has_access($this->get_roles(),$this->get_permissions(),$this);
 		}
 	}

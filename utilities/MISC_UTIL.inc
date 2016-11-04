@@ -176,7 +176,7 @@
 			return false;
 		}
 
-		public static function type_cast($value,$options=array()) {
+		public static function type_cast($value,$options=["cast_float"=>true]) {
 
 			if($value==="true")
 				$value = true;
@@ -189,13 +189,13 @@
 				if(preg_match("/^[0-9]+$/",$value)) {
 					if(!preg_match("/^0\d+/",$value) && (int)$value!=PHP_INT_MAX)
 						$value = (int)round($value,0);
-				} else {
+				} elseif(value($options,"cast_float",true)) {
 					$value = (float)$value;
 				}
 
 			} elseif(is_array($value)) {
 				foreach($value as &$item)
-					$item = self::type_cast($item);
+					$item = self::type_cast($item,$options);
 			}
 
 			return $value;

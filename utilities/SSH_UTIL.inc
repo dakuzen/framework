@@ -1,4 +1,4 @@
-<?	
+<?
 	require_once(DIR_FRAMEWORK."packages/phpseclib/vendor/autoload.php");
 
     /**
@@ -7,24 +7,24 @@
     * @package Framework
     * @subpackage Utilities
     */
-	
+
 	class SSH_UTIL {
 
         /**
          * the connection
-         * @var object $connection 
+         * @var object $connection
          */
 		protected $_connection 		= null;
-        
+
         /**
          * previous handler
-         * @var object $previous_handler 
+         * @var object $previous_handler
          */
 		protected $_previous_handler 	= null;
-                
+
         /**
          * The debug
-         * @var boolean $debug 
+         * @var boolean $debug
          */
 		protected $_debug 		= false;
 
@@ -34,24 +34,24 @@
 		 *
 		 * @param string $host the host address of the SSH connection
 		 * @param string $port the port of the SSH connection
-                 * 
+                 *
 		 * @return null
 		 */
 		public function __construct($host,$port=22) {
 
 			if(!$host)
 				throw new Exception("No host address supplied");
-			
+
 			$this->start_error_handler();
 
-			$this->_connection = new Net_SSH2($host);
+			$this->_connection = new Net_SSH2($host,$port);
 
 			$this->complete_error_handler();
 		}
 
         /**
          * Debug
-         * @param boolean $debug 
+         * @param boolean $debug
          */
 		public function debug($debug=true) { $this->_debug = $debug; }
 
@@ -59,10 +59,10 @@
          * connect password
          * @param string $user
          * @param string $password
-         * @throws Exception 
+         * @throws Exception
          */
 		public function connect_password($user,$password) {
-			
+
 			if(!$user)
 				throw new Exception("No user supplied");
 
@@ -88,7 +88,7 @@
          * @param string $user
          * @param string $key
          * @param string $password
-         * @throws Exception 
+         * @throws Exception
          */
 		public function connect_key($user,$key,$password="") {
 
@@ -100,7 +100,7 @@
 
 
 			$crypt_rsa = new phpseclib\Crypt\RSA();
-			
+
 			if($password)
 				$crypt_rsa->setPassword($password);
 
@@ -123,10 +123,10 @@
         /**
          * exec
          * @param string $exec
-         * @return string 
+         * @return string
          */
 		public function exec($exec) {
-			
+
 			if($this->_debug)
 				p($exec);
 
@@ -139,10 +139,10 @@
 
         /**
          * Read
-         * @param string $exec 
+         * @param string $exec
          */
 		public function read($exec) {
-			return $this->_connection->read($exec);		
+			return $this->_connection->read($exec);
 		}
 
         /**
@@ -150,7 +150,7 @@
          * @param string $exec
          */
 		public function write($exec) {
-			return $this->_connection->write($exec);		
+			return $this->_connection->write($exec);
 		}
 
         /**
@@ -160,11 +160,11 @@
          * @param string $filename
          * @param string $linenum
          * @return boolean
-         * @throws Exception 
+         * @throws Exception
          */
 		public function error_handler($errno, $errmsg, $filename, $linenum) {
-			
-			if(!DEBUG_UTIL::is_reportable($errno,$errmsg)) 
+
+			if(!DEBUG_UTIL::is_reportable($errno,$errmsg))
 				return false;
 
 			throw new Exception($errmsg);
@@ -178,7 +178,7 @@
 		}
 
         /**
-         * complete error handler 
+         * complete error handler
          */
 		protected function complete_error_handler() {
 			set_error_handler($this->_previous_handler);
