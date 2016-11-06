@@ -30,7 +30,6 @@
 		protected $_clone_cmodel 		= null;
 
 
-        protected $_rules = [];
         protected $_dirty = [];
         protected $_sanitized = [];
         protected $_validate_errors = [];
@@ -565,7 +564,12 @@
 		        			if($sanitize=="time") {
 		        				$value = CMODEL_TIME::create($value);
 		        			} else {
-		        				$value = call_user_func([$this,$sanitize],$value);
+
+		        				if($sanitize instanceof Closure) {
+		        					$value = $sanitize($value);
+		        				} else {
+		        					$value = call_user_func([$this,$sanitize],$value);
+		        				}
 		        			}
                         }else{
                             if($sanitize=="time") {
@@ -806,11 +810,6 @@
 			return $diff;
 		}
 
-
-
-
-
-
 		public function array_merge_recursive_distinct ( array &$array1, array &$array2 )
 		{
 			$merged = $array1;
@@ -829,164 +828,6 @@
 
 			return $merged;
 		}
-
-        public function setup_rules($options = []){
-            $rules = $this->_rules;
-
-            if (array_key_exists('rules', $options))
-                $rules = $this->array_merge_recursive_distinct($rules, $options['rules']);
-
-            if (array_key_exists('skip_required', $options) && $options['skip_required']===true)
-                foreach ($rules as $key=>$rule)
-                    unset($rules[$key]['required']);
-
-            $this->_rules = $rules;
-            return $this;
-        }
-
-		private $_error_invalid = '%1$s is invalid';
-		private $_error_required = '%1$s is required';
-		private $_error_not_found = '%1$s not found';
-
-		public function sanitize_trim($value){
-			return trim($value);
-		}
-
-		public function setup($data, $options=[]){
-			$this->_dirty = is_array($data)?$data:(array)$data;
-			$this->setup_rules($options);
-			//$this->_sanitized = filter_var_array($this->_dirty, $this->_rules, true);
-			$this->_sanitized = false;
-
-
-
-			foreach ($this->_rules as $key=>$rule){
-				if (array_key_exists($key, $this->_dirty)){
-
-					$value = $this->_dirty[$key];
-
-					//call_user_func
-					if (array_key_exists('sanitize', $rule)) {
-						foreach ($rule['sanitize'] as $sanitizer) {
-							if (is_callable(array($this, 'sanitize_' . $sanitizer))) {
-								$value = call_user_func(array($this, 'sanitize_' . $sanitizer), $value);
-								continue;
-							}
-
-							if (is_callable(array($this, $sanitizer))) {
-								$value = call_user_func(array($this, $sanitizer), $value);
-								continue;
-							}
-						}
-					}
-
-					if (
-						!empty($rule['required']) &&
-						$rule['required'] == true &&
-						empty($value)
-					) {
-						$message = sprintf($this->_error_required, ucfirst(str_replace('_', ' ', $key)) );
-						if (!empty($this->_rules[$key]['message_required']))
-							$message = $this->_rules[$key]['message_required'];
-
-						if (array_key_exists('collect', $options) && $options['collect'] == true)
-							$this->_validate_errors[$key] = $message;
-						else
-							throw new Exception($message);
-
-						$this->_sanitized[$key] = null;
-						continue;
-					}
-
-					if (empty($value)){
-						$this->_sanitized[$key] = null;
-						continue;
-					}
-
-					if (!array_key_exists('filter', $rule)){
-						$this->_sanitized[$key] = $value;
-						continue;
-					}
-
-
-					$this->_sanitized[$key] = filter_var($value, $rule['filter'], array_key_exists('options', $rule)?['options'=>$rule['options']]:null);
-				}
-				/*else
-					$this->_sanitized[$key] = null;*/
-			}
-
-
-
-
-			if ($this->_sanitized) {
-				foreach ($this->_sanitized as $key => $value) {
-					$default = false;
-					if (is_null($value) && array_key_exists('default', $this->_rules[$key])) {
-						if (is_callable($this->_rules[$key]['default']))
-							$default = call_user_func($this->_rules[$key]['default']);
-						else
-							$default = $this->_rules[$key]['default'];
-
-						$this->_sanitized[$key] = $value = $default;
-					}
-
-					if ($value === false) {
-						//$message = ucfirst(str_replace('_', ' ', $key)) . "  is invalid";
-						$message = sprintf($this->_error_invalid, ucfirst(str_replace('_', ' ', $key)) );
-						if (!empty($this->_rules[$key]['message']))
-							$message = $this->_rules[$key]['message'];
-
-						if (array_key_exists('collect', $options) && $options['collect'] == true)
-							$this->_validate_errors[$key] = $message;
-						else
-							throw new Exception($message);
-					}
-
-					//if ((!is_null($value) && $value !== false) || $default !== false)
-					if (($value !== false) || $default !== false)
-						$this->{'set_' . $key}($value);
-
-
-
-				}
-
-				if (!count($this->_validate_errors))
-					foreach ($this->_rules as $key=>$rule){
-						if (array_key_exists('after', $rule) && is_callable($rule['after'])) {
-							$result = call_user_func($rule['after'], $this->{'get_' . $key}());
-							$message = sprintf($this->_error_invalid, ucfirst(str_replace('_', ' ', $key)) );
-							if (!empty($this->_rules[$key]['message']))
-								$message = $this->_rules[$key]['message'];
-
-							if ($result === false)
-								if (array_key_exists('collect', $options) && $options['collect'] == true)
-									$this->_validate_errors[$key] = $message;
-								else
-									throw new Exception($message);
-						}
-					}
-
-				foreach ($this->_rules as $key=>$rule)
-					if (
-						!array_key_exists($key, $this->_validate_errors) &&
-						!empty($this->_rules[$key]['required']) &&
-						$this->_rules[$key]['required'] == true &&
-						empty($this->{'get_' . $key}())
-					) {
-						$message = sprintf($this->_error_required, ucfirst(str_replace('_', ' ', $key)) );
-						if (!empty($this->_rules[$key]['message_required']))
-							$message = $this->_rules[$key]['message_required'];
-
-						if (array_key_exists('collect', $options) && $options['collect'] == true)
-							$this->_validate_errors[$key] = $message;
-						else
-							throw new Exception($message);
-					}
-			}
-
-			return $this;
-		}
-
 
 		/**
          * @return array
