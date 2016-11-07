@@ -31,9 +31,6 @@
 
 
         protected $_dirty = [];
-        protected $_sanitized = [];
-        protected $_validate_errors = [];
-        protected $_skip_save = false;
 
 		public function __construct($dbo=null) {
 
@@ -828,35 +825,6 @@
 
 			return $merged;
 		}
-
-		/**
-         * @return array
-         */
-        public function get_validate_errors()
-        {
-            return $this->_validate_errors;
-        }
-
-        /**
-         * return bool
-         */
-        public function skip_save(){
-            return $this->_skip_save;
-        }
-
-        /**
-         * @return array
-         */
-        public function get_sanitized(){
-            return $this->_sanitized;
-        }
-
-        /**
-         * @return array
-         */
-        public function get_dirty(){
-            return $this->_dirty;
-        }
 	}
 
 	class CMODEL extends MODEL_COMPLEX {}
