@@ -29,7 +29,7 @@
 		function __construct($controller="",$task="",$roles=null, $form_id="",$form_url="") {
 			$this->set_route($controller,$task);
 			$this->set_roles($roles);
-	
+
 			if($form_id || $form_url) {
 
 				if(!$form_url)
@@ -69,11 +69,11 @@
 		function get_body_classes() 			{ return $this->_body_classes; }
 		function has_form()						{ return $this->_form!=null; }
 
-		function type_popup()					{ $this->set_type(self::TYPE_POPUP); }
-		function type_body()					{ $this->set_type(self::TYPE_BODY); }
-		function type_blank()					{ $this->set_type(self::TYPE_BLANK); }
-		function enable_type_popup()			{ $this->type_popup(); }
-		function enable_type_body()				{ $this->type_body(); }
+		function type_popup()					{ return $this->set_type(self::TYPE_POPUP); }
+		function type_body()					{ return $this->set_type(self::TYPE_BODY); }
+		function type_blank()					{ return $this->set_type(self::TYPE_BLANK); }
+		function enable_type_popup()			{ return $this->type_popup(); }
+		function enable_type_body()				{ return $this->type_body(); }
 		function add_body_class($class)		 	{ $this->_body_classes[] = $class; }
 
 		function type_ajax() {

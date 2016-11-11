@@ -2,7 +2,7 @@
 	class BASE_VIEW_MANAGE_INFO extends VIEW {
 
 		function __construct() {
-			$this->set_route("manage","info");
+			return $this->set_route("manage","info");
 		}
 
 		function init() {
@@ -10,7 +10,7 @@
 		}
 
 		function post_init() {
-			
+
 			$timestamps = array_values(APPLICATION::get_instance()->get_timestamps());
 
 			$time = get_value($timestamps,count($timestamps)-1) - get_value($timestamps,0);

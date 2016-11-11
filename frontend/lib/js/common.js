@@ -104,7 +104,7 @@ $.widget("custom.calendar",{
     _moment: null,
 
     format: function(format) {
-    
+
     	var moment = this.utc0();
 
     	return moment ? moment.format(format) : "";
@@ -380,6 +380,22 @@ $.go.it = function(url,opt1,opt2,opt3,el) {
 				return;
 
 	},this,options.complete);
+
+	options.error = function(response) {
+		var errors = [];
+
+		if(response.responseJSON) {
+			if(response.responseJSON.errors) {
+				errors = response.responseJSON.errors;
+			}
+		}
+
+		if(!errors.length) {
+			errors.push('There was a problem trying to process the request');
+		}
+
+		FF.msg.error(errors);
+	}
 
 	options.success = function(response) {
 
