@@ -564,6 +564,10 @@
 			return true;
 		}
 
+		function query_file($file) {
+			return $this->query_script(FILE_UTIL::get($file));
+		}
+
         /**
          * query script
          * @param string $script
