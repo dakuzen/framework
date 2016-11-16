@@ -61,7 +61,8 @@
 
 		public function select($functions) {
 
-			if(!$this->_objects) return array();
+			if(!$this->_objects)
+				return [];
 
 			$functions 	= (array)$functions;
 
@@ -84,6 +85,11 @@
 			}
 
 			return $list;
+		}
+
+		public function filter($filters) {
+			$this->_objects = ARRAY_UTIL::filter($this->_objects,$filters);
+			return $this;
 		}
 
 		public function _get($object,$functions) {

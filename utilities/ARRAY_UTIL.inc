@@ -306,7 +306,7 @@
 		const GROUP_TYPE_OBJECT = "O";
 		const GROUP_TYPE_ARRAY 	= "A";
 
-		static function group($objects,$groupings,$type=self::GROUP_TYPE_OBJECT) {
+		static function group($objects,$groupings,$type=null) {
 
 			if(!is_array($objects))
 				return array();
@@ -315,6 +315,9 @@
 				$groupings = array($groupings,"");
 
 			$group = $grouped_objects = array();
+
+			if(!$type)
+				$type = is_object(value($objects,0)) ? self::GROUP_TYPE_OBJECT : self::GROUP_TYPE_ARRAY;
 
 			if($type==self::GROUP_TYPE_OBJECT) {
 
@@ -504,6 +507,26 @@
 			foreach($keys as $key)
 				if($value=value($array,$key))
 					$list[$key] = $value;
+
+			return $list;
+		}
+
+		static function filter($array,$filters) {
+
+			$list = [];
+			foreach($array as $ikey=>$item) {
+				foreach($filters as $key=>$value) {
+					if(is_array($value)) {
+						if(in_array(value($item,$key),$value)) {
+							$list[$ikey] = $item;
+							continue;
+						}
+					} elseif(value($item,$key)==$value) {
+						$list[$ikey] = $item;
+						continue;
+					}
+				}
+			}
 
 			return $list;
 		}

@@ -126,7 +126,13 @@
 			return $list;
 		}
 
-		public static function permission_list($filters=[]) {
-			return CMODEL_LISTING::create(self::permissions($filters))->column("name","value");
+		public static function permission_list($filters=[],$group=null) {
+			$permissions = CMODEL_LISTING::create(self::permissions($filters))->column("name","value");
+
+			if($group) {
+
+			}
+
+			return $permissions;
 		}
 	}
