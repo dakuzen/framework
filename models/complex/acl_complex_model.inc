@@ -135,4 +135,14 @@
 
 			return $permissions;
 		}
+
+		public static function inherit($permissions) {
+			foreach($permissions as $permission)
+				foreach(CMODEL_ACL::permissions() as $perm)
+					if($perm["value"]==$permission)
+						$permissions = array_merge($permissions,value($perm,"inherit",[]));
+
+			return $permissions;
+		}
+
 	}
