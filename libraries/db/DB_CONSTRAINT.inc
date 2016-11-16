@@ -258,8 +258,10 @@
 		public function guid() {
 			$key = $this->_tablename2.$this->_tablename2_alias.$this->_type;
 
-			foreach($this->_db_group->get_conditions() as $condition)
-				$key .= $condition->get_field().$condition->get_operator().implode("",$condition->get_value()).$condition->get_relation();
+			foreach($this->_db_group->get_conditions() as $condition) {
+				if(is_a($condition,"DB_CONSTRAINT"))
+					$key .= $condition->get_field().$condition->get_operator().implode("",$condition->get_value()).$condition->get_relation();
+			}
 
 			return md5($key);
 		}
