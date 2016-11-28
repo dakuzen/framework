@@ -487,21 +487,26 @@
 			return value(self::get_headers(),$name);
 		}
 
-        static function get_headers() {
-			if(function_exists('getallheaders'))
-			    return getallheaders();
+        static function get_headers($case=CASE_LOWER) {
+			if(function_exists('getallheaders')) {
+			    $headers = getallheaders();
+			} else {
 
-	        $headers = [];
-	        if (is_array($_SERVER)) {
-		        foreach ($_SERVER as $name => $value) {
-		            if (substr($name, 0, 5) == 'HTTP_') {
-		                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
-		            }
-		        }
-		    }
+		        $headers = [];
+		        if (is_array($_SERVER)) {
+			        foreach ($_SERVER as $name => $value) {
+			            if (substr($name, 0, 5) == 'HTTP_') {
+			                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+			            }
+			        }
+			    }
+			}
+
+		    if($case==CASE_LOWER)
+		    	$headers = array_change_key_case($headers,CASE_LOWER);
+
 	        return $headers;
         }
-
 	}
 
 
