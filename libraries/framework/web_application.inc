@@ -66,12 +66,9 @@
 
 			$this->add_timestamp("start_initialize");
 
-			parent::initialize();			
+			parent::initialize();
 
-			$url = strtok(SERVER_UTIL::get_request_uri(),"?");
-
-			if($redirect_query_string=SERVER_UTIL::get_redirect_query_string())
-				$url .= "?".$redirect_query_string;
+			$url = SERVER_UTIL::get_request_uri();
 
 			$this->_uri = new URI($url,array());
 
@@ -129,7 +126,7 @@
 			$get	= $this->_uri->get_arguments();
 
 			//Once this is ran the php://input will be empty so it is stored in $this->_php_input
-			
+
 			if(!$this->_php_input)
 				$this->_php_input = trim(@file_get_contents("php://input","r"));
 
@@ -163,7 +160,7 @@
 
 					    $post[$matches[1]] = value($matches,2);
 					}
-					
+
 				} elseif($content_type=="text/json" || JSON_UTIL::is_encoded($this->_php_input)) {
 
 					$post_input = JSON_UTIL::decode($this->_php_input);
@@ -204,7 +201,7 @@
 
 				if(is_array($value))
 					$value = $this->cast_parms($value);
-				else 
+				else
 					$value = MISC_UTIL::type_cast($value);
 			}
 
@@ -288,7 +285,7 @@
 				$this->add_timestamp("end_process_request");
 
 			} catch(Exception $exception) {
-				
+
 				if(!SYSTEM_MANAGER::is_system_mode_production()) {
 
 					$message = "Uncaught Exception: ".$exception->getMessage()."\n".$exception->getFile()." @ ".$exception->getLine()."\n\n".print_r($exception->getTrace(),true);
@@ -405,7 +402,7 @@
 					$this->process_action($task);
 
 				} catch(Exception $e) {
-					
+
 					if(!SYSTEM_MANAGER::is_system_mode_production())
 						$task->data("trace",$e->getTrace());
 
