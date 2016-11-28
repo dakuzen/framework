@@ -332,7 +332,7 @@
 		static function cors() {
 
 			$headers = [];
-            foreach(self::headersz() as $name=>$value) {
+            foreach(self::headers() as $name=>$value) {
                 if(strcasecmp($name,"Access-Control-Request-Headers")===0) {
                     $headers = array_merge($headers,array($value));
                 }
