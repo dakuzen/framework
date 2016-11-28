@@ -332,7 +332,7 @@
 		static function cors() {
 
 			$headers = [];
-            foreach(self::headers() as $name=>$value) {
+            foreach(SERVER_UTIL::get_headers() as $name=>$value) {
                 if(strcasecmp($name,"Access-Control-Request-Headers")===0) {
                     $headers = array_merge($headers,array($value));
                 }
@@ -343,20 +343,5 @@
 
             if($headers)
                 SERVER_UTIL::add_header("Access-Control-Allow-Headers",implode(",",$headers));
-        }
-
-        static function headers() {
-			if(function_exists('getallheaders'))
-			    return getallheaders();
-
-	        $headers = [];
-	        if (is_array($_SERVER)) {
-		        foreach ($_SERVER as $name => $value) {
-		            if (substr($name, 0, 5) == 'HTTP_') {
-		                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
-		            }
-		        }
-		    }
-	        return $headers;
         }
 	}
