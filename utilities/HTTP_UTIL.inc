@@ -9,7 +9,7 @@
 	class HTTP_UTIL {
 
 		/**
-		 * Streams a file 
+		 * Streams a file
 		 *
 		 * <code>
 		 * echo HTTP_UTIL::stream_file("Koala.jpg");
@@ -25,28 +25,28 @@
 		function stream($file,$save_as_filename=null,$die=true,$delete_file=false) {
 			self::stream_file($file,$save_as_filename,$die,$delete_file);
 		}
-		 
+
 		function stream_file($file,$save_as_filename=null,$die=true,$delete_file=false) {
-			
-			if(!is_file($file)) 
+
+			if(!is_file($file))
 				return false;
-			
+
 			set_time_limit(0);
 
 			$name = is_null($save_as_filename) ? FILE_UTIL::get_filename($file) : $save_as_filename;
-			
+
 			self::output_headers(filesize($file),$name,!!$save_as_filename);
-			
+
 			//ob_clean(); //Removed this because it was corrupting zip files
 			flush();
 			readfile($file);
-	
-			if($delete_file) 
+
+			if($delete_file)
 				FILE_UTIL::delete($file);
 
-			if($die) 
+			if($die)
 				die;
-				
+
 			return true;
 		}
 
@@ -121,35 +121,35 @@
 		 *
 		 * @param string $string string contents of the file
                  * @param string $name
-		 * @param boolean $save_as_filename 
+		 * @param boolean $save_as_filename
                  * @param boolean $die
 		 */
-		 
+
 		function stream_string($string,$name,$save_as_filename=false,$die=false) {
 
 			$filename_extension = FILE_UTIL::get_file_extension($name);
-			
+
 			if($filename_extension) {
 
 				header("Content-Description: File Transfer");
 				header("Content-Type: ".self::get_content_type($filename_extension));
-			
+
 				if($save_as_filename)
 					header("Content-Disposition: attachment; filename=\"".$name."\"");
-				
+
 				header("Content-Transfer-Encoding: binary");
-				
+
 				if($string)
 					header("Content-Length: ".strlen($string));
-			
-			} else 
+
+			} else
 				header("Content-Type: ".self::get_content_type($filename_extension));
 
 			echo $string;
-			
+
 			if($die) die;
 		}
-		
+
 		/**
 		 * Outputs the headers
 		 *
@@ -159,55 +159,55 @@
 		 * </code>
 		 *
 		 * @param integer $content_length string length of the file
-		 * @param string $filename string filename 
+		 * @param string $filename string filename
 		 * @param boolean $force_download boolean enables forced download
 		 */
-		 
+
 		function output_headers($content_length,$filename,$force_download=false) {
-			
+
 			http_response_code(200);
 
 			$filename_extension = FILE_UTIL::get_file_extension($filename);
 
 			header("Content-Description: File Transfer");
 			header("Content-Type: ".self::get_content_type($filename_extension));
-			
+
 			if($force_download)
 				header('Content-Disposition: attachment; filename="'.$filename.'"');
 			else
 				header('Content-Disposition: inline; filename="'.$filename.'"');
 
 			header("Content-Transfer-Encoding: binary");
-			
+
 			if($content_length)
 				header("Content-Length: ".(string)$content_length);
 		}
-		
+
 		/**
 		 * Streams a stream
 		 *
 		 * @param string $stream string stream file
-		 * @param string $filename string filename 
+		 * @param string $filename string filename
 		 * @param boolean $force_download boolean enables forced download
 		 * @return boolean
 		 */
-		 
+
 		function stream_stream($stream,$filename,$force_download=false) {
-			
-			if(!$stream) 
+
+			if(!$stream)
 				return false;
-			
+
 			$length = 0;
-			while(!feof($stream)) 
+			while(!feof($stream))
 				$length += strlen(fread($stream, 2));
-			
+
 			self::output_headers($length,$filename,$force_download);
-			
-			while(!feof($stream)) 
+
+			while(!feof($stream))
 				echo fread($stream, 2);
-			
+
 			fclose($stream);
-			
+
 			return true;
 		}
 
@@ -224,9 +224,9 @@
 		 * @param string $file_type string file extension
 		 * @return string
 		 */
-		 
+
 		public static function get_content_type($file_type) {
-	
+
 			$file_type = stripos($file_type,".")!==false ? FILE_UTIL::get_file_extension($file_type) : $file_type;
 
 			$file_type = strtolower($file_type);
@@ -254,7 +254,7 @@
 			$types["zip"] 	= "application/zip";
 			$types["doc"] 	= "application/msword";
 			$types["xls"] 	= "application/vnd.ms-excel";
-			$types["ppt"] 	= "application/vnd.ms-powerpoint";				
+			$types["ppt"] 	= "application/vnd.ms-powerpoint";
 			$types["gif"] 	= "image/gif";
 			$types["png"] 	= "image/png";
 			$types["jpeg"] 	= "image/jpeg";
@@ -273,7 +273,7 @@
 			$types["xml"] 	= "text/xml";
 			$types["html"] 	= "text/html";
 			$types["svg"] 	= "image/svg+xml";
-			
+
 			return value($types,$file_type,"application/force-download");
 		}
 
@@ -293,46 +293,46 @@
                  * @param string $http_code
                  * @param boolean $top
 		 */
-		 
+
 		function redirect($url,$http_code=null,$top=false) {
-			
+
 			if($top)
 				die("<script>window.top.location='".$url."';</script>");
 			else
 				header("Location: ".$url,true,$http_code);
 			die;
-		}		
-		
+		}
+
                 /**
-                 * Send header disable cache 
+                 * Send header disable cache
                  */
 		static function send_header_disable_cache() {
 			header("Expires: Sat, 1 Jan 2000 00:00:00 GMT");
 			header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 			session_cache_limiter("private, must-revalidate");
 		}
-		
+
                 /**
-                 *Send header charset utf8 
+                 *Send header charset utf8
                  */
 		static function send_header_charset_utf8() {
 			header("content-type: text/html; charset=utf-8");
 		}
-		
+
                 /**
-                 * Send header enable third party cookie 
+                 * Send header enable third party cookie
                  */
 		static function send_header_enable_third_party_cookie() {
-			
+
 			//header('P3P:policyref="/lib/p3p/p3p.xml",CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');
 
 			header('P3P:CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
-		}	
+		}
 
 		static function cors() {
-		
+
 			$headers = [];
-            foreach(getallheaders() as $name=>$value) {
+            foreach(self::headersz() as $name=>$value) {
                 if(strcasecmp($name,"Access-Control-Request-Headers")===0) {
                     $headers = array_merge($headers,array($value));
                 }
@@ -340,8 +340,23 @@
 
             SERVER_UTIL::add_header("Access-Control-Allow-Origin","*");
             SERVER_UTIL::add_header("Access-Control-Allow-Methods","GET, POST, PUT, DELETE");
-            
+
             if($headers)
                 SERVER_UTIL::add_header("Access-Control-Allow-Headers",implode(",",$headers));
+        }
+
+        static function headers() {
+			if(function_exists('getallheaders'))
+			    return getallheaders();
+
+	        $headers = [];
+	        if (is_array($_SERVER)) {
+		        foreach ($_SERVER as $name => $value) {
+		            if (substr($name, 0, 5) == 'HTTP_') {
+		                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+		            }
+		        }
+		    }
+	        return $headers;
         }
 	}
