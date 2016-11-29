@@ -234,10 +234,6 @@
 			margin-bottom: 25px;
 		}
 
-		header .host-title {
-
-		}
-
 		header .links {
 			float: right;
 		}
@@ -266,30 +262,26 @@
 		}
 
 		.endpoints {
-			overflow: hidden;
-			padding-left: 30px;
+		    position: absolute;
+		    top: 100px;
+		    overflow-y: auto;
+		    bottom: 0px;
+		    padding-left: 249px;
+		    width: 1135px;
 		}
 
 		.api:first-child h1 {
 			margin-top: 0;
 		}
 
-		.api-body {
-
-		}
-
-		nav {
-			float: left;
-			width: 200px;
-			position: relative;
-			height: 10px;
-		}
-
 		nav #menu {
-		    position:absolute;
-		    top:0;
-		    width:100%;
+		    position: fixed;
+		    top: 100px;
+		    width: 221px;
 		    padding-right: 20px;
+		    overflow-y: auto;
+		    bottom: 0px;
+		    z-index: 99;
 		}
 
 		nav #menu ul {
@@ -300,7 +292,6 @@
 
 		nav #menu ul li a {
 		    display:block;
-		    border-left:6px solid #ccc;
 		    text-decoration:none;
 		    padding:5px 5px 5px 25px;
 		    list-style: none;
@@ -342,26 +333,24 @@
 			</div>
 	    	<div class="host-title">
 	    		<i class="glyphicon glyphicon-cloud"><span>API</span></i>
-	    		<!--<div class="title">Documentation</div>-->
 	    		<span class="host"><?=SERVER_UTIL::get_server_host()?></span>
 	    	</div>
 	    </header>
 
 	    <nav>
 	    	<div id="menu">
-	    	<ul>
-	    	<? foreach($config as $api) { ?>
+		    	<ul>
+			    	<? foreach($config as $api) { ?>
 
-	  			<? $paths = (array)value($api,array("endpoints",0,"path"),array()) ?>
+			  			<? $paths = (array)value($api,array("endpoints",0,"path"),array()) ?>
 
-  				<li>
-  					<a href="#<?=value($paths,0)?>"><?=value($api,"name")?></a>
-  				</li>
+		  				<li>
+		  					<a href="#<?=value($paths,0)?>"><?=value($api,"name")?></a>
+		  				</li>
 
-		  	<? } ?>
-		  	</ul>
+				  	<? } ?>
+			  	</ul>
 		  	</div>
-
   		</nav>
   		<div class="endpoints">
 		    <? foreach($config as $api) { ?>
@@ -575,9 +564,6 @@
 		</div>
 	</div>
 
-	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-	<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-
 	<script>
 
 		$(function () {
@@ -586,17 +572,16 @@
 			var menu = $("#menu");
 		    var header = $("header").outerHeight(true);
 
-		    $(window).scroll(function() {
-		    	var stop = $(window).scrollTop();
-		    	if(stop>=header)
-		    		menu.finish().css("top",stop - header);
-		    	else
-		    		menu.finish().css("top",0);
+		    $(".endpoints").scroll(function(e) {
+		    	var scrolltop = $(".endpoints").scrollTop();
 
-		    	$($(".api").get().reverse()).each(function() {
+		    console.log('------------------------------');
+
+		    	$($(".api").get()).each(function() {
+
 		    		var offset = $(this).offset();
 
-		    		if(offset.top<=stop) {
+		    		if((offset.top + $(this).height() - 50)>0) {
 		    			$("#menu a").removeClass("active");
 		    			$("#menu a[href='#" + $(this).data("api") + "']").addClass("active");
 		    			return false;
