@@ -11,7 +11,7 @@
 		protected $_path 					= "";
 		protected $_public_root				= "";
 		protected $_public_path				= "";
-		protected $_sizes 					= "";
+		protected $_sizes 					= [];
 		protected $_timestamp				= null;
 		protected $_storage_cmodel			= null;
 		protected $_use_filename_timestamp 	= false;
