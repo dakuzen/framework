@@ -144,7 +144,7 @@
 		protected function initialize_error_handling() {
 
 			DEBUG_UTIL::enable_system_error_handler();
-			
+
 			if(SYSTEM_MANAGER::is_system_mode_production()) {
 				DEBUG_UTIL::output(false);
 				if($logger_cmodel=SYSTEM_MANAGER::get_logger())
@@ -162,9 +162,9 @@
 				 		if(SYSTEM_MANAGER::is_system_mode_production()) {
 							DEBUG_UTIL::notify_error($error);
 							$this->render_fatal_error($error);
-						} else 
+						} else
 							echo DEBUG_UTIL::debug("Fatal Error: ".value($error,"message")."\n".value($error,"file")." @ ".value($error,"line"));
-					}							
+					}
 				}
 
 				return true;
@@ -306,7 +306,7 @@
 			$base_dir = $base_dir ? $base_dir : self::get_application_directory();
 
 			$success = self::include_once_debug($base_dir."db/dbo/".$filename);
-			
+
 			if(!$success) {
 
 				if(value($options,"framework",true) && preg_match("/^DBO/",$class_name)) {
@@ -314,7 +314,7 @@
 					if(is_file(self::get_framework_directory()."db/dbo/".$filename)) {
 
 						$success = class_alias("BASE_".$class_name,$class_name,true);
-					}	
+					}
 				}
 			}
 
@@ -339,7 +339,7 @@
 			$base_dir = $base_dir ? $base_dir : self::get_application_directory();
 
 			$success = self::include_once_debug($base_dir.$dbq_filename);
-	
+
 			if(!$success) {
 
 				if(value($options,"framework") && preg_match("/^DBQ/",$class_name)) {
@@ -347,7 +347,7 @@
 					if(is_file(self::get_framework_directory().$dbq_filename)) {
 
 						$success = class_alias("BASE_".$class_name,$class_name,true);
-					}	
+					}
 				}
 			}
 
@@ -401,7 +401,7 @@
 			$model_file = self::get_model_file($class_name,$model_type,$base_dir);
 
 			$has_success = self::include_once_debug($model_file);
-			
+
 			if($has_success) {
 
 				$match = preg_match("/^(EXTEND_|BASE_|B)?((CMODEL|HMODEL)_(.*))/",$class_name,$matches);
@@ -413,14 +413,14 @@
 
 					if(preg_match("/^B/",$prefix)) {
 
-						if(class_exists("BASE_".$model) && !class_exists("B".$model)) 
+						if(class_exists("BASE_".$model) && !class_exists("B".$model))
 							class_alias("BASE_".$model,"B".$model,false);
 
-						elseif(class_exists("B".$model) && !class_exists("BASE_".$model)) 
+						elseif(class_exists("B".$model) && !class_exists("BASE_".$model))
 							class_alias("B".$model,"BASE_".$model,false);
 					}
 				}
-			
+
 			} elseif(value($options,"framework",true)) {
 
 				if(preg_match("/^(CMODEL|HMODEL|MODEL)/",$class_name)) {
@@ -428,10 +428,10 @@
 					$model_file = self::get_model_file($class_name,$model_type,self::get_framework_directory());
 
 					if(is_file($model_file)) {
-						
+
 						$base_class_name = "BASE_".$class_name;
 						$has_success = class_alias($base_class_name,$class_name,true);
-					}	
+					}
 				}
 			}
 
@@ -637,11 +637,11 @@
 
 			if(!file_exists($file))
 				return false;
-			
+
 			//if(SYSTEM_MANAGER::is_system_mode_production())
 			return include_once($file);
 
-			
+
 			//	return include_once($file);
 
 			//return false;
@@ -651,6 +651,13 @@
          * initialize framework
          */
 		static function initialize_framework() {
+
+			// Hack to hide php7 Declaration warning
+			if (PHP_MAJOR_VERSION >= 7) {
+			    set_error_handler(function ($errno, $errstr) {
+			       return strpos($errstr, 'Declaration of') === 0;
+			    }, E_WARNING);
+			}
 
 			require_once(DIR_FRAMEWORK."utilities/MISC_UTIL.inc");
 			require_once(DIR_FRAMEWORK."utilities/SERVER_UTIL.inc");
@@ -665,7 +672,7 @@
 			require_once(DIR_FRAMEWORK."libraries/framework/route.inc");
 			require_once(DIR_FRAMEWORK."libraries/framework/base_task.inc");
 			require_once(DIR_FRAMEWORK."libraries/framework/base_view.inc");
-			require_once(DIR_FRAMEWORK."libraries/framework/base_action.inc");			
+			require_once(DIR_FRAMEWORK."libraries/framework/base_action.inc");
 			require_once(DIR_FRAMEWORK."libraries/db/DBQ.inc");
 
 			require_once(self::get_application_directory()."system/managers/system_manager.inc");
@@ -682,11 +689,11 @@
 			if(!@include_once(self::get_application_directory()."system/framework/view.inc"))
 				MISC_UTIL::class_alias("BASE_VIEW","VIEW");
 
-			if(!@include_once(self::get_application_directory()."system/framework/action.inc")) 
+			if(!@include_once(self::get_application_directory()."system/framework/action.inc"))
 				MISC_UTIL::class_alias("BASE_ACTION","ACTION");
 
 			require_once(DIR_FRAMEWORK."libraries/framework/base_action_json.inc");
-			if(!@include_once(self::get_application_directory()."system/framework/action_json.inc")) 
+			if(!@include_once(self::get_application_directory()."system/framework/action_json.inc"))
 				MISC_UTIL::class_alias("BASE_ACTION_JSON","ACTION_JSON");
 		}
 
@@ -1147,20 +1154,17 @@
 			if(preg_match("/_SESSION$/",$class_name))
 				return $this->include_session($class_name);
 
-			elseif(preg_match("/^VIEW_([^_]+)_(.*)/",$class_name,$match))
+			if(preg_match("/^VIEW_([^_]+)_(.*)/",$class_name,$match))
 				return self::include_view(get_value($match,1),get_value($match,2));
 
-			elseif(preg_match("/^ACTION_([^_]+)_(.*)/",$class_name,$match))
+			if(preg_match("/^ACTION_([^_]+)_(.*)/",$class_name,$match))
 				return self::include_action(get_value($match,1),get_value($match,2));
 
-			elseif(preg_match("/^BASE_VIEW_([^_]+)_(.*)/",$class_name,$match))
+			if(preg_match("/^BASE_VIEW_([^_]+)_(.*)/",$class_name,$match))
 				return self::include_view(get_value($match,1),get_value($match,2),self::get_framework_base_directory());
 
-			elseif(preg_match("/^BASE_ACTION_([^_]+)_(.*)/",$class_name,$match))
+			if(preg_match("/^BASE_ACTION_([^_]+)_(.*)/",$class_name,$match))
 				return self::include_action(get_value($match,1),get_value($match,2),self::get_framework_base_directory());
-
-			if(preg_match("/HTMLFORM_/",$class_name))
-				return $this->include_htmlform($class_name);
 
 			return false;
 		}
