@@ -156,20 +156,22 @@
 
 			            				$name = is_numeric($name) ? $parm : $name;
 
-			            				$name = @preg_replace("/^[\?\*]*/","",$name);
+			            				if(!is_array($name)) {
 
-			            				/*
-			            				if(is_array($parm)) {
+			            					$name = preg_replace("/^[\?\*]*/","",$name);
 
-			            					foreach($parm as $sub_parm_name=>$sub_parm) {
-			            						$xml_writer_util->add("param","",array("name"=>$name."[".$sub_parm_name."]","type"=>"xsd:string","style"=>"query"));
-			            					}
+				            				/*
+				            				if(is_array($parm)) {
 
-			            				} else
-			            				*/
+				            					foreach($parm as $sub_parm_name=>$sub_parm) {
+				            						$xml_writer_util->add("param","",array("name"=>$name."[".$sub_parm_name."]","type"=>"xsd:string","style"=>"query"));
+				            					}
 
+				            				} else
+				            				*/
 
-				            			$xml_writer_util->add("param","",array("name"=>$name,"type"=>"xsd:string","style"=>"query"));
+				            				$xml_writer_util->add("param","",array("name"=>$name,"type"=>"xsd:string","style"=>"query"));
+				            			}
 			            			}
 
 			            			$xml_writer_util
