@@ -722,7 +722,7 @@
 				} elseif(value($config,"diff-value")) {
 					$label = value($config,["diff-value","label"], ucwords(str_replace("_", " ", $name)));
 
-					if($this->{"get_".$name}()!=$this->_clone_cmodel->{"get_".$name}()) {
+					if($this->{"get_".$name}()!=$this->_clone_cmodel->{"get_".$name}() || value($config,["diff-lookup","always"])) {
 						$list = call_user_func($config["diff-value"]["value"][0]."::".$config["diff-value"]["value"][1]);
 						$value = value($list, $this->{"get_".$name}());
 						$diff[] = $label." = `".$value."`";
@@ -733,7 +733,7 @@
 				} elseif(value($config,"diff-lookup")) {
 					$label = value($config,["diff-lookup","label"], ucwords(str_replace("_", " ", $name)));
 
-					if($this->{"get_".$name}()!=$this->_clone_cmodel->{"get_".$name}()) {
+					if($this->{"get_".$name}()!=$this->_clone_cmodel->{"get_".$name}() || value($config,["diff-lookup","always"])) {
 						$callstack = value($config,["diff-lookup","value"]);
                         $object = $callstack[0]->{$callstack[1]}(true);
                         if($object){
@@ -796,7 +796,7 @@
 								$value2 = CMODEL_TIME::create($value2);
 						}
 
-						if($value1!=$value2) {
+						if($value1!=$value2 || value($config,["diff","always"])) {) {
 							$diff[] = $label." = `".$value1."`";
 						}
 					}
