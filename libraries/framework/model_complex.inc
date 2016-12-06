@@ -796,7 +796,7 @@
 								$value2 = CMODEL_TIME::create($value2);
 						}
 
-						if($value1!=$value2 || value($config,["diff","always"])) {) {
+						if($value1!=$value2 || value($config,["diff","always"])) {
 							$diff[] = $label." = `".$value1."`";
 						}
 					}
