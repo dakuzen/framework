@@ -156,7 +156,7 @@
 
 			            				$name = is_numeric($name) ? $parm : $name;
 
-			            				$name = preg_replace("/^[\?\*]*/","",$name);
+			            				$name = @preg_replace("/^[\?\*]*/","",$name);
 
 			            				/*
 			            				if(is_array($parm)) {
