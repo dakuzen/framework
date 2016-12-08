@@ -1,4 +1,4 @@
-<?php
+<?
     /**
     * Class BASE_APPLICATION
     *
