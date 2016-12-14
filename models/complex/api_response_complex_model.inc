@@ -13,12 +13,6 @@
         const CODE_FAIL     = 400;
 
         /**
-         * The success
-         * @var integer $success
-         */
-        protected $_success 	= 0;
-
-        /**
          * The reference
          * @var string $reference
          */
@@ -42,7 +36,7 @@
          * The code
          * @var integer $code
          */
-        protected $_code 	= null;
+        protected $_code 	= 200;
 
         protected $_codes   = array("success"=>self::CODE_SUCCESS,"fail"=>self::CODE_FAIL);
 
@@ -59,46 +53,56 @@
 
 			header("Content-Type: ".HTTP_UTIL::get_content_type("json"));
 
-            $payload = JSON_UTIL::encode($this->get_payload());
+			try {
 
-            if($payload===false) {
-                $payload = JSON_UTIL::encode(["message"=>json_last_error_msg()]);
-            }
+            	$payload = JSON_UTIL::encode($this->get_payload());
+
+	        } catch(Exception $e) {
+	        	$this->exception($e);
+	        	$payload = JSON_UTIL::encode(self::create_payload($this->_code,$this->_messages,[],$this->_exception));
+	        }
+
+	        http_response_code($this->_code);
 
             if($jsonp)
                 $payload = $jsonp."(".$payload.")";
 
             echo $payload;
 
-            if($die) die;
+            if($die)
+            	die;
 		}
 
-        public function get_payload() {
+		public function get_payload() {
+			return self::create_payload($this->_code,$this->_messages,$this->_data,$this->_exception,$this->_payload);
+		}
 
-            $payload["success"] = $this->_success;
-            $payload["code"]    = (int)$this->_code;
-            $payload["data"]    = $this->_data;
+        public function create_payload($code,$messages,$data,$exception,$payload=[]) {
+        	$code = (int)$code;
 
-            if($this->_messages) {
-                $payload["message"]     = $this->get_message();
-                $payload["messages"]    = $this->_messages;
+        	$payload = $payload ? $payload : [];
+            $payload["success"] = $code>=200 && $code<300;
+            $payload["code"]    = $code;
+            $payload["data"]    = $data;
+
+            if($messages) {
+                $payload["message"]     = implode(". ",ARRAY_UTIL::listing($messages,"message"));
+                $payload["messages"]    = $messages;
             }
 
-            if($this->_reference)
-                $payload["ref"] = $this->_reference;
+            /*if($this->_reference)
+                $payload["ref"] = $this->_reference;*/
 
-            if($this->_exception) {
+            if($exception) {
 
                 $trace = [];
-                foreach($this->_exception->getTrace() as $line)
+                foreach($exception->getTrace() as $line)
                     $trace[] = value($line,"class")."->".value($line,"function")."() @ ".value($line,"file")." on ".value($line,"line");
 
-                $payload["exception_message"] = $this->_exception->getMessage();
-                $payload["exception_code"] = $this->_exception->getCode();
+                $payload["exception_message"] = $exception->getMessage();
+                $payload["exception_code"] = $exception->getCode();
                 $payload["exception_trace"] = $trace;
             }
-
-            $payload = array_merge($payload,$this->_payload);
 
             return $payload;
         }
@@ -116,7 +120,7 @@
          * @param integer $code
          */
 		public function success($success=1,$code=null) {
-            $code = $code===null ? $this->_codes["success"] : $code;
+            $code = $code===null ? self::CODE_SUCCESS : $code;
             $this->_success = !is_empty($success);
             $this->_code = $code;
         }
@@ -135,7 +139,20 @@
          */
         public function payload($name,$value)      { $this->_payload[$name] = $value; return $this; }
 
-        public function exception($exception)      { $this->_exception = $exception; return $this; }
+        public function exception($exception)      {
+
+        	$message = $exception->getMessage();
+            if(SYSTEM_MANAGER::is_system_mode_production()) {
+            	if(is_a($exception,"BCMODEL_SYSTEM_EXCEPTION")) {
+            		DEBUG_UTIL::notify_exception($exception);
+            		$message = "Oops, looks like something went wrong. Please contact support";
+            	}
+            } else {
+            	$this->_exception = $exception;
+            }
+
+            return $this->error($message,$exception->getCode());
+		}
 
         /**
          * Sets data
@@ -170,7 +187,9 @@
          * @param integer $code
          */
 		public function error($message,$code=null) {
-            $this->_messages[] = array("message"=>$message,"code"=>$code,"type"=>"error"); $this->_code = $code;
+			$code = $code ? $code : self::CODE_FAIL;
+            $this->_messages[] = array("message"=>$message,"code"=>$code,"type"=>"error");
+            $this->_code = $code;
             return $this;
         }
 
@@ -185,12 +204,6 @@
             $code = $code===null ? $this->_codes["fail"] : $code;
             return $this->set_error($message,$code)->success(false,$code);
         }
-
-        /**
-         * Returns the message
-         * @return string
-         */
-        public function get_message()			{ return implode(". ",ARRAY_UTIL::listing($this->_messages,"message")); }
 
         /**
          * Returns the code

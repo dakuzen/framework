@@ -113,9 +113,6 @@
             if(!$this->_object)
                 throw new BCMODEL_SYSTEM_EXCEPTION("There is no service object registered");
 
-            //Removed for now.
-            //$this->code(500);
-
             $e = null;
             $exists = false;
 
@@ -186,42 +183,19 @@
                 foreach($e->messages() as $message)
                     $this->response()->error($message["message"],$message["code"]);
 
+                $this->response()->exception($e);
+
             } catch(Exception $e) {
-
-            	$message = $e->getMessage();
-                if(SYSTEM_MANAGER::is_system_mode_production()) {
-                	if(is_a($e,"BCMODEL_DB_EXCEPTION") || is_a($e,"BCMODEL_SYSTEM_EXCEPTION")) {
-                		DEBUG_UTIL::notify_exception($e);
-                		$message = "Oops, looks like something went wrong. Please contact support";
-                	}
-                }
-
-                $this->response()->error($message,$e->getCode());
+            	$this->response()->exception($e);
             }
 
             foreach(value($this->_events,"complete",array()) as $function)
                 call_user_func($function,$this);
 
-            if($e && !SYSTEM_MANAGER::is_system_mode_production()) {
-                $this->response()->exception($e);
-            }
-
             return $this->render();
         }
 
         public function render($die=true) {
-
-            $code = 200;
-
-            if($error=value($this->response()->get_messages(),0)) {
-
-                $code = value($error,"code");
-
-                if(!$code || !is_numeric($code))
-                    $code = 400; //bad request
-            }
-
-            $this->code($code);
 
             $this->response()->set_reference($this->request()->get_id());
 
@@ -231,8 +205,7 @@
         }
 
         public function code($code) {
-            http_response_code($code);
-            return $this;
+            return $this->response()->code($code);
         }
     }
 
