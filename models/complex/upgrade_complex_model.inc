@@ -552,6 +552,11 @@
          */
 		function query($queries) {
 
+			if(is_string($queries)) {
+				$queries = trim(trim($queries),";");
+				$queries = explode(";",$queries);
+			}
+
 			if(!is_array($queries))
 				$queries = array($queries);
 
@@ -574,10 +579,7 @@
          * @return boolean
          */
 		function query_script($script) {
-			$script = trim(trim($script),";");
-			$queries = explode(";",$script);
-
-			return $this->query($queries);
+			return $this->query($script);
 		}
 
 		function drop_foreign_key($table,$key,$column="") {
