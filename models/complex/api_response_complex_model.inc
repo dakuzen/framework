@@ -62,7 +62,8 @@
 	        	$payload = JSON_UTIL::encode(self::create_payload($this->_code,$this->_messages,[],$this->_exception));
 	        }
 
-	        http_response_code($this->_code);
+	        $code = $this->_code && is_int($this->_code) ? $this->_code : self::CODE_FAIL;
+	        http_response_code($code);
 
             if($jsonp)
                 $payload = $jsonp."(".$payload.")";
