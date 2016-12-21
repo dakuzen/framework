@@ -428,7 +428,7 @@
 				return false;
 
 			// Hack to hide php7 Declaration warning. Also found in BASE_APPLICATION::initialize_framework()
-			if(PHP_MAJOR_VERSION >= 7 && strpos($errmsg, "Declaration of")>=0)
+			if(PHP_MAJOR_VERSION >= 7 && strpos($errmsg, "Declaration of")!==false)
 				return false;
 
 			$reportable_errors = $reportable_errors ? $reportable_errors : array_keys(self::$_REPORTABLE_ERRORS);
