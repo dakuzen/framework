@@ -205,7 +205,7 @@
         }
 
         public function code($code) {
-            return $this->response()->code($code);
+            return $this->response()->set_code($code);
         }
     }
 

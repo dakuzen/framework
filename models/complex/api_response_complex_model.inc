@@ -120,8 +120,7 @@
          * @param integer $success
          * @param integer $code
          */
-		public function success($success=1,$code=null) {
-            $code = $code===null ? self::CODE_SUCCESS : $code;
+		public function success($success=1,$code=self::CODE_SUCCESS) {
             $this->_success = !is_empty($success);
             $this->_code = $code;
         }
