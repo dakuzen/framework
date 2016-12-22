@@ -190,8 +190,8 @@
 			if($this->get_limit())
 				$db_object->set_limit($this->get_limit(),$this->get_offset());
 
-			foreach($this->_order_bys as $field=>$direction)
-				$db_object->add_order_by($field,$direction);
+			foreach($this->_order_bys as $order)
+				$db_object->add_order_by(value($order,"field"),value($order,"direction"));
 
 			foreach($this->_group_bys as $group)
 				$db_object->add_group_by($group);
@@ -368,17 +368,26 @@
 		 * @param string $direction
 		 * @return MODEL_HANDLER
 		 */
-		function add_order_by($field,$direction="ASC") {
-			$this->_order_bys[$field] = $direction;
+		function add_order_by($field,$direction="ASC",$name=null) {
+			$order_by = [ "field"=>$field, "direction"=>$direction, "name"=>$name ];
+
+			$index = count($this->_order_bys);
+			foreach($this->_order_bys as $idx=>$item) {
+				if($name && value($item,"name")==$name)
+					$index = $idx;
+			}
+
+			$this->_order_bys[$index] = $order_by;
+
 			return $this;
 		}
 
-		function order_by($field,$direction="ASC") {
-			return $this->add_order_by($field,$direction);
+		function order_by($field,$direction="ASC",$name=null) {
+			return $this->add_order_by($field,$direction,$name);
 		}
 
-		function order($field,$direction="ASC") {
-			return $this->add_order_by($field,$direction);
+		function order($field,$direction="ASC",$name=null) {
+			return $this->add_order_by($field,$direction,$name);
 		}
 
 		function clear_order() {
@@ -715,6 +724,30 @@
 					}
 				}
 			}
+		}
+
+		public function match_order($field,$value,$weight=1) {
+			$name = "weight_".str_replace(".","_",$field);
+			$value = addslashes($value);
+
+			$order_field = "";
+			foreach($this->_order_bys as $item)
+				if(value($item,"name")=="match_order")
+					$order_field = value($item,"field");
+
+			$names = [$name."_exact",$name."_starts"];
+			foreach($names as $item) {
+
+				if($order_field)
+					$order_field .= " + ";
+
+				$order_field .= $weight>1 ? "(".$item." * ".$weight.")" : $item;
+			}
+
+			return $this
+					->data("MATCH(".$field.") AGAINST ('".$value."*' IN BOOLEAN MODE)",$name."_starts")
+					->data("MATCH(".$field.") AGAINST ('\"".str_replace("@","",$value)."\"' IN BOOLEAN MODE)",$name."_exact")
+					->order_by($order_field,"DESC","match_order");
 		}
 
 		/*

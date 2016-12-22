@@ -29,6 +29,13 @@
 			return $this;
 		}
 
+		function match($field,$value) {
+            $value = addslashes($value);
+			return $this
+					->where("MATCH(".$field.")","AGAINST","'".str_replace("@","",$value)."*' IN BOOLEAN MODE","OR",false,false,false)
+					->where("MATCH(".$field.")","AGAINST","'\"".$value."\"' IN BOOLEAN MODE","OR",false,false,false);
+		}
+
 		function add_where($value1,$operator,$value2,$relation=DB_CONSTRAINT::RELATION_AND,$parms=true,$pad=false,$escape=true) {
 			return $this->where($value1,$operator,$value2,$relation,$parms,$pad,$escape);
 		}
