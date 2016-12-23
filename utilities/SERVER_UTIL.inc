@@ -350,41 +350,34 @@
 			return !$return_var;
 		}
 
-		public function exec_stream($cmd,$callback=null,$options=["capture"=>true]) {
+		public function exec_stream($cmd,$callback=null,$options=["capture"=>false]) {
 
 			if(value($options,"capture",true))
 				$cmd = $cmd." 2>&1";
 
 			$descriptorspec = array(
-			   0 => array("pipe", "r"),   // stdin is a pipe that the child will read from
-			   1 => array("pipe", "w"),   // stdout is a pipe that the child will write to
-			   2 => array("pipe", "w")    // stderr is a pipe that the child will write to
+			    0 => array("pipe", "r"),
+			    1 => array("pipe", "w"),
+			    2 => array("pipe", "a")
 			);
 
-			$process = proc_open($cmd, $descriptorspec, $pipes, realpath('./'), null);
+			$pipes = array();
+
+			$process = proc_open($cmd, $descriptorspec, $pipes, null, null);
 
 			if(!is_resource($process))
-				throw new Exception("Failed to get process resource");
+				throw new Exception("Unable to start the process");
 
-			$errors = [];
-			while($s=fgets($pipes[2])) {
-	          $errors[] = $s;
-	          $callback($s);
-	        }
+		    do {
+		        echo fgets($pipes[1]);
+		        $arr = proc_get_status($process);
 
-		    while($s = fgets($pipes[1])) {
-		    	$errors[] = $s;
-		        $callback($s);
-		    }
-
-			$return = @proc_close($process);
+		    } while($arr['running']);
 
 			@fclose($pipes[0]);
 			@fclose($pipes[1]);
 			@fclose($pipes[2]);
-
-			if($return)
-				throw new Exception(implode("\n",$errors));
+			@proc_close($process);
 		}
 
         /**
