@@ -652,6 +652,67 @@
 			return $grouped_cmodels;
 		}
 
+		public function map_child($cmodels, $hmodel, $parent_reference_function, $parent_object_function, $child_reference_column, $joins=[]) {
+			return $this->map($cmodels, $hmodel, false, $parent_reference_function, $parent_object_function, $child_reference_column, $joins);
+		}
+
+		public function map_children($cmodels, $hmodel, $parent_reference_function, $parent_object_function, $child_reference_column, $joins=[]) {
+			return $this->map($cmodels, $hmodel, true, $parent_reference_function, $parent_object_function, $child_reference_column, $joins);
+		}
+
+		/**
+		 * @param array $cmodels An array of parent cmodels
+		 * @param array $hmodel The child handler
+		 * @param string $parent_reference_function The function that would return the identifiers used to filter the child hmodel results
+		 * @param string $parent_object_function The parent setter function that sets the child object(s)
+		 * @param string $child_reference_column The column name used to filter the child results
+		 * @param array $joins An array to specify table joins
+		 */
+		public function map($cmodels, $hmodel, $multiple, $parent_reference_function, $parent_object_function, $child_reference_column, $joins=[]) {
+
+			if($cmodels && $hmodel) {
+
+				//DB::Debug();
+
+				//$joins[] = ["from"=>"contacts","to"=>"contact_clients","from_column"=>"contact_id","to_column"=>"contact_id"];
+
+				$hmodel = $hmodel->clone();
+
+				foreach($joins as $join)
+					$hmodel->join(value($join,"from"),value($join,"to"),value($join,"from_column"),value($join,"to_column"),value($join,"type","INNER"));
+
+				$ids = array_filter(array_unique(ARRAY_UTIL::listing($cmodels,$parent_reference_function)));
+				$id_get = preg_replace("/^[^.]+\./","",$child_reference_column);
+
+				if($ids) {
+
+					$tmp_cmodels = $hmodel
+									->data($child_reference_column)
+									->where($child_reference_column,"IN",$ids)
+									->gets();
+
+					foreach($cmodels as $cmodel) {
+						$array_cmodels = [];
+						foreach($tmp_cmodels as $tmp_cmodel) {
+
+							if($cmodel->$parent_reference_function()==$tmp_cmodel->data($id_get)) {
+
+								if($multiple)
+									$array_cmodels[] = 	$tmp_cmodel;
+								else
+									$cmodel->$parent_object_function($tmp_cmodel);
+							}
+						}
+
+						if($multiple)
+							$cmodel->$parent_object_function($array_cmodels);
+					}
+				}
+			}
+
+			return $this;
+		}
+
 		public function map_many_many(	$cmodels,
 										$handler,
 										$source_object,
@@ -713,7 +774,7 @@
 										->gets();
 
 					foreach($cmodels as $cmodel) {
-						$array_cmodels = array();
+						$array_cmodels = [];
 						foreach($tmp_cmodels as $tmp_cmodel) {
 							if($cmodel->$source_function()==$tmp_cmodel->$relation_function()) {
 								$array_cmodels[] = 	$tmp_cmodel;
@@ -722,6 +783,33 @@
 
 						$cmodel->$object_set_function($array_cmodels);
 					}
+				}
+			}
+		}
+
+		public function map_one($cmodels,$handler,$source,$relation,$object=null) {
+
+			if($cmodels && $handler) {
+
+				$handler 				= $handler->clone();
+				$object 				= $object ? $object : $relation;
+				$source_function 		= "get_".$source."_id";
+				$relation_function 		= "get_".$relation."_id";
+				$relation_id 			= $relation."_id";
+				$object_set_function 	= "set_".$object;
+
+				$ids = array_filter(array_unique(ARRAY_UTIL::listing($cmodels,$source_function)));
+
+				if($ids) {
+
+					// This is done when mapping the $cmodels for speed
+					$tmp_cmodels = ARRAY_UTIL::index($handler
+														->where($handler->get_dbq()->get_tablename().".".$relation_id,"IN",$ids)
+														->gets(),"get_".$relation_id);
+
+
+					foreach($cmodels as $cmodel)
+						$cmodel->$object_set_function(value($tmp_cmodels,$cmodel->$source_function()));
 				}
 			}
 		}
@@ -750,35 +838,6 @@
 					->order_by($order_field,"DESC","match_order");
 		}
 
-		/*
-		 * $source
-		 */
-		public function map_one($cmodels,$handler,$source,$relation,$object=null) {
-
-			if($cmodels && $handler) {
-
-				$handler 				= $handler->clone();
-				$object 				= $object ? $object : $relation;
-				$source_function 		= "get_".$source."_id";
-				$relation_function 		= "get_".$relation."_id";
-				$relation_id 			= $relation."_id";
-				$object_set_function 	= "set_".$object;
-
-				$ids = array_filter(array_unique(ARRAY_UTIL::listing($cmodels,$source_function)));
-
-				if($ids) {
-
-					// This is done when mapping the $cmodels for speed
-					$tmp_cmodels = ARRAY_UTIL::index($handler
-														->where($handler->get_dbq()->get_tablename().".".$relation_id,"IN",$ids)
-														->gets(),"get_".$relation_id);
-
-
-					foreach($cmodels as $cmodel)
-						$cmodel->$object_set_function(value($tmp_cmodels,$cmodel->$source_function()));
-				}
-			}
-		}
 	}
 
 
