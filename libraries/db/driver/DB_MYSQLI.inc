@@ -56,8 +56,8 @@
 
 			$commands = (array)value($options,"commands",array());
 
-			$commands[] = "SET NAMES 'utf8';";
-			$commands[] = "SET SESSION sql_auto_is_null = 0;";
+//			$commands[] = "SET NAMES 'utf8';";
+//			$commands[] = "SET SESSION sql_auto_is_null = 0;";
 
 			$options["commands"] = $commands;
 
