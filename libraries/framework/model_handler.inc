@@ -672,16 +672,12 @@
 
 			if($cmodels && $hmodel) {
 
-				//DB::Debug();
-
-				//$joins[] = ["from"=>"contacts","to"=>"contact_clients","from_column"=>"contact_id","to_column"=>"contact_id"];
-
 				$hmodel = $hmodel->clone();
 
 				foreach($joins as $join)
 					$hmodel->join(value($join,"from"),value($join,"to"),value($join,"from_column"),value($join,"to_column"),value($join,"type","INNER"));
 
-				$ids = array_filter(array_unique(ARRAY_UTIL::listing($cmodels,$parent_reference_function)));
+				$ids 	= array_filter(array_unique(ARRAY_UTIL::listing($cmodels,$parent_reference_function)));
 				$id_get = preg_replace("/^[^.]+\./","",$child_reference_column);
 
 				if($ids) {
@@ -691,21 +687,28 @@
 									->where($child_reference_column,"IN",$ids)
 									->gets();
 
+					if(!$multiple && !$joins)
+						$tmp_cmodels = ARRAY_UTIL::index($tmp_cmodels,$parent_reference_function);
+
 					foreach($cmodels as $cmodel) {
-						$array_cmodels = [];
-						foreach($tmp_cmodels as $tmp_cmodel) {
 
-							if($cmodel->$parent_reference_function()==$tmp_cmodel->data($id_get)) {
+						$value = $multiple ? [] : null;
 
-								if($multiple)
-									$array_cmodels[] = 	$tmp_cmodel;
-								else
-									$cmodel->$parent_object_function($tmp_cmodel);
+						if(!$multiple && !$joins) {
+							$value = value($tmp_cmodels,$cmodel->$parent_reference_function());
+
+						} else {
+							foreach($tmp_cmodels as $tmp_cmodel) {
+								if($cmodel->$parent_reference_function()==$tmp_cmodel->data($id_get)) {
+									if($multiple)
+										$value[] = $tmp_cmodel;
+									else
+										$value = $tmp_cmodel;
+								}
 							}
 						}
 
-						if($multiple)
-							$cmodel->$parent_object_function($array_cmodels);
+						$cmodel->$parent_object_function($value);
 					}
 				}
 			}
@@ -713,6 +716,9 @@
 			return $this;
 		}
 
+		/**
+		 * @deprecated No longer used please use map() or helper functions
+		 */
 		public function map_many_many(	$cmodels,
 										$handler,
 										$source_object,
@@ -754,6 +760,9 @@
 			}
 		}
 
+		/**
+		 * @deprecated No longer used please use map() or helper functions
+		 */
 		public function map_many($cmodels,$handler,$source,$relation,$object=null) {
 
 			if($cmodels && $handler) {
@@ -787,6 +796,9 @@
 			}
 		}
 
+		/**
+		 * @deprecated No longer used please use map() or helper functions
+		 */
 		public function map_one($cmodels,$handler,$source,$relation,$object=null) {
 
 			if($cmodels && $handler) {
