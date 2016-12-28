@@ -640,8 +640,15 @@
 				return "";
 
 			$order_bys = array();
-			foreach($this->_orders as $order)
-				$order_bys[] = $order[0]." ".$order[1];
+			foreach($this->_orders as $order) {
+				$field = $order[0];
+
+				if(!preg_match("/[\(\),`]/",$field)) {
+					$field = "`".str_replace(".","`.`",$field)."`";
+				}
+
+				$order_bys[] = $field." ".$order[1];
+			}
 
 			return " ORDER BY ".implode(",",$order_bys);
 		}
