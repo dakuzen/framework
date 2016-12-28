@@ -1,12 +1,12 @@
-<?php
+<?
 
-        /**
-        * Class MODEL_HANDLER
-        *
-        * @package Library
-        * @subpackage Common
-        * @method static $this create() return self
-        */
+    /**
+    * Class MODEL_HANDLER
+    *
+    * @package Library
+    * @subpackage Common
+    * @method static $this create() return self
+    */
 
 	class MODEL_HANDLER extends MODEL {
 
