@@ -688,7 +688,7 @@
 									->gets();
 
 					if(!$multiple && !$joins)
-						$tmp_cmodels = ARRAY_UTIL::index($tmp_cmodels,$parent_reference_function);
+						$tmp_cmodels = ARRAY_UTIL::index($tmp_cmodels,"get_".$id_get);
 
 					foreach($cmodels as $cmodel) {
 
