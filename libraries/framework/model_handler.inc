@@ -1,12 +1,12 @@
-<?php
+<?
 
-        /**
-        * Class MODEL_HANDLER
-        *
-        * @package Library
-        * @subpackage Common
-        * @method static $this create() return self
-        */
+    /**
+    * Class MODEL_HANDLER
+    *
+    * @package Library
+    * @subpackage Common
+    * @method static $this create() return self
+    */
 
 	class MODEL_HANDLER extends MODEL {
 
@@ -190,8 +190,8 @@
 			if($this->get_limit())
 				$db_object->set_limit($this->get_limit(),$this->get_offset());
 
-			foreach($this->_order_bys as $field=>$direction)
-				$db_object->add_order_by($field,$direction);
+			foreach($this->_order_bys as $order)
+				$db_object->add_order_by(value($order,"field"),value($order,"direction"));
 
 			foreach($this->_group_bys as $group)
 				$db_object->add_group_by($group);
@@ -368,17 +368,26 @@
 		 * @param string $direction
 		 * @return MODEL_HANDLER
 		 */
-		function add_order_by($field,$direction="ASC") {
-			$this->_order_bys[$field] = $direction;
+		function add_order_by($field,$direction="ASC",$name=null) {
+			$order_by = [ "field"=>$field, "direction"=>$direction, "name"=>$name ];
+
+			$index = count($this->_order_bys);
+			foreach($this->_order_bys as $idx=>$item) {
+				if($name && value($item,"name")==$name)
+					$index = $idx;
+			}
+
+			$this->_order_bys[$index] = $order_by;
+
 			return $this;
 		}
 
-		function order_by($field,$direction="ASC") {
-			return $this->add_order_by($field,$direction);
+		function order_by($field,$direction="ASC",$name=null) {
+			return $this->add_order_by($field,$direction,$name);
 		}
 
-		function order($field,$direction="ASC") {
-			return $this->add_order_by($field,$direction);
+		function order($field,$direction="ASC",$name=null) {
+			return $this->add_order_by($field,$direction,$name);
 		}
 
 		function clear_order() {
@@ -643,6 +652,73 @@
 			return $grouped_cmodels;
 		}
 
+		public function map_child($cmodels, $hmodel, $parent_reference_function, $parent_object_function, $child_reference_column, $joins=[]) {
+			return $this->map($cmodels, $hmodel, false, $parent_reference_function, $parent_object_function, $child_reference_column, $joins);
+		}
+
+		public function map_children($cmodels, $hmodel, $parent_reference_function, $parent_object_function, $child_reference_column, $joins=[]) {
+			return $this->map($cmodels, $hmodel, true, $parent_reference_function, $parent_object_function, $child_reference_column, $joins);
+		}
+
+		/**
+		 * @param array $cmodels An array of parent cmodels
+		 * @param array $hmodel The child handler
+		 * @param string $parent_reference_function The function that would return the identifiers used to filter the child hmodel results
+		 * @param string $parent_object_function The parent setter function that sets the child object(s)
+		 * @param string $child_reference_column The column name used to filter the child results
+		 * @param array $joins An array to specify table joins
+		 */
+		public function map($cmodels, $hmodel, $multiple, $parent_reference_function, $parent_object_function, $child_reference_column, $joins=[]) {
+
+			if($cmodels && $hmodel) {
+
+				$hmodel = $hmodel->clone();
+
+				foreach($joins as $join)
+					$hmodel->join(value($join,"from"),value($join,"to"),value($join,"from_column"),value($join,"to_column"),value($join,"type","INNER"));
+
+				$ids 	= array_filter(array_unique(ARRAY_UTIL::listing($cmodels,$parent_reference_function)));
+				$id_get = preg_replace("/^[^.]+\./","",$child_reference_column);
+
+				if($ids) {
+
+					$tmp_cmodels = $hmodel
+									->data($child_reference_column)
+									->where($child_reference_column,"IN",$ids)
+									->gets();
+
+					if(!$multiple && !$joins)
+						$tmp_cmodels = ARRAY_UTIL::index($tmp_cmodels,"get_".$id_get);
+
+					foreach($cmodels as $cmodel) {
+
+						$value = $multiple ? [] : null;
+
+						if(!$multiple && !$joins) {
+							$value = value($tmp_cmodels,$cmodel->$parent_reference_function());
+
+						} else {
+							foreach($tmp_cmodels as $tmp_cmodel) {
+								if($cmodel->$parent_reference_function()==$tmp_cmodel->data($id_get)) {
+									if($multiple)
+										$value[] = $tmp_cmodel;
+									else
+										$value = $tmp_cmodel;
+								}
+							}
+						}
+
+						$cmodel->$parent_object_function($value);
+					}
+				}
+			}
+
+			return $this;
+		}
+
+		/**
+		 * @deprecated No longer used please use map() or helper functions
+		 */
 		public function map_many_many(	$cmodels,
 										$handler,
 										$source_object,
@@ -684,6 +760,9 @@
 			}
 		}
 
+		/**
+		 * @deprecated No longer used please use map() or helper functions
+		 */
 		public function map_many($cmodels,$handler,$source,$relation,$object=null) {
 
 			if($cmodels && $handler) {
@@ -704,7 +783,7 @@
 										->gets();
 
 					foreach($cmodels as $cmodel) {
-						$array_cmodels = array();
+						$array_cmodels = [];
 						foreach($tmp_cmodels as $tmp_cmodel) {
 							if($cmodel->$source_function()==$tmp_cmodel->$relation_function()) {
 								$array_cmodels[] = 	$tmp_cmodel;
@@ -717,8 +796,8 @@
 			}
 		}
 
-		/*
-		 * $source
+		/**
+		 * @deprecated No longer used please use map() or helper functions
 		 */
 		public function map_one($cmodels,$handler,$source,$relation,$object=null) {
 
@@ -746,6 +825,31 @@
 				}
 			}
 		}
+
+		public function match_order($field,$value,$weight=1) {
+			$name = "weight_".str_replace(".","_",$field);
+			$value = addslashes($value);
+
+			$order_field = "";
+			foreach($this->_order_bys as $item)
+				if(value($item,"name")=="match_order")
+					$order_field = value($item,"field");
+
+			$names = [$name."_exact",$name."_starts"];
+			foreach($names as $item) {
+
+				if($order_field)
+					$order_field .= " + ";
+
+				$order_field .= $weight>1 ? "(".$item." * ".$weight.")" : $item;
+			}
+
+			return $this
+					->data("MATCH(".$field.") AGAINST ('".$value."*' IN BOOLEAN MODE)",$name."_starts")
+					->data("MATCH(".$field.") AGAINST ('\"".str_replace("@","",$value)."\"' IN BOOLEAN MODE)",$name."_exact")
+					->order_by($order_field,"DESC","match_order");
+		}
+
 	}
 
 

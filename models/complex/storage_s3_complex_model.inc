@@ -83,6 +83,42 @@
 			self::reset_error_handler();
 		}
 
+
+		public function download($path, $local_file) {
+			$path = $this->path($path);
+
+			$this->aws()->s3()->registerStreamWrapper();
+			$url = 's3://'.value($this->_options,"bucket").$path;
+
+			self::error_handler();
+
+			$out_stream = fopen($local_file, "w");
+
+			// Open a stream in read-only mode
+			if ($stream=fopen($url, 'r')) {
+
+				// http_response_code(200);
+				// if (!empty($options['download_name'])) {
+				// 	HTTP_UTIL::output_headers(0,$options['download_name'],true);
+				// } else {
+				// 	HTTP_UTIL::output_headers(0,basename($path),true);
+				// }
+
+			    // While the stream is still open
+			    while (!@feof($stream)) {
+			        // Read 1024 bytes from the stream and write to out_stream
+			     	@fwrite($out_stream, fread($stream, 1024));
+			    }
+			    // Be sure to close the stream resource when you're done with it
+			    @fclose($stream);
+			    @fclose($out_stream);
+			}
+
+			self::reset_error_handler();
+		}
+
+
+
 		public function redirect($path) {
 			$url = $this->url($this->path($path));
 			HTTP_UTIL::redirect($url);

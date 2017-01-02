@@ -1,2 +1,2 @@
 <?
-	class BCMODEL_DB_EXCEPTION extends Exception {}
+	class BCMODEL_DB_EXCEPTION extends BCMODEL_SYSTEM_EXCEPTION {}

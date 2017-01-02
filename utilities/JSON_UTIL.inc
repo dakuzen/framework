@@ -1,4 +1,4 @@
-<?php
+<?
     /**
     * Class JSON_UTIL
     *
@@ -23,7 +23,13 @@
 			if(value($options,"type_cast"))
 				$object = MISC_UTIL::type_cast($object);
 
-			return json_encode($object,$bits);
+			$json = json_encode($object,$bits);
+
+			if($json===false) {
+				throw new BCMODEL_SYSTEM_EXCEPTION(json_last_error_msg());
+			}
+
+			return $json;
 		}
 
         /**

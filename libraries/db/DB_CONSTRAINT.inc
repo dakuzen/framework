@@ -29,6 +29,13 @@
 			return $this;
 		}
 
+		function match($field,$value) {
+            $value = addslashes($value);
+			return $this
+					->where("MATCH(".$field.")","AGAINST","'".str_replace("@","",$value)."*' IN BOOLEAN MODE","OR",false,false,false)
+					->where("MATCH(".$field.")","AGAINST","'\"".$value."\"' IN BOOLEAN MODE","OR",false,false,false);
+		}
+
 		function add_where($value1,$operator,$value2,$relation=DB_CONSTRAINT::RELATION_AND,$parms=true,$pad=false,$escape=true) {
 			return $this->where($value1,$operator,$value2,$relation,$parms,$pad,$escape);
 		}
@@ -263,7 +270,7 @@
 					$key .= $condition->get_field().$condition->get_operator().implode("",$condition->get_value()).$condition->get_relation();
 			}
 
-			return md5($key);
+			return md5(strtolower($key));
 		}
 
 		public static function create($tablename1=null,$tablename2=null,$column1=null,$column2=null,$type="INNER") {
