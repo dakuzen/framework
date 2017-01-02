@@ -223,7 +223,7 @@
 
             $this->code($code);
 
-            $this->response()->set_reference($this->request()->get_id());
+            //$this->response()->set_reference($this->request()->get_id());
 
             $jsonp = $this->registry()->get("jsonp.callback");
 

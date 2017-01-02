@@ -265,9 +265,15 @@
 			if($db_utility->is_table_exist("processes"))
 				$db->script("RENAME TABLE `processes` TO `ff_processes`");
 
+			if($db_utility->is_table_exist("site_content_widgets"))
+				$db->script("ALTER TABLE `site_content_widgets` CHANGE COLUMN `site_content_widget_id` `content_widget_id` INT NOT NULL AUTO_INCREMENT;
+							RENAME TABLE `site_content_widgets` TO `ff_content_widgets`;");
+
+			if($db_utility->is_table_exist("site_contents"))
+				$db->script("ALTER TABLE `site_contents` CHANGE COLUMN `site_content_id` `content_id` INT NOT NULL AUTO_INCREMENT;
+							RENAME TABLE `site_contents` TO `ff_contents`;");
+
 			//Run any upgrades from the site content system.
-			//CMODEL_SITE_CONTENT::create()->upgrade();
-			CMODEL_SITE_CONTENT_WIDGET::create()->upgrade();
 			CMODEL_MESSAGE::create()->upgrade();
 		}
 
