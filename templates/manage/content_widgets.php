@@ -23,5 +23,3 @@
 		->set_headings(array("Name","Content","Tag",""))
 		->set_width("100%")
 		->render();
-
-	$this->show_view("paging");

@@ -10,8 +10,6 @@
 		function __construct() {
 			$this->set_route("manage","content_widgets");
 
-			$this->set_view("paging",APPLICATION::get_base_view_instance("components","paging"));
-
 			$this->_edit_url_html 		= BASE_MODEL_IMAGE_ICON::get_edit();
 			$this->_delete_url_html 	= BASE_MODEL_IMAGE_ICON::get_delete();
 			$this->_preview_url_html 	= BASE_MODEL_IMAGE_ICON::get_view();
@@ -36,24 +34,9 @@
 				die;
 			}
 
-			$content_widget_hmodel = HMODEL_FF_CONTENT_WIDGET::create()
-											->add_order_by("name");
-
-			$record_count = $content_widget_hmodel->get_count();
-
-			if(($page_index * $page_limit)>=$record_count)
-				$page_index = 0;
-
-			$content_widget_hmodel->set_limit($page_limit,$page_limit * $page_index);
-
-			$page_count = ceil($record_count/$page_limit);
-
-			$content_widget_cmodels = $content_widget_hmodel->gets();
-
-			$this->get_view("paging")->set_page_index($page_index);
-			$this->get_view("paging")->set_page_count($page_count);
-			$this->get_view("paging")->set_page_limit($page_limit);
-			$this->get_view("paging")->set_record_count($record_count);
+			$content_widget_cmodels = HMODEL_FF_CONTENT_WIDGET::create()
+											->order_by("name")
+											->gets();
 
 			$this->set_var("content_widgets",$content_widget_cmodels);
 			$this->set_var("edit_url",$this->_edit_url);
