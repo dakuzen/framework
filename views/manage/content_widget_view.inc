@@ -20,7 +20,7 @@
 
 			$view_url = APPLICATION::get_instance()->get_uri()->get_path();
 
-			if($this->request("action")=="save") {
+			if($action=$this->request("action")) {
 
 				$this->load($this->request("cwid"));
 
@@ -28,17 +28,20 @@
 
 				try {
 
-					$this->_content_widget_cmodel
-						->set_name($this->request("form","name"))
-						->set_tag($this->request("form","tag"))
-						->set_source($this->request("form","source"))
-						->set_path($this->request("form","path"))
-						->set_content(XSS_UTIL::decode($this->request("content")))
-						->save();
+					if($action=="save") {
 
-					if(!$this->request("cwid")) {
-						APPLICATION::add_persistent_notify("Successfully created the content widget");
-						$response_cmodel->redirect($view_url.$this->_content_widget_cmodel->get_content_widget_id());
+						$this->_content_widget_cmodel
+							->set_name($this->request("form","name"))
+							->set_tag($this->request("form","tag"))
+							->set_source($this->request("form","source"))
+							->set_path($this->request("form","path"))
+							->set_content(XSS_UTIL::decode($this->request("content")))
+							->save();
+
+						if(!$this->request("cwid")) {
+							APPLICATION::add_persistent_notify("Successfully created the content widget");
+							$response_cmodel->redirect($view_url.$this->_content_widget_cmodel->get_content_widget_id());
+						}
 					}
 
 					$response_cmodel->success();
