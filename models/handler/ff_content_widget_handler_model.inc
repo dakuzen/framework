@@ -45,17 +45,19 @@
 
 		function get_count() 											{ return $this->get_dbq()->count(); }
 		function exists() 												{ return $this->get_dbq()->exists(); }
-		function set_content_widget_dbq_class($class) 				{ $this->_content_widget_dbq_class = $class; return $this; }
-		function set_content_widget_cmodel_class($class) 			{ $this->_complex_class = $class; return $this; }
+		function set_content_widget_dbq_class($class) 					{ $this->_content_widget_dbq_class = $class; return $this; }
+		function set_content_widget_cmodel_class($class) 				{ $this->_complex_class = $class; return $this; }
 		function set_complex_class($class) 								{ $this->_complex_class = $class; return $this; }
-		function set_ontent_widget_hmodel_class($class) 			{ $this->_complex_class = $class; return $this; }
-		function set_content_widget_ids($content_widget_ids) 	{ return $this->add_filter("ff_content_widgets.content_widget_id","IN",$content_widget_ids); }
-		function set_content_widget_id($content_widget_id) 	{ return $this->add_filter("ff_content_widgets.content_widget_id","=",$content_widget_id); }
-		function set_content($content) 									{ return $this->add_filter("ff_content_widgets.content","=",$content); }
-		function set_state($state) 										{ return $this->add_filter("ff_content_widgets.state","=",$state); }
-		function set_modified_date($modified_date) 						{ return $this->add_filter("ff_content_widgets.modified_date","=",$modified_date); }
-		function set_create_date($create_date) 							{ return $this->add_filter("ff_content_widgets.create_date","=",$create_date); }
-		function set_name($name) 										{ return $this->add_filter("ff_content_widgets.name","=",$name); }
-		function set_tag($tag) 											{ return $this->add_filter("ff_content_widgets.tag","=",$tag); }
-		function set_tags($tags) 										{ return $this->add_filter("ff_content_widgets.tag","IN",$tags); }
+		function set_ontent_widget_hmodel_class($class) 				{ $this->_complex_class = $class; return $this; }
+		function set_content_widget_ids($content_widget_ids) 			{ return $this->where("ff_content_widgets.content_widget_id","IN",$content_widget_ids); }
+		function set_content_widget_id($content_widget_id) 				{ return $this->where("ff_content_widgets.content_widget_id","=",$content_widget_id); }
+		function set_content($content) 									{ return $this->where("ff_content_widgets.content","=",$content); }
+		function set_state($state) 										{ return $this->where("ff_content_widgets.state","=",$state); }
+		function set_modified_date($modified_date) 						{ return $this->where("ff_content_widgets.modified_date","=",$modified_date); }
+		function set_create_date($create_date) 							{ return $this->where("ff_content_widgets.create_date","=",$create_date); }
+		function set_name($name) 										{ return $this->where("ff_content_widgets.name","=",$name); }
+		function set_tag($tag) 											{ return $this->where("ff_content_widgets.tag","=",$tag); }
+		function set_tags($tags) 										{ return $this->where("ff_content_widgets.tag","IN",$tags); }
+		function where_state_active()									{ return $this->where("ff_content_widgets.state","=",BASE_CMODEL_FF_CONTENT_WIDGET::STATE_ACTIVE); }
+		function create($defaults=true) 								{ return $defaults ? parent::create()->where_state_active() : parent::create(); }
 	}
