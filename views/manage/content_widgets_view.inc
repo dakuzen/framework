@@ -16,9 +16,29 @@
 		}
 
 		function init() {
-			$page_index	= is_numeric($this->request("page_index")) ? $this->request("page_index") : 0;
-			$page_limit	= is_numeric($this->request("page_limit")) ? $this->request("page_limit") : 100;
 
+			if($this->request("action")=="remove") {
+
+				$response_cmodel = CMODEL_RESPONSE::create();
+
+				try {
+
+					$content_widget_cmodel = HMODEL_FF_CONTENT_WIDGET::create()
+												->set_content_widget_id($this->request("cwid"))
+												->get();
+
+					if($content_widget_cmodel)
+						$content_widget_cmodel->purge();
+
+					APPLICATION::add_persistent_notify("Successfully removed the content widget");
+					$response_cmodel->success();
+
+				} catch(Exception $e) {
+					$response_cmodel->add_error($e->getMessage());
+				}
+
+				$response_cmodel->render(true);
+			}
 
 			if($this->request("preview") && ($content_widget_id=$this->request("cwid"))) {
 
@@ -40,7 +60,7 @@
 
 			$this->set_var("content_widgets",$content_widget_cmodels);
 			$this->set_var("edit_url",$this->_edit_url);
-			$this->set_var("delete_url",$this->_delete_url);
+			$this->set_var("view_url",APPLICATION::get_instance()->get_uri()->get_path());
 			$this->set_var("edit_url_html",$this->_edit_url_html);
 			$this->set_var("preview_url_html",$this->_preview_url_html);
 			$this->set_var("view",APPLICATION::get_instance()->get_current_view_url());
