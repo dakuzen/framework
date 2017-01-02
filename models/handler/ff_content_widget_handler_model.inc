@@ -59,5 +59,5 @@
 		function set_tag($tag) 											{ return $this->where("ff_content_widgets.tag","=",$tag); }
 		function set_tags($tags) 										{ return $this->where("ff_content_widgets.tag","IN",$tags); }
 		function where_state_active()									{ return $this->where("ff_content_widgets.state","=",BASE_CMODEL_FF_CONTENT_WIDGET::STATE_ACTIVE); }
-		function create($defaults=true) 								{ return $defaults ? parent::create()->where_state_active() : parent::create(); }
+		public static function create($defaults=true) 					{ return $defaults ? parent::create()->where_state_active() : parent::create(); }
 	}
