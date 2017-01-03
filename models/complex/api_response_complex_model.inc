@@ -139,19 +139,14 @@
          */
         public function payload($name,$value)      { $this->_payload[$name] = $value; return $this; }
 
-        public function exception($exception)      {
+        public function exception($exception) {
 
-        	$message = $exception->getMessage();
-            if(SYSTEM_MANAGER::is_system_mode_production()) {
-            	if(is_a($exception,"BCMODEL_SYSTEM_EXCEPTION")) {
-            		DEBUG_UTIL::notify_exception($exception);
-            		$message = "Oops, looks like something went wrong. Please contact support";
-            	}
-            } else {
+            if(!SYSTEM_MANAGER::is_system_mode_production()) {
+        	
             	$this->_exception = $exception;
             }
 
-            return $this->error($message,$exception->getCode());
+            return $this;
 		}
 
         /**

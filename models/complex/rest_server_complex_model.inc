@@ -190,7 +190,7 @@
 
             	$message = $e->getMessage();
                 if(SYSTEM_MANAGER::is_system_mode_production()) {
-                	if(is_a($e,"BCMODEL_DB_EXCEPTION") || is_a($e,"BCMODEL_SYSTEM_EXCEPTION")) {
+                	if(is_a($e,"BCMODEL_SYSTEM_EXCEPTION")) {
                 		DEBUG_UTIL::notify_exception($e);
                 		$message = "Oops, looks like something went wrong. Please contact support";
                 	}
@@ -222,8 +222,6 @@
             }
 
             $this->code($code);
-
-            //$this->response()->set_reference($this->request()->get_id());
 
             $jsonp = $this->registry()->get("jsonp.callback");
 
