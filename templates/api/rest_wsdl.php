@@ -187,11 +187,14 @@
 		}
 
 		.parameter-values .heading {
-
+			margin: 0;
+			border-left: 1px solid #ccc;
+			padding: 10px 0;
+			font-weight: bold;
+			padding-left: 20px;
 		}
 
 		.parameter-values-table {
-			margin-top: 10px;
 			border-left: 1px solid #ccc;
 			padding-left: 10px;
 		}
@@ -417,13 +420,20 @@
 						    						$values 		= value($value,"values",[]);
 						    						$object 		= value($value,"object");
 
-						    						if(!array_key_exists("object",$value) && !array_key_exists("description",$value) && !array_key_exists("default",$value) && !array_key_exists("values",$value)) {
+						    						if(	!array_key_exists("object",$value) &&
+						    							!array_key_exists("description",$value) &&
+						    							!array_key_exists("default",$value) &&
+						    							!array_key_exists("values",$value)) {
+
 						    							$values = $value;
+
 						    						} else {
 							    						if(value($value,"name")) {
 							    							$name = value($value,"name");
 							    						}
 						    						}
+
+						    						$values_keys = array_keys(array_fill(0,count($values),true))!=array_keys($values);
 						    					?>
 
 				    							<tr>
@@ -431,6 +441,7 @@
 							    						<span class="parameter-name"><?=$name?></span>
 							    					</td>
 													<td width="80%">
+
 														<? if($description) { ?>
 															<div class="description"><?=$description?></div>
 														<? } ?>
@@ -446,15 +457,23 @@
 								    							<div class="parameter-values-table">
 									    							<table class="table table-values">
 											    						<?	foreach($values as $name=>$item) { ?>
-											    							<tr>
-									    										<td class="value">
-									    											<span class="parameter-name"><?=$name?></span>
-									    										</td>
+											    							<? if($values_keys) { ?>
+												    							<tr>
+										    										<td class="value">
+										    											<span class="parameter-name"><?=$name?></span>
+										    										</td>
 
-									    										<td class="description">
-														    						<?=$item?> <? if($default==$name) { ?><span class="default">(default)</span><? } ?>
-													    						</td>
-													    					</tr>
+										    										<td class="description">
+															    						<?=$item?> <? if($default==$name) { ?><span class="default">(default)</span><? } ?>
+														    						</td>
+														    					</tr>
+														    				<? } else { ?>
+																				<tr>
+										    										<td class="value">
+										    											<span class="parameter-name"><?=$item?></span>
+										    										</td>
+														    					</tr>
+														    				<? } ?>
 											    						<? } ?>
 											    					</table>
 											    				</div>
